@@ -1,5 +1,6 @@
 version: axhub/v1
 name: samil-ax-assistant
+root: frontend
 build:
   deploy_method: static
-  static_output_dir: public
+  static_output_dir: dist
