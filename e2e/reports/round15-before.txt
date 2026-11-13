@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: 서버 2대(같은 MySQL)
+    # Subtest: AB01 A에서 접수·결재·조건 변경을 하면 B의 화면 데이터(스냅샷)와 변경 번호에 3초 안에 반영됨
+    not ok 1 - AB01 A에서 접수·결재·조건 변경을 하면 B의 화면 데이터(스냅샷)와 변경 번호에 3초 안에 반영됨
+      ---
+      duration_ms: 3549.428115
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: 'A의 접수가 B 스냅샷에 3초 넘게 안 보임(B는 자기 캐시를 계속 보냄)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:49:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AB02 B에 붙은 화면(로그인 모드)에서, A로 들어온 접수가 6초 안에 목록에 나타남
+    not ok 2 - AB02 B에 붙은 화면(로그인 모드)에서, A로 들어온 접수가 6초 안에 목록에 나타남
+      ---
+      duration_ms: 8655.143152
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: 'B 화면에 A의 접수가 6초 넘게 나타나지 않음'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:70:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AB03 A에 맡긴 접수 작업의 진행 상태를 B에 물어도 404가 아니라 진행 상태·결과가 나옴
+    not ok 3 - AB03 A에 맡긴 접수 작업의 진행 상태를 B에 물어도 404가 아니라 진행 상태·결과가 나옴
+      ---
+      duration_ms: 513.918172
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        B에 바로 물으면 404({"detail":"작업을 찾을 수 없습니다(오래되어 정리됐거나 다른 서버의 작업입니다)."})
+        
+        404 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:82:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AB04 A와 B를 번갈아 비밀번호를 틀려도 5번 넘으면 잠김(서버마다 5번씩 = 10번 시도 불가)
+    not ok 4 - AB04 A와 B를 번갈아 비밀번호를 틀려도 5번 넘으면 잠김(서버마다 5번씩 = 10번 시도 불가)
+      ---
+      duration_ms: 196.102225
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        번갈아 6번 틀림 → 401,401,401,401,401,401
+        
+        401 !== 429
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 429
+      actual: 401
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:91:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AB05 A에서 로그아웃하면 B에서도 그 토큰이 6초 안에 무효
+    ok 5 - AB05 A에서 로그아웃하면 B에서도 그 토큰이 6초 안에 무효
+      ---
+      duration_ms: 4566.515781
+      type: 'test'
+      ...
+    # Subtest: AB06 같은 결재 건을 A와 B로 동시에 승인·거절하면 하나만 성공하고 다른 쪽은 409, 기록도 한 번
+    not ok 6 - AB06 같은 결재 건을 A와 B로 동시에 승인·거절하면 하나만 성공하고 다른 쪽은 409, 기록도 한 번
+      ---
+      duration_ms: 215.565682
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        동시 결재 응답 422,422
+        + actual - expected
+        
+          [
+        +   422,
+        +   422
+        -   200,
+        -   409
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 200
+        1: 409
+      actual:
+        0: 422
+        1: 422
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:117:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..6
+not ok 1 - 서버 2대(같은 MySQL)
+  ---
+  duration_ms: 22303.370098
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round15.e2e.test.cjs:34:1'
+  failureType: 'subtestsFailed'
+  error: '5 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 6
+# suites 1
+# pass 1
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24240.607869

@@ -1,0 +1,31 @@
+{
+  "_meta": "정책 RAG 골든셋(질문·정답 근거 문서·정답 핵심어) + 판단 골든셋(조건 → 기대 권고·승인자). 정답은 원본 문서에서 직접 확인한 값.",
+  "rag": [
+    {"id": "G-01", "q": "인플루언서 연간 전속계약 갱신은 누가 승인하나요?", "sources": ["approval_authority_policy"], "must": ["10억", "CEO"]},
+    {"id": "G-02", "q": "통보 기한을 넘겨 자동 갱신되면 어떻게 보나요?", "sources": ["approval_authority_policy", "inf001_exclusive_contract_notice"], "must": ["체결"]},
+    {"id": "G-03", "q": "covenant 하회 예상 구간에 신규 약정은 누가 승인하나요?", "sources": ["approval_authority_policy", "covenant_terms_ms"], "must": ["CEO"]},
+    {"id": "G-04", "q": "캠페인 확대안 승인 판단 기준은 GMV인가요?", "sources": ["approval_authority_policy"], "must": ["공헌이익"]},
+    {"id": "G-05", "q": "Masil 현금 전망은 어떤 스케줄로 계산하나요?", "sources": ["calculation_definitions", "covenant_terms_ms"], "must": ["fin_ar_aging_ms"]},
+    {"id": "G-06", "q": "AP와 발주 대금 이중계상은 어떻게 막나요?", "sources": ["calculation_definitions"], "must": ["po_id"]},
+    {"id": "G-07", "q": "혜인 전속계약 고정 피와 통보 기한은?", "sources": ["inf001_exclusive_contract_notice"], "must": ["28억", "2026-07-17"]},
+    {"id": "G-08", "q": "LC-0001 결제조건은 어떻게 바뀌었나요?", "sources": ["lc0001_payment_term_notice"], "must": ["90일"]},
+    {"id": "G-09", "q": "표본 마케팅 데이터와 풀스케일 금액을 곱해도 되나요?", "sources": ["data_dictionary", "mkt_meeting_notes_ms", "inf001_exclusive_contract_notice"], "must": ["표본"]},
+    {"id": "G-10", "q": "화장품 광고에 치료 효과를 표현해도 되나요?", "sources": ["legal_kb"], "must": ["의약품"]},
+    {"id": "G-11", "q": "인플루언서 게시물에 광고 표시를 해야 하나요?", "sources": ["legal_kb"], "must": ["광고"]},
+    {"id": "G-12", "q": "실질 ROAS 산식은 무엇인가요?", "sources": ["calculation_definitions"], "must": ["Contribution Profit"]}
+  ],
+  "decisions": [
+    {"id": "D-01", "case": "CONTRACT", "ctx": {}, "expect": {"recommendation": "CHANGE_TERMS", "approver": "GROUP_CEO"}},
+    {"id": "D-02", "case": "CONTRACT", "ctx": {"offer": "counter"}, "expect": {"recommendation": "NEEDS_INFO", "approver": null}},
+    {"id": "D-03", "case": "CONTRACT", "ctx": {"offer": "counter_sched"}, "expect": {"recommendation": "REJECT", "approver": "GROUP_CEO"}},
+    {"id": "D-04", "case": "PLAN-014", "ctx": {}, "expect": {"recommendation": "APPROVE", "approver": "MASIL_CEO"}},
+    {"id": "D-05", "case": "PLAN-015", "ctx": {}, "expect": {"recommendation": "APPROVE", "approver": "GROUP_CEO"}},
+    {"id": "D-06", "case": "PLAN-015", "ctx": {"cash_assumption": "LEGACY45"}, "expect": {"recommendation": "APPROVE", "approver": "MASIL_CEO"}},
+    {"id": "D-07", "case": "PLAN-016", "ctx": {}, "expect": {"recommendation": "HOLD_COPY", "approver": "GROUP_CEO"}},
+    {"id": "D-08", "case": "PLAN-011", "ctx": {}, "expect": {"recommendation": "HOLD_SUPPLY", "approver": "MASIL_CEO"}},
+    {"id": "D-09", "case": "PLAN-005", "ctx": {}, "expect": {"recommendation": "REJECT", "approver": "MASIL_CEO"}},
+    {"id": "D-10", "case": "PLAN-024", "ctx": {"cash_assumption": "CONSERVATIVE"}, "expect": {"recommendation": "APPROVE", "approver": "GROUP_CEO"}},
+    {"id": "D-11", "case": "PLAN-001", "ctx": {"contract_status": "TERMINATION_APPROVED"}, "expect": {"recommendation": "REJECT", "approver": "GROUP_CEO"}},
+    {"id": "D-12", "case": "PLAN-021", "ctx": {}, "expect": {"recommendation": "APPROVE", "approver": "GROUP_CEO"}}
+  ]
+}

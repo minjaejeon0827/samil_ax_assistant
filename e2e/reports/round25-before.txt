@@ -1,0 +1,267 @@
+TAP version 13
+# Subtest: 운영 DB(MySQL 호환) — 연결·정규화·제약·VIEW·트랜잭션·문자셋·백업
+    # Subtest: AL02 서버의 DB 연결 재사용(커넥션 풀): 화면 갱신 100번 동안 DB에 새로 맺는 연결이 20개 이하, 스냅샷 응답 p95 60ms 이하
+    not ok 1 - AL02 서버의 DB 연결 재사용(커넥션 풀): 화면 갱신 100번 동안 DB에 새로 맺는 연결이 20개 이하, 스냅샷 응답 p95 60ms 이하
+      ---
+      duration_ms: 9035.259731
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: '화면 갱신 100번에 DB 연결 701개를 새로 맺음(요청마다 연결·해제)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:68:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AL03 정규화: 계약서 3,000건이 쌓여도(계약 기록 = 행 하나씩) 관계없는 결재 300ms·계약서 올리기 2초·화면 갱신 300ms 이하, 명령 하나가 DB에 쓰는 양이 계약 수에 비례하지 않음
+    not ok 2 - AL03 정규화: 계약서 3,000건이 쌓여도(계약 기록 = 행 하나씩) 관계없는 결재 300ms·계약서 올리기 2초·화면 갱신 300ms 이하, 명령 하나가 DB에 쓰는 양이 계약 수에 비례하지 않음
+      ---
+      duration_ms: 3349.412132
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: 'kv 문서 하나가 15.1MB — 명령마다 통째로 읽고 씀'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:106:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AL04 제약·트리거: 감사 기록은 DB가 append only를 지킴 — 앱 계정으로 UPDATE·DELETE 하면 거부되고, '처음부터'(그룹 CEO)만 지울 수 있으며 그 사실이 새 감사 기록에 남음
+    not ok 3 - AL04 제약·트리거: 감사 기록은 DB가 append only를 지킴 — 앱 계정으로 UPDATE·DELETE 하면 거부되고, '처음부터'(그룹 CEO)만 지울 수 있으며 그 사실이 새 감사 기록에 남음
+      ---
+      duration_ms: 1407.678349
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: '앱 계정으로 감사 기록을 고칠 수 있음(UPDATE)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'ok'
+      actual: 'ok'
+      operator: 'notStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:125:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AL05 VIEW·JOIN: 운영자가 SQL로 볼 수 있는 보기(v_cases·v_tasks·v_audit·v_renewals)가 있고, 작업 → 처리 건 참조가 끊긴 행 0, 보기의 건수·상태가 화면(API)과 같음
+    not ok 4 - AL05 VIEW·JOIN: 운영자가 SQL로 볼 수 있는 보기(v_cases·v_tasks·v_audit·v_renewals)가 있고, 작업 → 처리 건 참조가 끊긴 행 0, 보기의 건수·상태가 화면(API)과 같음
+      ---
+      duration_ms: 1910.210872
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        보기 없음(있는 것: )
+        + actual - expected
+        
+        + [
+        +   'v_audit',
+        +   'v_cases',
+        +   'v_renewals',
+        +   'v_tasks'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'v_audit'
+        1: 'v_cases'
+        2: 'v_renewals'
+        3: 'v_tasks'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:148:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AL06 트랜잭션 격리: 다른 서버가 '처리 건 + 작업'을 한 트랜잭션으로 바꾸는 동안 화면을 300번 갱신해도, 작업은 있는데 그 처리 건은 바뀌기 전인 '반쯤 반영된' 화면 0번
+    not ok 5 - AL06 트랜잭션 격리: 다른 서버가 '처리 건 + 작업'을 한 트랜잭션으로 바꾸는 동안 화면을 300번 갱신해도, 작업은 있는데 그 처리 건은 바뀌기 전인 '반쯤 반영된' 화면 0번
+      ---
+      duration_ms: 5833.658629
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        반쯤 반영된 화면 43/300번(처리 건·작업을 서로 다른 시점에 읽음)
+        
+        43 !== 0
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 0
+      actual: 43
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:188:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AL07 문자셋(utf8mb4): 이모지·확장 한자(4바이트)·결합 문자가 든 메모가 MySQL을 거쳐도 그대로 저장·표시되고, 이모지로 감사 기록을 찾을 수 있음
+    not ok 6 - AL07 문자셋(utf8mb4): 이모지·확장 한자(4바이트)·결합 문자가 든 메모가 MySQL을 거쳐도 그대로 저장·표시되고, 이모지로 감사 기록을 찾을 수 있음
+      ---
+      duration_ms: 1337.724471
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        DB 저장: ?? ?? ?? ?? ?? � ?? ??? � ?? ??
+        + actual - expected
+        
+        + '?? ?? ?? ?? ?? � ?? ??? � ?? ??'
+        - '현장 메모 🚚📦 납품 지연 — 𠀀𪚥 협력사 · 가́ 표기'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: '현장 메모 🚚📦 납품 지연 — 𠀀𪚥 협력사 · 가́ 표기'
+      actual: '?? ?? ?? ?? ?? � ?? ??? � ?? ??'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:206:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AL08 백업·복구 리허설: 쓰기가 계속되는 중에 mysqldump --single-transaction으로 백업 → 새 DB로 복구 → 그 DB로 서버를 띄우면 번호 충돌 없이 이어서 접수·결재·검색되고 트리거·보기도 살아 있음
+    not ok 7 - AL08 백업·복구 리허설: 쓰기가 계속되는 중에 mysqldump --single-transaction으로 백업 → 새 DB로 복구 → 그 DB로 서버를 띄우면 번호 충돌 없이 이어서 접수·결재·검색되고 트리거·보기도 살아 있음
+      ---
+      duration_ms: 3600.736741
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: '복구한 DB에 감사 기록 보호 트리거 0개'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:242:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..7
+not ok 1 - 운영 DB(MySQL 호환) — 연결·정규화·제약·VIEW·트랜잭션·문자셋·백업
+  ---
+  duration_ms: 26758.012425
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:49:1'
+  failureType: 'subtestsFailed'
+  error: '7 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 시연 영상
+    # Subtest: AL09 시연 영상: 5분 이내, AI 음성 해설 트랙, 해설 대본의 모든 줄이 영상 안에서 재생되고 v1.25 장면(운영 DB)이 들어 있음
+    not ok 1 - AL09 시연 영상: 5분 이내, AI 음성 해설 트랙, 해설 대본의 모든 줄이 영상 안에서 재생되고 v1.25 장면(운영 DB)이 들어 있음
+      ---
+      duration_ms: 93.355207
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: 'v1.25(운영 DB) 장면 없음'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:261:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:25)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    1..1
+not ok 2 - 시연 영상
+  ---
+  duration_ms: 93.644868
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:251:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: §14 리스크와 한계 · §15 대조
+    # Subtest: AL01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, '남은 일'에 이미 한 일이 없으며, 표의 E2E 수가 사실과 같음
+    not ok 1 - AL01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, '남은 일'에 이미 한 일이 없으며, 표의 E2E 수가 사실과 같음
+      ---
+      duration_ms: 1541.865977
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:24:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        §14가 말하는 E2E 수 239 ≠ 실제 248
+        
+        239 !== 248
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 248
+      actual: 239
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:302:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:26:25)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    1..1
+not ok 3 - §14 리스크와 한계 · §15 대조
+  ---
+  duration_ms: 1541.985385
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round25.e2e.test.cjs:271:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..3
+# tests 9
+# suites 3
+# pass 0
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29556.447138
+
+# 주: AL07은 시험 수정(mariadb 명령줄 --default-character-set=utf8mb4, 감사 기록에 실제로 남는 글로 검색) 뒤 v1.24로 다시 돌려 통과 — 앱 결함 아님. 시험 수정을 반영한 v1.24 결과: 1/9(AL07만 통과)
+# 주: AL06·AL03도 시험 수정(쓰는 쪽 명령줄 문자셋 utf8mb4, 제목 번호는 "격리 시험 n"에서만) 뒤 v1.24 코드(지난 배포 zip)로 다시 잼 — AL06 50/300번 반쯤 반영, AL03 kv 문서 9.1MB·올리기 638ms. 여전히 실패(앱 결함).

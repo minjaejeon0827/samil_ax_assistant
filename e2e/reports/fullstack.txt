@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: React ↔ FastAPI
+    # Subtest: S01 실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시
+    ok 1 - S01 실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시
+      ---
+      duration_ms: 677.468071
+      type: 'test'
+      ...
+    # Subtest: S02 화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)
+    ok 2 - S02 화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)
+      ---
+      duration_ms: 128.817212
+      type: 'test'
+      ...
+    # Subtest: S03 화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건
+    ok 3 - S03 화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건
+      ---
+      duration_ms: 174.221451
+      type: 'test'
+      ...
+    # Subtest: S04 권한 없는 승인 시도 → 서버 403 메시지를 화면에 표시
+    ok 4 - S04 권한 없는 승인 시도 → 서버 403 메시지를 화면에 표시
+      ---
+      duration_ms: 450.446974
+      type: 'test'
+      ...
+    # Subtest: S05 새로고침 후에도 서버 모드·상태 유지
+    ok 5 - S05 새로고침 후에도 서버 모드·상태 유지
+      ---
+      duration_ms: 91.408656
+      type: 'test'
+      ...
+    # Subtest: S07 재무팀이 화면에서 현금 전망 가정을 바꾸면 서버가 전 건을 다시 판단
+    ok 6 - S07 재무팀이 화면에서 현금 전망 가정을 바꾸면 서버가 전 건을 다시 판단
+      ---
+      duration_ms: 219.211764
+      type: 'test'
+      ...
+    # Subtest: S06 콘솔 오류 0건(S04에서 의도적으로 받은 403 응답 기록만 제외)
+    ok 7 - S06 콘솔 오류 0건(S04에서 의도적으로 받은 403 응답 기록만 제외)
+      ---
+      duration_ms: 0.675579
+      type: 'test'
+      ...
+    1..7
+ok 1 - React ↔ FastAPI
+  ---
+  duration_ms: 3119.591726
+  type: 'suite'
+  ...
+1..1
+# tests 7
+# suites 1
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3352.344181

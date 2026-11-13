@@ -1,0 +1,249 @@
+TAP version 13
+# Subtest: §15 남은 일 · 새 기능 × 기존 보장
+    # Subtest: AJ02 §15-1 IdP가 먼저 끊는 로그아웃(Back-Channel): IdP가 보낸 서명된 logout_token이면 그 SSO 로그인의 접근·리프레시 토큰이 모두 끊기고 열린 화면은 로그인 창으로, 위조·nonce·재전송은 거부
+    not ok 1 - AJ02 §15-1 IdP가 먼저 끊는 로그아웃(Back-Channel): IdP가 보낸 서명된 logout_token이면 그 SSO 로그인의 접근·리프레시 토큰이 모두 끊기고 열린 화면은 로그인 창으로, 위조·nonce·재전송은 거부
+      ---
+      duration_ms: 11065.929692
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        정상 logout_token을 받지 않음(405 {"detail":"Method Not Allowed"})
+        
+        405 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 405
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:96:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AJ03 §14 새 칸의 수명: '처음부터'를 해도 v1.22의 보안·연동 상태가 지켜짐 — SSO 로그아웃은 여전히 IdP까지, 이미 처리한 전자결재 콜백을 다시 받아도 새로 생긴 같은 번호의 건을 결재하지 않음
+    not ok 2 - AJ03 §14 새 칸의 수명: '처음부터'를 해도 v1.22의 보안·연동 상태가 지켜짐 — SSO 로그아웃은 여전히 IdP까지, 이미 처리한 전자결재 콜백을 다시 받아도 새로 생긴 같은 번호의 건을 결재하지 않음
+      ---
+      duration_ms: 1378.844077
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        '처음부터' 전의 전자결재 승인이 새로 생긴 CS-0001를 결재함({"ok":true,"state":"APPROVED","error":null,"forbidden":null})
+        + actual - expected
+        
+        + 'APPROVED'
+        - 'PENDING_APPROVAL'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'PENDING_APPROVAL'
+      actual: 'APPROVED'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:127:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AJ04 §15-2 다시 보내기 × 동시 클릭: 두 사람(또는 두 탭)이 같은 실패 건을 동시에 다시 보내면 한 번만 보내고, 나머지는 '이미 보내는 중'으로 안내
+    not ok 3 - AJ04 §15-2 다시 보내기 × 동시 클릭: 두 사람(또는 두 탭)이 같은 실패 건을 동시에 다시 보내면 한 번만 보내고, 나머지는 '이미 보내는 중'으로 안내
+      ---
+      duration_ms: 2428.139583
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: '나머지 사람에게 이유를 알리지 않음: 실패한 전송만 다시 보낼 수 있습니다(지금: queued).'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '실패한 전송만 다시 보낼 수 있습니다(지금: queued).'
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:152:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AJ05 §15-3 OCR × 여러 쪽·적대적 PDF: 11쪽 스캔은 올리자마자 접수(진행 안내)되고 마지막 쪽의 위약금까지 읽으며, 쪽수 한도를 넘으면 그 사실을 남기고, 8KB짜리 초대형 페이지 PDF는 서버 자원을 쓰지 않고 빨리 거절
+    not ok 4 - AJ05 §15-3 OCR × 여러 쪽·적대적 PDF: 11쪽 스캔은 올리자마자 접수(진행 안내)되고 마지막 쪽의 위약금까지 읽으며, 쪽수 한도를 넘으면 그 사실을 남기고, 8KB짜리 초대형 페이지 PDF는 서버 자원을 쓰지 않고 빨리 거절
+      ---
+      duration_ms: 86938.821038
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: "업로드 응답 24989ms — 글자 인식이 끝날 때까지 화면이 기다림(15초 넘으면 '응답 없음')"
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:181:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AJ06 §15-3 조항 문구 변형(한국어 변형·영문 USD·영문 고정 기간·갱신 조항 없음): 값은 맞거나 '확인 필요' — 틀린 값 0, 외화 금액은 원화로 바꾸지 않고 표시
+    not ok 5 - AJ06 §15-3 조항 문구 변형(한국어 변형·영문 USD·영문 고정 기간·갱신 조항 없음): 값은 맞거나 '확인 필요' — 틀린 값 0, 외화 금액은 원화로 바꾸지 않고 표시
+      ---
+      duration_ms: 1449.138513
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        틀린 값 3건: freight_en_usd.md:auto_renew=false(기대 true) / service_kr_no_clause.md:auto_renew=false(기대 null) / service_kr_no_clause.md: 갱신 조항이 없는데 '자동 갱신 없음'으로 단정
+        + actual - expected
+        
+        + [
+        +   'freight_en_usd.md:auto_renew=false(기대 true)',
+        +   'service_kr_no_clause.md:auto_renew=false(기대 null)',
+        +   "service_kr_no_clause.md: 갱신 조항이 없는데 '자동 갱신 없음'으로 단정"
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'freight_en_usd.md:auto_renew=false(기대 true)'
+        1: 'service_kr_no_clause.md:auto_renew=false(기대 null)'
+        2: "service_kr_no_clause.md: 갱신 조항이 없는데 '자동 갱신 없음'으로 단정"
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:224:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AJ07 §15 ⑦ 남은 일: 같은 MySQL을 쓰는 서버 2대가 한 제공자의 토큰 한도를 함께 셈(LLM_TPM_SCOPE=shared) — 두 서버가 동시에 LLM을 불러도 429 3회 이하, 모든 건 LLM 설명
+    not ok 6 - AJ07 §15 ⑦ 남은 일: 같은 MySQL을 쓰는 서버 2대가 한 제공자의 토큰 한도를 함께 셈(LLM_TPM_SCOPE=shared) — 두 서버가 동시에 LLM을 불러도 429 3회 이하, 모든 건 LLM 설명
+      ---
+      duration_ms: 22595.240927
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: '429 104회 — 두 서버가 한도를 따로 세어 합쳐서 넘김'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:251:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AJ08 v1.22 새 화면(외부 채널 전송·계약서 요약·AI 설명 보관함)이 axe 심각·치명 0건, 390px 휴대폰에서 가로 넘침 없음, 키보드만으로 '다시 보내기'·보관함 열기 가능
+    not ok 7 - AJ08 v1.22 새 화면(외부 채널 전송·계약서 요약·AI 설명 보관함)이 axe 심각·치명 0건, 390px 휴대폰에서 가로 넘침 없음, 키보드만으로 '다시 보내기'·보관함 열기 가능
+      ---
+      duration_ms: 22836.37147
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.waitFor: Timeout 12000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('[data-testid="deliveries"] [data-testid^="redeliver-"]').first() to be visible[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:291:91
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:19)
+      ...
+    1..7
+not ok 1 - §15 남은 일 · 새 기능 × 기존 보장
+  ---
+  duration_ms: 149917.895802
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:75:1'
+  failureType: 'subtestsFailed'
+  error: '7 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: §14 리스크와 한계 · §15 대조
+    # Subtest: AJ01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, '남은 일'에 이미 한 일이 없으며, 표의 E2E 수가 사실과 같음
+    not ok 1 - AJ01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, '남은 일'에 이미 한 일이 없으며, 표의 E2E 수가 사실과 같음
+      ---
+      duration_ms: 1162.643962
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        대응이 지켜지지 않는 리스크 11건: 서버 여러 대 ← round23:AJ07(실패) / 외부 시스템 연동 ← round23:AJ02(실패) / 외부 시스템 연동 ← round23:AJ04(실패) / 계약서 추출 ← round23:AJ06(실패) / 적대적·대용량 파일 ← round23:AJ05(실패) / 새 칸의 수명 ← round23:AJ03(실패)
+        + actual - expected
+        
+        + [
+        +   '서버 여러 대 ← round23:AJ07(실패)',
+        +   '외부 시스템 연동 ← round23:AJ02(실패)',
+        +   '외부 시스템 연동 ← round23:AJ04(실패)',
+        +   '계약서 추출 ← round23:AJ06(실패)',
+        +   '적대적·대용량 파일 ← round23:AJ05(실패)',
+        +   '새 칸의 수명 ← round23:AJ03(실패)',
+        +   '외부 LLM 사용량 한도 ← round23:AJ07(실패)',
+        +   '화면 크기 ← round23:AJ08(실패)',
+        +   '새 기능이 기존 보장을 깨뜨림 ← round23:AJ03(실패)',
+        +   '새 기능이 기존 보장을 깨뜨림 ← round23:AJ04(실패)',
+        +   '새 기능이 기존 보장을 깨뜨림 ← round23:AJ08(실패)'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '서버 여러 대 ← round23:AJ07(실패)'
+        1: '외부 시스템 연동 ← round23:AJ02(실패)'
+        2: '외부 시스템 연동 ← round23:AJ04(실패)'
+        3: '계약서 추출 ← round23:AJ06(실패)'
+        4: '적대적·대용량 파일 ← round23:AJ05(실패)'
+        5: '새 칸의 수명 ← round23:AJ03(실패)'
+        6: '외부 LLM 사용량 한도 ← round23:AJ07(실패)'
+        7: '화면 크기 ← round23:AJ08(실패)'
+        8: '새 기능이 기존 보장을 깨뜨림 ← round23:AJ03(실패)'
+        9: '새 기능이 기존 보장을 깨뜨림 ← round23:AJ04(실패)'
+        10: '새 기능이 기존 보장을 깨뜨림 ← round23:AJ08(실패)'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:390:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:34:25)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    1..1
+not ok 2 - §14 리스크와 한계 · §15 대조
+  ---
+  duration_ms: 1163.051016
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round23.e2e.test.cjs:361:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..2
+# tests 8
+# suites 2
+# pass 0
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 151332.531883

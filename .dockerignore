@@ -1,0 +1,12 @@
+**/node_modules
+frontend/dist
+**/__pycache__
+.git
+.claude
+.codex
+.agents
+demo
+frontend/dist-api
+frontend/dist-docker
+e2e/reports
+demo/raw

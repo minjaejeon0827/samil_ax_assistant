@@ -1,0 +1,27 @@
+# 로컬 멀티유저 구성: MySQL + FastAPI(+정적 프론트). HTTPS는 앞단 리버스 프록시(Caddy/Nginx+Let's Encrypt)에서 종료.
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-me}
+      MYSQL_DATABASE: aurora_desk
+      MYSQL_USER: aurora
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me-too}
+    volumes:
+      - ./backend/app/repo/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - dbdata:/var/lib/mysql
+    healthcheck: { test: ["CMD", "mysqladmin", "ping", "-h", "localhost"], interval: 5s, retries: 20 }
+  app:
+    build: .
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      REPO: mysql
+      MYSQL_HOST: db
+      MYSQL_USER: aurora
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me-too}
+      MYSQL_DB: aurora_desk
+      API_KEYS: ${API_KEYS:-demo-public-key}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8000}
+    ports: ["8000:8000"]
+volumes:
+  dbdata:

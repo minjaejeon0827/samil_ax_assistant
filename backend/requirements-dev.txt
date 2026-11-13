@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.1.1
+langchain-openai==1.7.4   # 5차 E2E: 모의 OpenAI 호환 서버로 외부 LLM 경로(정상·환각·장애·지연) 시험
+langchain-anthropic==1.7.10   # 6차 E2E: 모의 Anthropic 호환 서버로 두 번째 LLM 제공자 경로 시험

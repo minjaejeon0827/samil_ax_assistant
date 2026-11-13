@@ -1,0 +1,52 @@
+{
+ "at": "2026-11-09T11:47:01.347Z",
+ "suite": "fullstack",
+ "results": [
+  {
+   "id": "S01",
+   "name": "실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시",
+   "ok": true,
+   "ms": 759
+  },
+  {
+   "id": "S02",
+   "name": "화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)",
+   "ok": true,
+   "ms": 334
+  },
+  {
+   "id": "S03",
+   "name": "화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건",
+   "ok": true,
+   "ms": 214
+  },
+  {
+   "id": "S04",
+   "name": "권한 없는 승인 시도 → 서버 409 메시지를 화면에 표시",
+   "ok": true,
+   "ms": 545
+  },
+  {
+   "id": "S05",
+   "name": "새로고침 후에도 서버 모드·상태 유지",
+   "ok": true,
+   "ms": 105
+  },
+  {
+   "id": "S06",
+   "name": "콘솔 오류 0건",
+   "ok": false,
+   "ms": 1,
+   "error": "Expected values to be strictly deep-equal:"
+  }
+ ],
+ "pageErrors": [
+  "console: Failed to load resource: the server responded with a status of 409 (Conflict)"
+ ],
+ "perf": [
+  {
+   "label": "API 모드 접수→화면 반영",
+   "ms": 328
+  }
+ ]
+}

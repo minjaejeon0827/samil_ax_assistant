@@ -1,0 +1,229 @@
+TAP version 13
+# Subtest: 권한 매트릭스 — 쓰기 기능 전부 × 역할 6개(로그인 모드)
+    # Subtest: P01 각 쓰기 기능은 정해진 역할만 성공하고, 나머지는 서버가 거부(화면에서 버튼을 숨기는 것만으로는 부족)
+    not ok 1 - P01 각 쓰기 기능은 정해진 역할만 성공하고, 나머지는 서버가 거부(화면에서 버튼을 숨기는 것만으로는 부족)
+      ---
+      duration_ms: 2821.029349
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   '접수:CONTRACT_RENEWAL_NOTICE: 허용 [CONTRACT_OWNER,GROUP_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '접수:BUDGET_PLAN_BATCH: 허용 [MARKETING_TEAM,MASIL_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '접수:AGENCY_COUNTER_OFFER: 허용 [CONTRACT_OWNER] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '접수:MARKETING_CLAIM: 허용 [MARKETING_TEAM] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '접수:FINANCE_OVERDUE_AR: 허용 [FINANCE] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '조건 변경: 허용 [FINANCE] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '카피 수정: 허용 [MARKETING_TEAM] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '에이전시 회신 입력: 허용 [CONTRACT_OWNER] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]',
+        +   '시계 진행: 허용 [GROUP_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '접수:CONTRACT_RENEWAL_NOTICE: 허용 [CONTRACT_OWNER,GROUP_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        1: '접수:BUDGET_PLAN_BATCH: 허용 [MARKETING_TEAM,MASIL_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        2: '접수:AGENCY_COUNTER_OFFER: 허용 [CONTRACT_OWNER] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        3: '접수:MARKETING_CLAIM: 허용 [MARKETING_TEAM] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        4: '접수:FINANCE_OVERDUE_AR: 허용 [FINANCE] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        5: '조건 변경: 허용 [FINANCE] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        6: '카피 수정: 허용 [MARKETING_TEAM] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        7: '에이전시 회신 입력: 허용 [CONTRACT_OWNER] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+        8: '시계 진행: 허용 [GROUP_CEO] / 실제 성공 [MARKETING_TEAM,MASIL_CEO,GROUP_CEO,FINANCE,SCM,CONTRACT_OWNER]'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:81:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: P02 부서 작업은 그 부서만 완료할 수 있음(다른 부서가 '통보 발송'을 대신 누르면 거부)
+    not ok 2 - P02 부서 작업은 그 부서만 완료할 수 있음(다른 부서가 '통보 발송'을 대신 누르면 거부)
+      ---
+      duration_ms: 39.640711
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        다른 부서가 완료함: 에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함)(CONTRACT_OWNER) ← MARKETING_TEAM / 연계 기안 PLAN-001, PLAN-002, PLAN-003 집행 보류 — 상위 계약 결정과 함께 처리(MARKETING_TEAM) ← MASIL_CEO / 13주 재전망(하회 구간)과 계약 지급 일정 대조표 작성(FINANCE) ← MARKETING_TEAM / 이사회 보고: 인플루언서 배분 원칙(집행 비중↔실질 공헌이익 역전) 개선안(GROUP_CEO) ← MARKETING_TEAM
+        + actual - expected
+        
+        + [
+        +   '에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함)(CONTRACT_OWNER) ← MARKETING_TEAM',
+        +   '연계 기안 PLAN-001, PLAN-002, PLAN-003 집행 보류 — 상위 계약 결정과 함께 처리(MARKETING_TEAM) ← MASIL_CEO',
+        +   '13주 재전망(하회 구간)과 계약 지급 일정 대조표 작성(FINANCE) ← MARKETING_TEAM',
+        +   '이사회 보고: 인플루언서 배분 원칙(집행 비중↔실질 공헌이익 역전) 개선안(GROUP_CEO) ← MARKETING_TEAM'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함)(CONTRACT_OWNER) ← MARKETING_TEAM'
+        1: '연계 기안 PLAN-001, PLAN-002, PLAN-003 집행 보류 — 상위 계약 결정과 함께 처리(MARKETING_TEAM) ← MASIL_CEO'
+        2: '13주 재전망(하회 구간)과 계약 지급 일정 대조표 작성(FINANCE) ← MARKETING_TEAM'
+        3: '이사회 보고: 인플루언서 배분 원칙(집행 비중↔실질 공헌이익 역전) 개선안(GROUP_CEO) ← MARKETING_TEAM'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:96:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 1 - 권한 매트릭스 — 쓰기 기능 전부 × 역할 6개(로그인 모드)
+  ---
+  duration_ms: 4051.29202
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:43:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 로그인 수명과 감사
+    # Subtest: P03 로그아웃하면 그 토큰은 서버에서도 즉시 무효(가져간 토큰으로 15분간 쓰지 못함)
+    not ok 1 - P03 로그아웃하면 그 토큰은 서버에서도 즉시 무효(가져간 토큰으로 15분간 쓰지 못함)
+      ---
+      duration_ms: 20.355508
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        로그아웃 API 404
+        
+        404 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:107:39
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: P04 로그인 실패와 잠금이 감사 로그에 남음(누가 어느 계정에 시도했는지)
+    not ok 2 - P04 로그인 실패와 잠금이 감사 로그에 남음(누가 어느 계정에 시도했는지)
+      ---
+      duration_ms: 79.747469
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: '감사 로그: '
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: ''
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:113:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: P05 다른 사람이 일부러 틀려도 정당한 사용자의 로그인은 막히지 않음(잠금 악용 방지)
+    not ok 3 - P05 다른 사람이 일부러 틀려도 정당한 사용자의 로그인은 막히지 않음(잠금 악용 방지)
+      ---
+      duration_ms: 85.53051
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        정당한 사용자가 잠김(429)
+        
+        429 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 429
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:122:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: P06 MCP: 토큰이 만료돼도 다시 로그인해 이어서 동작(토큰 2초 서버)
+    ok 4 - P06 MCP: 토큰이 만료돼도 다시 로그인해 이어서 동작(토큰 2초 서버)
+      ---
+      duration_ms: 5638.983376
+      type: 'test'
+      ...
+    # Subtest: P07 관리자가 계정의 역할을 바꾸면 그 사람이 들고 있던 이전 역할 토큰은 거부
+    ok 5 - P07 관리자가 계정의 역할을 바꾸면 그 사람이 들고 있던 이전 역할 토큰은 거부
+      ---
+      duration_ms: 2752.24313
+      type: 'test'
+      ...
+    # Subtest: P08 사용자 200명을 등록해도 서버가 3초 안에 뜨고 로그인은 1초 안에 됨
+    not ok 6 - P08 사용자 200명을 등록해도 서버가 3초 안에 뜨고 로그인은 1초 안에 됨
+      ---
+      duration_ms: 3420.95502
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:19:29'
+      failureType: 'testCodeFailure'
+      error: '기동 3404ms'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:151:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:21:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..6
+not ok 2 - 로그인 수명과 감사
+  ---
+  duration_ms: 11998.61802
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round8.e2e.test.cjs:101:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 운영 조합 — 로그인 모드 + MySQL 호환 DB + 단일 컨테이너
+    # Subtest: P09 화면 로그인 → 결재 → 서버 재시작 후에도 결과·감사(사용자)가 DB에 남고, 화면에서 다시 로그인해 이어서 봄
+    ok 1 - P09 화면 로그인 → 결재 → 서버 재시작 후에도 결과·감사(사용자)가 DB에 남고, 화면에서 다시 로그인해 이어서 봄
+      ---
+      duration_ms: 4864.10186
+      type: 'test'
+      ...
+    1..1
+ok 3 - 운영 조합 — 로그인 모드 + MySQL 호환 DB + 단일 컨테이너
+  ---
+  duration_ms: 4864.326046
+  type: 'suite'
+  ...
+1..3
+# tests 9
+# suites 3
+# pass 3
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21148.097053

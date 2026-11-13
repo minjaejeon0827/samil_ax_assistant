@@ -1,0 +1,11 @@
+# 21차 E2E 실행 전(v1.20) — PRD §15 '다음 단계' 기능 존재 확인
+# v1.20 배포본(aurora-campaign-desk.zip, version="1.20.0")을 AUTH_MODE=jwt로 띄워 새 엔드포인트를 호출한 결과
+GET /api/auth/oidc/start → 404          (§15-1 사내 SSO 없음)
+POST /api/auth/oidc/callback → 404
+POST /api/auth/token → 404              (§15-1 리프레시 토큰 없음)
+POST /api/auth/password → 404           (§15-1 비밀번호 변경 없음)
+POST /api/integrations/approval → 404   (§15-2 전자결재 콜백 없음)
+GET /api/integrations/deliveries → 404  (§15-2 외부 채널 전송 없음 — 발송함 모의만)
+POST /api/contracts → 404               (§15-3·4 계약서 업로드·추출·다른 자동 갱신 계약 없음)
+login 응답 키: ['expires_in', 'role', 'token', 'user']  (refresh_token 없음)
+# → 21차 E2E AH01~AH07은 v1.20에서 전부 실패(기능 미구현). 테스트 파일은 v1.21에 맞춰 작성.

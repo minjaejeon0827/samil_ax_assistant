@@ -1,0 +1,282 @@
+TAP version 13
+# Subtest: 두 번째 LLM 제공자(Anthropic 호환)
+    # Subtest: A01 Anthropic ok: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+    ok 1 - A01 Anthropic ok: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+      ---
+      duration_ms: 837.836936
+      type: 'test'
+      ...
+    # Subtest: A02 Anthropic hallucinate: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+    ok 2 - A02 Anthropic hallucinate: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+      ---
+      duration_ms: 65.006837
+      type: 'test'
+      ...
+    # Subtest: A03 Anthropic error: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+    ok 3 - A03 Anthropic error: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+      ---
+      duration_ms: 442.443049
+      type: 'test'
+      ...
+    # Subtest: A04 Anthropic hang: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+    ok 4 - A04 Anthropic hang: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
+      ---
+      duration_ms: 6430.940252
+      type: 'test'
+      ...
+    1..4
+ok 1 - 두 번째 LLM 제공자(Anthropic 호환)
+  ---
+  duration_ms: 10193.08102
+  type: 'suite'
+  ...
+# Subtest: 메신저 채널(MCP) — 원격 보안과 입력 오류
+    # Subtest: N01 외부에 여는 원격 MCP(0.0.0.0)는 접근 토큰 없이 시작하지 않음(승인 도구가 무방비로 열리지 않음)
+    not ok 1 - N01 외부에 여는 원격 MCP(0.0.0.0)는 접근 토큰 없이 시작하지 않음(승인 도구가 무방비로 열리지 않음)
+      ---
+      duration_ms: 8170.877077
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: '토큰 없이 시작됨(종료 코드 null, 시간 초과=true)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:71:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    # Subtest: N02 토큰을 둔 원격 MCP: 토큰 없는 요청은 401, 토큰이 있으면 승인 대기 조회 동작
+    not ok 2 - N02 토큰을 둔 원격 MCP: 토큰 없는 요청은 401, 토큰이 있으면 승인 대기 조회 동작
+      ---
+      duration_ms: 8.265628
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: 'fetch failed'
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        node:internal/deps/undici/undici:15456:13
+        async /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:75:5
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: N03 MCP 도구에 잘못된 값(행동·역할·사건 종류·회신 종류)을 넣으면 한국어로 무엇이 틀렸는지와 허용 값을 안내
+    not ok 3 - N03 MCP 도구에 잘못된 값(행동·역할·사건 종류·회신 종류)을 넣으면 한국어로 무엇이 틀렸는지와 허용 값을 안내
+      ---
+      duration_ms: 1376.960374
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        bad_action: 거부됨: [{'type': 'literal_error', 'loc': ['body', 'action'], 'msg': "Input should be 'approv | bad_role: 거부됨: [{'type': 'literal_error', 'loc': ['body', 'actor'], 'msg': "Input should be 'MARKETI | bad_kind: 접수 실패: [{'type': 'literal_error', 'loc': ['body', 'kind'], 'msg': "Input should be 'CONTRA | bad_reply: [{'type': 'literal_error', 'loc': ['body', 'reply_key'], 'msg': "Input should be 'agency_p | bad_pending_role: CEO 승인 대기 건이 없습니다.
+        + actual - expected
+        
+        + [
+        +   [
+        +     'bad_action',
+        +     `거부됨: [{'type': 'literal_error', 'loc': ['body', 'action'], 'msg': "Input should be 'approve', 'reject' or 'request_info'", 'input': 'approve!!', 'ctx': {'expected': "'approve', 'reject' or 'request_info'"}}]`
+        +   ],
+        +   [
+        +     'bad_role',
+        +     `거부됨: [{'type': 'literal_error', 'loc': ['body', 'actor'], 'msg': "Input should be 'MARKETING_TEAM', 'MASIL_CEO', 'GROUP_CEO', 'FINANCE', 'SCM', 'CONTRACT_OWNER', 'AGENCY' or 'SYSTEM'", 'input': 'CEO', 'ctx': {'expected': "'MARKETING_TEAM', 'MASIL_CEO', 'GROUP_CEO', 'FINANCE', 'SCM', 'CONTRACT_OWNER', 'AGENCY' or 'SYSTEM'"}}]`
+        +   ],
+        +   [
+        +     'bad_kind',
+        +     `접수 실패: [{'type': 'literal_error', 'loc': ['body', 'kind'], 'msg': "Input should be 'CONTRACT_RENEWAL_NOTICE', 'BUDGET_PLAN_BATCH', 'AGENCY_COUNTER_OFFER', 'MARKETING_CLAIM', 'FINANCE_OVERDUE_AR' or 'FREE_TEXT'", 'input': 'UNKNOWN_KIND', 'ctx': {'expected': "'CONTRACT_RENEWAL_NOTICE', 'BUDGET_PLAN_BATCH', 'AGENCY_COUNTER_OFFER', 'MARKETING_CLAIM', 'FINANCE_OVERDUE_AR' or 'FREE_TEXT'"}}]`
+        +   ],
+        +   [
+        +     'bad_reply',
+        +     `[{'type': 'literal_error', 'loc': ['body', 'reply_key'], 'msg': "Input should be 'agency_payment_schedule' or 'agency_accepts_termination'", 'input': 'nope', 'ctx': {'expected': "'agency_payment_schedule' or 'agency_accepts_termination'"}}]`
+        +   ],
+        +   [
+        +     'bad_pending_role',
+        +     'CEO 승인 대기 건이 없습니다.'
+        +   ]
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0:
+          0: 'bad_action'
+          1: `거부됨: [{'type': 'literal_error', 'loc': ['body', 'action'], 'msg': "Input should be 'approve', 'reject' or 'request_info'", 'input': 'approve!!', 'ctx': {'expected': "'approve', 'reject' or 'request_info'"}}]`
+        1:
+          0: 'bad_role'
+          1: `거부됨: [{'type': 'literal_error', 'loc': ['body', 'actor'], 'msg': "Input should be 'MARKETING_TEAM', 'MASIL_CEO', 'GROUP_CEO', 'FINANCE', 'SCM', 'CONTRACT_OWNER', 'AGENCY' or 'SYSTEM'", 'input': 'CEO', 'ctx': {'expected': "'MARKETING_TEAM', 'MASIL_CEO', 'GROUP_CEO', 'FINANCE', 'SCM', 'CONTRACT_OWNER', 'AGENCY' or 'SYSTEM'"}}]`
+        2:
+          0: 'bad_kind'
+          1: `접수 실패: [{'type': 'literal_error', 'loc': ['body', 'kind'], 'msg': "Input should be 'CONTRACT_RENEWAL_NOTICE', 'BUDGET_PLAN_BATCH', 'AGENCY_COUNTER_OFFER', 'MARKETING_CLAIM', 'FINANCE_OVERDUE_AR' or 'FREE_TEXT'", 'input': 'UNKNOWN_KIND', 'ctx': {'expected': "'CONTRACT_RENEWAL_NOTICE', 'BUDGET_PLAN_BATCH', 'AGENCY_COUNTER_OFFER', 'MARKETING_CLAIM', 'FINANCE_OVERDUE_AR' or 'FREE_TEXT'"}}]`
+        3:
+          0: 'bad_reply'
+          1: `[{'type': 'literal_error', 'loc': ['body', 'reply_key'], 'msg': "Input should be 'agency_payment_schedule' or 'agency_accepts_termination'", 'input': 'nope', 'ctx': {'expected': "'agency_payment_schedule' or 'agency_accepts_termination'"}}]`
+        4:
+          0: 'bad_pending_role'
+          1: 'CEO 승인 대기 건이 없습니다.'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:84:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: N04 MCP에 이상한 건 ID('../snapshot' 등)를 넣어도 다른 API를 부르거나 멈추지 않고 형식 오류로 안내
+    not ok 4 - N04 MCP에 이상한 건 ID('../snapshot' 등)를 넣어도 다른 API를 부르거나 멈추지 않고 형식 오류로 안내
+      ---
+      duration_ms: 1334.936473
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        get_traversal: Error executing tool get_case | get_etc: Not Found | decide_traversal: 거부됨: Not Found
+        + actual - expected
+        
+        + [
+        +   [
+        +     'get_traversal',
+        +     'Error executing tool get_case'
+        +   ],
+        +   [
+        +     'get_etc',
+        +     'Not Found'
+        +   ],
+        +   [
+        +     'decide_traversal',
+        +     '거부됨: Not Found'
+        +   ]
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0:
+          0: 'get_traversal'
+          1: 'Error executing tool get_case'
+        1:
+          0: 'get_etc'
+          1: 'Not Found'
+        2:
+          0: 'decide_traversal'
+          1: '거부됨: Not Found'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:89:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..4
+not ok 2 - 메신저 채널(MCP) — 원격 보안과 입력 오류
+  ---
+  duration_ms: 10891.480228
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:66:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 감사 로그·장기 사용·날짜 한계
+    # Subtest: K01 감사 로그가 200건을 넘어도 가장 오래된 기록까지 화면에서 찾아 볼 수 있음(서버 모드)
+    not ok 1 - K01 감사 로그가 200건을 넘어도 가장 오래된 기록까지 화면에서 찾아 볼 수 있음(서버 모드)
+      ---
+      duration_ms: 7132.307602
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.click: Timeout 5000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('[data-testid="audit-all"]')[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:104:50
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:9)
+      ...
+    # Subtest: K02 메모 500건이 쌓여도 결정할 기안이 목록 위쪽에 보이고, 클릭 반응 100ms·저장 크기 2MB 이내(브라우저 모드)
+    not ok 2 - K02 메모 500건이 쌓여도 결정할 기안이 목록 위쪽에 보이고, 클릭 반응 100ms·저장 크기 2MB 이내(브라우저 모드)
+      ---
+      duration_ms: 786.855705
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: '결정할 기안 목록이 33390px 아래에 있음(메모에 묻힘)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:129:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: D01 시뮬레이션 날짜 한계(2027-06-30)를 브라우저 모드도 서버와 똑같이 지키고, 이유를 알려 줌
+    not ok 3 - D01 시뮬레이션 날짜 한계(2027-06-30)를 브라우저 모드도 서버와 똑같이 지키고, 이유를 알려 줌
+      ---
+      duration_ms: 400.373483
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:16:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        브라우저 모드가 한계를 넘어 7월 1일로 진행
+        
+        '7월 1일' !== '6월 30일'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: '6월 30일'
+      actual: '7월 1일'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:145:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:18:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..3
+not ok 3 - 감사 로그·장기 사용·날짜 한계
+  ---
+  duration_ms: 8320.085482
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round6.e2e.test.cjs:93:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..3
+# tests 11
+# suites 3
+# pass 4
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29860.894414

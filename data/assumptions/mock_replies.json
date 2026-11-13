@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "origin": "MOCK",
+    "note": "외부 회신(에이전시·재무)은 실제로 보내지 않고 이 파일의 모의 회신으로 대신한다. 유리한 회신만 두지 않도록 수용/역제안/정보누락 회신을 함께 둔다."
+  },
+  "agency_counter_offer": {
+    "reply_id": "MR-001",
+    "from": "AGENCY",
+    "contract_id": "CT-INF001-2025",
+    "summary": "고정 피 28억 → 18억으로 인하, 성과 피는 GMV의 3%로 변경 제안. 전속 조건 유지. 담당자 연락처 010-2345-6789",
+    "fixed_fee_krw": 1800000000,
+    "performance_fee": "GMV 3%",
+    "payment_schedule": null
+  },
+  "agency_payment_schedule": {
+    "reply_id": "MR-002",
+    "from": "AGENCY",
+    "contract_id": "CT-INF001-2025",
+    "summary": "고정 피는 분기 선급. 1회차(4.5억)는 2026-08-14 지급 요청. 계좌 110-234-567890",
+    "payment_schedule": [
+      {
+        "date": "2026-08-14",
+        "amount_krw": 450000000
+      },
+      {
+        "date": "2026-11-14",
+        "amount_krw": 450000000
+      },
+      {
+        "date": "2027-02-14",
+        "amount_krw": 450000000
+      },
+      {
+        "date": "2027-05-14",
+        "amount_krw": 450000000
+      }
+    ]
+  },
+  "agency_accepts_termination": {
+    "reply_id": "MR-003",
+    "from": "AGENCY",
+    "contract_id": "CT-INF001-2025",
+    "summary": "미갱신 통보 수령 확인. 2026-08-31 계약 종료에 동의."
+  },
+  "marketing_claim_report": {
+    "reply_id": "MR-004",
+    "from": "MARKETING_TEAM",
+    "summary": "혜인 캠페인 GMV 1위(표본 GMV 4.2억), 브랜드 인지도 기여 큼 — 갱신 필요(마케팅팀 의견)",
+    "kind": "CLAIM"
+  },
+  "finance_overdue_ar": {
+    "reply_id": "MR-005",
+    "from": "FINANCE",
+    "summary": "연체 매출채권 1.80억(MAR-0003·0009·0012·0015·0018·0021)은 기준일 회수가 불확실 — 13주 전망에서 제외 요청",
+    "cash_assumption": "CONSERVATIVE",
+    "kind": "CONDITION"
+  }
+}

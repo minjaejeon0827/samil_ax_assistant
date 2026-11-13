@@ -1,0 +1,151 @@
+TAP version 13
+# Subtest: 브라우저 단독 — 저장소와 탭
+    # Subtest: R01 같은 브라우저의 두 탭: 한 탭의 처리 결과가 다른 탭의 작업으로 지워지지 않음
+    ok 1 - R01 같은 브라우저의 두 탭: 한 탭의 처리 결과가 다른 탭의 작업으로 지워지지 않음
+      ---
+      duration_ms: 972.129308
+      type: 'test'
+      ...
+    # Subtest: R02 다른 탭의 변경이 새로고침 없이 이 탭에 반영됨
+    ok 2 - R02 다른 탭의 변경이 새로고침 없이 이 탭에 반영됨
+      ---
+      duration_ms: 423.874652
+      type: 'test'
+      ...
+    # Subtest: R03 이전 버전 저장 형식이 남아 있으면 이유를 알리고, 이전 기록을 따로 보관
+    ok 3 - R03 이전 버전 저장 형식이 남아 있으면 이유를 알리고, 이전 기록을 따로 보관
+      ---
+      duration_ms: 121.610014
+      type: 'test'
+      ...
+    # Subtest: R04 손상된 저장 데이터·저장소 차단에서도 화면이 뜨고 처리 가능
+    ok 4 - R04 손상된 저장 데이터·저장소 차단에서도 화면이 뜨고 처리 가능
+      ---
+      duration_ms: 504.832925
+      type: 'test'
+      ...
+    1..4
+ok 1 - 브라우저 단독 — 저장소와 탭
+  ---
+  duration_ms: 4159.683637
+  type: 'suite'
+  ...
+# Subtest: 브라우저 단독 — 접근성·모바일·긴 사용
+    # Subtest: R05 키보드만으로 접수 → 결재 서류 열기 → 역할 변경 → 승인
+    ok 1 - R05 키보드만으로 접수 → 결재 서류 열기 → 역할 변경 → 승인
+      ---
+      duration_ms: 238.420463
+      type: 'test'
+      ...
+    # Subtest: R06 모바일(iPhone 13) 전체 여정: 모든 탭에서 가로 넘침 없음, 결재까지 완료
+    ok 2 - R06 모바일(iPhone 13) 전체 여정: 모든 탭에서 가로 넘침 없음, 결재까지 완료
+      ---
+      duration_ms: 990.500275
+      type: 'test'
+      ...
+    # Subtest: R07 '처음부터' 확인창에서 취소하면 기록이 그대로
+    ok 3 - R07 '처음부터' 확인창에서 취소하면 기록이 그대로
+      ---
+      duration_ms: 472.680999
+      type: 'test'
+      ...
+    # Subtest: R08 아주 긴 사용(기안 25건 + 시계 75일 + 조건 변경 반복) 후에도 클릭 반응 100ms 이내, 저장 크기 안정
+    ok 4 - R08 아주 긴 사용(기안 25건 + 시계 75일 + 조건 변경 반복) 후에도 클릭 반응 100ms 이내, 저장 크기 안정
+      ---
+      duration_ms: 4540.864108
+      type: 'test'
+      ...
+    1..4
+ok 2 - 브라우저 단독 — 접근성·모바일·긴 사용
+  ---
+  duration_ms: 6243.104743
+  type: 'suite'
+  ...
+# Subtest: 서버 모드 — 다중 사용자·장애·중복
+    # Subtest: R09 API·MCP로 같은 사건을 두 번 넣어도 중복 건이 생기지 않음
+    ok 1 - R09 API·MCP로 같은 사건을 두 번 넣어도 중복 건이 생기지 않음
+      ---
+      duration_ms: 323.844117
+      type: 'test'
+      ...
+    # Subtest: R10 화면에서 접수 버튼을 빠르게 두 번 눌러도 한 번만 접수
+    ok 2 - R10 화면에서 접수 버튼을 빠르게 두 번 눌러도 한 번만 접수
+      ---
+      duration_ms: 1734.849763
+      type: 'test'
+      ...
+    # Subtest: R11 두 결재자가 동시에 보고 있을 때: 늦은 쪽은 충돌 안내와 함께 최신 상태로 갱신
+    ok 3 - R11 두 결재자가 동시에 보고 있을 때: 늦은 쪽은 충돌 안내와 함께 최신 상태로 갱신
+      ---
+      duration_ms: 1614.877776
+      type: 'test'
+      ...
+    # Subtest: R12 다른 사용자의 결정이 내 화면에 자동으로 반영(서버 모드)
+    ok 4 - R12 다른 사용자의 결정이 내 화면에 자동으로 반영(서버 모드)
+      ---
+      duration_ms: 2677.694997
+      type: 'test'
+      ...
+    # Subtest: R18 자동 갱신의 대기 중 네트워크 사용량이 작음(변경 없을 때 10초에 10KB 미만)
+    ok 5 - R18 자동 갱신의 대기 중 네트워크 사용량이 작음(변경 없을 때 10초에 10KB 미만)
+      ---
+      duration_ms: 10001.488533
+      type: 'test'
+      ...
+    # Subtest: R13 서버가 꺼졌을 때 한국어로 원인과 할 일을 안내하고, 서버 데이터인 척 브라우저 데이터를 보여주지 않음
+    ok 6 - R13 서버가 꺼졌을 때 한국어로 원인과 할 일을 안내하고, 서버 데이터인 척 브라우저 데이터를 보여주지 않음
+      ---
+      duration_ms: 2834.119376
+      type: 'test'
+      ...
+    # Subtest: R14 서버가 다시 켜지면 화면이 저절로 복구
+    ok 7 - R14 서버가 다시 켜지면 화면이 저절로 복구
+      ---
+      duration_ms: 1366.925405
+      type: 'test'
+      ...
+    # Subtest: R17 서버가 입력을 거부(422)하면 무엇이 문제인지 읽을 수 있게 안내
+    ok 8 - R17 서버가 입력을 거부(422)하면 무엇이 문제인지 읽을 수 있게 안내
+      ---
+      duration_ms: 112.33128
+      type: 'test'
+      ...
+# HTTP Request: GET http://localhost:8000/api/cases/CS-9999 "HTTP/1.1 404 Not Found"
+# HTTP Request: POST http://localhost:8000/api/events "HTTP/1.1 202 Accepted"
+# HTTP Request: GET http://localhost:8000/api/jobs/bcb221cc9c25 "HTTP/1.1 200 OK"
+# HTTP Request: POST http://localhost:8000/api/events "HTTP/1.1 202 Accepted"
+# HTTP Request: GET http://localhost:8000/api/jobs/ffe33d150bdf "HTTP/1.1 200 OK"
+    # Subtest: R15 서버 모드 '처음부터' → 서버 기록 초기화
+    ok 9 - R15 서버 모드 '처음부터' → 서버 기록 초기화
+      ---
+      duration_ms: 441.600172
+      type: 'test'
+      ...
+    1..9
+ok 3 - 서버 모드 — 다중 사용자·장애·중복
+  ---
+  duration_ms: 21108.596774
+  type: 'suite'
+  ...
+# Subtest: MCP — 오류 경로
+    # Subtest: R16 MCP: 없는 건 조회·서버 중단 시 사람이 읽을 수 있는 안내
+    ok 1 - R16 MCP: 없는 건 조회·서버 중단 시 사람이 읽을 수 있는 안내
+      ---
+      duration_ms: 1979.56476
+      type: 'test'
+      ...
+    1..1
+ok 4 - MCP — 오류 경로
+  ---
+  duration_ms: 1979.701798
+  type: 'suite'
+  ...
+1..4
+# tests 18
+# suites 4
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33942.557851

@@ -1,0 +1,91 @@
+TAP version 13
+# Subtest: 외부 LLM 경로(OpenAI 호환)
+    # Subtest: L01 LLM이 정상이면 설명문과 판사가 LLM으로 동작하고, 처리 건이 결재로 올라감
+    ok 1 - L01 LLM이 정상이면 설명문과 판사가 LLM으로 동작하고, 처리 건이 결재로 올라감
+      ---
+      duration_ms: 479.999998
+      type: 'test'
+      ...
+    # Subtest: L02 LLM이 사실에 없는 금액을 지어내면(판사 LLM이 관대해도) 승인자에게 그 숫자가 보이지 않음
+    ok 2 - L02 LLM이 사실에 없는 금액을 지어내면(판사 LLM이 관대해도) 승인자에게 그 숫자가 보이지 않음
+      ---
+      duration_ms: 76.053161
+      type: 'test'
+      ...
+    # Subtest: L03 LLM 서버가 오류(500)를 내도 접수·판단은 끝나고, 설명문은 근거 기반 대체문으로
+    ok 3 - L03 LLM 서버가 오류(500)를 내도 접수·판단은 끝나고, 설명문은 근거 기반 대체문으로
+      ---
+      duration_ms: 493.153427
+      type: 'test'
+      ...
+    # Subtest: L04 LLM 서버가 응답하지 않아도 접수가 10초 안에 끝나고, 이어지는 건은 기다리지 않음(시간 제한 + 회로 차단)
+    ok 4 - L04 LLM 서버가 응답하지 않아도 접수가 10초 안에 끝나고, 이어지는 건은 기다리지 않음(시간 제한 + 회로 차단)
+      ---
+      duration_ms: 6971.440113
+      type: 'test'
+      ...
+    # Subtest: L05 LLM 지연(호출당 0.5초)에서도 기안 25건 일괄 5초·조건 변경 3초 이내
+    ok 5 - L05 LLM 지연(호출당 0.5초)에서도 기안 25건 일괄 5초·조건 변경 3초 이내
+      ---
+      duration_ms: 2554.272871
+      type: 'test'
+      ...
+    # Subtest: L06 LLM이 어떤 말을 해도 판단(권고·결재자·상태)은 오프라인 모드와 같음
+    ok 6 - L06 LLM이 어떤 말을 해도 판단(권고·결재자·상태)은 오프라인 모드와 같음
+      ---
+      duration_ms: 1107.341587
+      type: 'test'
+      ...
+    # Subtest: L07 승인자 화면: 설명문을 누가 썼는지(LLM·대체문)와 판사 결과를 사실대로 표시
+    ok 7 - L07 승인자 화면: 설명문을 누가 썼는지(LLM·대체문)와 판사 결과를 사실대로 표시
+      ---
+      duration_ms: 1144.737889
+      type: 'test'
+      ...
+    1..7
+ok 1 - 외부 LLM 경로(OpenAI 호환)
+  ---
+  duration_ms: 15244.169746
+  type: 'suite'
+  ...
+# Subtest: 처음 쓰는 사람의 경로
+    # Subtest: C01 새 환경(전역 NODE_PATH 없음)에서도 E2E 도구가 Playwright를 찾음
+    ok 1 - C01 새 환경(전역 NODE_PATH 없음)에서도 E2E 도구가 Playwright를 찾음
+      ---
+      duration_ms: 452.269884
+      type: 'test'
+      ...
+    # Subtest: C02 데이터 재생성(scripts/build_dataset.py)을 다시 돌려도 결과 파일이 바이트 단위로 같음
+    ok 2 - C02 데이터 재생성(scripts/build_dataset.py)을 다시 돌려도 결과 파일이 바이트 단위로 같음
+      ---
+      duration_ms: 994.200751
+      type: 'test'
+      ...
+    1..2
+ok 2 - 처음 쓰는 사람의 경로
+  ---
+  duration_ms: 1446.780065
+  type: 'suite'
+  ...
+# Subtest: 결재 서류 인쇄
+    # Subtest: P01 결재 서류를 인쇄·PDF로 저장하면 서류만 나오고(메뉴·버튼·안내 제외) 2쪽 이내
+    ok 1 - P01 결재 서류를 인쇄·PDF로 저장하면 서류만 나오고(메뉴·버튼·안내 제외) 2쪽 이내
+      ---
+      duration_ms: 403.903302
+      type: 'test'
+      ...
+    1..1
+ok 3 - 결재 서류 인쇄
+  ---
+  duration_ms: 404.141889
+  type: 'suite'
+  ...
+1..3
+# tests 10
+# suites 3
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17292.547668

@@ -1,0 +1,244 @@
+TAP version 13
+# Subtest: 보안·입력
+    # Subtest: A01 헬스 체크
+    ok 1 - A01 헬스 체크
+      ---
+      duration_ms: 5.450611
+      type: 'test'
+      ...
+    # Subtest: A02 API 키: 없음 401 · 틀림 403 · 맞음 200
+    ok 2 - A02 API 키: 없음 401 · 틀림 403 · 맞음 200
+      ---
+      duration_ms: 17.00988
+      type: 'test'
+      ...
+    # Subtest: A03 CORS: 허용 출처만 Access-Control-Allow-Origin
+    ok 3 - A03 CORS: 허용 출처만 Access-Control-Allow-Origin
+      ---
+      duration_ms: 3.37479
+      type: 'test'
+      ...
+    # Subtest: A04 Pydantic 검증: 알 수 없는 사건·잘못된 날짜·역할 → 422
+    ok 4 - A04 Pydantic 검증: 알 수 없는 사건·잘못된 날짜·역할 → 422
+      ---
+      duration_ms: 10.44459
+      type: 'test'
+      ...
+    # Subtest: A05 없는 건 조회 404 · 없는 작업 완료 404
+    not ok 5 - A05 없는 건 조회 404 · 없는 작업 완료 404
+      ---
+      duration_ms: 7.922547
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:15:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        500 !== 404
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 404
+      actual: 500
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:65:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:17:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..5
+not ok 1 - 보안·입력
+  ---
+  duration_ms: 1059.636785
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:45:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 시나리오(HTTP)
+    # Subtest: A06 정상: 접수(202→job) → 권한 거부 409 → CEO 승인 → 작업 4건 → 발송 → 상태
+    ok 1 - A06 정상: 접수(202→job) → 권한 거부 409 → CEO 승인 → 작업 4건 → 발송 → 상태
+      ---
+      duration_ms: 202.499566
+      type: 'test'
+      ...
+    # Subtest: A07 조건 변경: 기안 승인 후 연체 채권 회신 → 승인 무효·작업 취소·CEO 재상신
+    ok 2 - A07 조건 변경: 기안 승인 후 연체 채권 회신 → 승인 무효·작업 취소·CEO 재상신
+      ---
+      duration_ms: 334.028255
+      type: 'test'
+      ...
+    # Subtest: A08 정보 부족 → 회신 → 거절: 역제안 확인 필요 → 지급 일정 → CEO 거절 → 연계 기안 부결
+    ok 3 - A08 정보 부족 → 회신 → 거절: 역제안 확인 필요 → 지급 일정 → CEO 거절 → 연계 기안 부결
+      ---
+      duration_ms: 65.700625
+      type: 'test'
+      ...
+    # Subtest: A09 미갱신 통보 발송 → 에이전시 수령 확인 → 계약 상태 '계약 종료'로 한글 표기
+    not ok 4 - A09 미갱신 통보 발송 → 에이전시 수령 확인 → 계약 상태 '계약 종료'로 한글 표기
+      ---
+      duration_ms: 35.060247
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:15:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /종료/. Input:
+        
+        'TERMINATED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: 'TERMINATED'
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:120:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:17:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: A10 역제안 수용(갱신 승인) 시 '상위 계약 대기' 기안이 풀려 다시 판단되어야 한다
+    not ok 5 - A10 역제안 수용(갱신 승인) 시 '상위 계약 대기' 기안이 풀려 다시 판단되어야 한다
+      ---
+      duration_ms: 259.069722
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:15:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        여전히 보류: PLAN-001,PLAN-002,PLAN-003
+        + actual - expected
+        
+        + [
+        +   'PLAN-001',
+        +   'PLAN-002',
+        +   'PLAN-003'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'PLAN-001'
+        1: 'PLAN-002'
+        2: 'PLAN-003'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:134:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:17:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: A11 사람이 요청한 '확인 필요'는 조건 변경 재검증에도 유지되어야 한다
+    not ok 6 - A11 사람이 요청한 '확인 필요'는 조건 변경 재검증에도 유지되어야 한다
+      ---
+      duration_ms: 326.61639
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:15:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'PENDING_APPROVAL'
+        - 'NEEDS_INFO'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'NEEDS_INFO'
+      actual: 'PENDING_APPROVAL'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:144:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:17:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: A12 확인 요청 작업을 완료하면 건이 다시 판단되어 결재로 돌아와야 한다
+    ok 7 - A12 확인 요청 작업을 완료하면 건이 다시 판단되어 결재로 돌아와야 한다
+      ---
+      duration_ms: 29.83091
+      type: 'test'
+      ...
+    # Subtest: A13 기한 감시: 미결정 계약 → 7/18 진행 시 자동 갱신 기록
+    ok 8 - A13 기한 감시: 미결정 계약 → 7/18 진행 시 자동 갱신 기록
+      ---
+      duration_ms: 16.789605
+      type: 'test'
+      ...
+    1..8
+not ok 2 - 시나리오(HTTP)
+  ---
+  duration_ms: 1270.368391
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/api.e2e.test.cjs:69:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 동시성·성능
+    # Subtest: A14 두 승인자가 동시에 같은 건 결정 → 정확히 1건만 반영
+    ok 1 - A14 두 승인자가 동시에 같은 건 결정 → 정확히 1건만 반영
+      ---
+      duration_ms: 17.331664
+      type: 'test'
+      ...
+    # Subtest: A15 처리 중에도 다른 사용자 조회 응답 지연 없음(일괄 판단 중 snapshot < 500ms)
+    ok 2 - A15 처리 중에도 다른 사용자 조회 응답 지연 없음(일괄 판단 중 snapshot < 500ms)
+      ---
+      duration_ms: 151.218576
+      type: 'test'
+      ...
+    # Subtest: A16 스냅샷 응답 크기·시간(전 시나리오 후): 400KB 이하·300ms 이하
+    ok 3 - A16 스냅샷 응답 크기·시간(전 시나리오 후): 400KB 이하·300ms 이하
+      ---
+      duration_ms: 212.035113
+      type: 'test'
+      ...
+    # Subtest: A17 파일 영속 저장소(REPO_PATH, Docker 기본값)에서 기안 25건 일괄 판단 1.5초 이내
+    ok 4 - A17 파일 영속 저장소(REPO_PATH, Docker 기본값)에서 기안 25건 일괄 판단 1.5초 이내
+      ---
+      duration_ms: 2835.429103
+      type: 'test'
+      ...
+    1..4
+ok 3 - 동시성·성능
+  ---
+  duration_ms: 3216.32226
+  type: 'suite'
+  ...
+# HTTP Request: POST http://localhost:8000/api/events "HTTP/1.1 202 Accepted"
+# HTTP Request: GET http://localhost:8000/api/snapshot "HTTP/1.1 200 OK"
+# HTTP Request: POST http://localhost:8000/api/cases/CS-0001/decision "HTTP/1.1 409 Conflict"
+# HTTP Request: POST http://localhost:8000/api/cases/CS-0001/decision "HTTP/1.1 200 OK"
+# HTTP Request: GET http://localhost:8000/api/cases/CS-0001 "HTTP/1.1 200 OK"
+# HTTP Request: POST http://localhost:8000/api/replies "HTTP/1.1 409 Conflict"
+# HTTP Request: GET http://localhost:8000/api/snapshot "HTTP/1.1 200 OK"
+# Subtest: MCP 채널
+    # Subtest: A18 MCP stdio 클라이언트: 도구 6종·사건 주입·권한 거부·승인·조회·발송함
+    ok 1 - A18 MCP stdio 클라이언트: 도구 6종·사건 주입·권한 거부·승인·조회·발송함
+      ---
+      duration_ms: 2372.847108
+      type: 'test'
+      ...
+    1..1
+ok 4 - MCP 채널
+  ---
+  duration_ms: 2373.068624
+  type: 'suite'
+  ...
+1..4
+# tests 18
+# suites 4
+# pass 14
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8284.575433

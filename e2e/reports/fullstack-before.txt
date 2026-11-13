@@ -1,0 +1,83 @@
+TAP version 13
+# Subtest: React ↔ FastAPI
+    # Subtest: S01 실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시
+    ok 1 - S01 실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시
+      ---
+      duration_ms: 759.662801
+      type: 'test'
+      ...
+    # Subtest: S02 화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)
+    ok 2 - S02 화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)
+      ---
+      duration_ms: 333.75696
+      type: 'test'
+      ...
+    # Subtest: S03 화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건
+    ok 3 - S03 화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건
+      ---
+      duration_ms: 213.682311
+      type: 'test'
+      ...
+    # Subtest: S04 권한 없는 승인 시도 → 서버 409 메시지를 화면에 표시
+    ok 4 - S04 권한 없는 승인 시도 → 서버 409 메시지를 화면에 표시
+      ---
+      duration_ms: 544.732962
+      type: 'test'
+      ...
+    # Subtest: S05 새로고침 후에도 서버 모드·상태 유지
+    ok 5 - S05 새로고침 후에도 서버 모드·상태 유지
+      ---
+      duration_ms: 105.218725
+      type: 'test'
+      ...
+    # Subtest: S06 콘솔 오류 0건
+    not ok 6 - S06 콘솔 오류 0건
+      ---
+      duration_ms: 1.49486
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/fullstack.e2e.test.cjs:10:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'console: Failed to load resource: the server responded with a status of 409 (Conflict)'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'console: Failed to load resource: the server responded with a status of 409 (Conflict)'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/fullstack.e2e.test.cjs:65:45
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/fullstack.e2e.test.cjs:12:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..6
+not ok 1 - React ↔ FastAPI
+  ---
+  duration_ms: 3370.297088
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/fullstack.e2e.test.cjs:27:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 6
+# suites 1
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3812.442311

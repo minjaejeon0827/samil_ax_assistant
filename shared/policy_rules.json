@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "as_of": "2026-07-01",
+    "note": "백엔드(Python)와 프론트엔드(TS)가 동일하게 읽는 단일 규칙 소스. 모든 값은 원본 문서에서 옮겨 왔으며 source 필드에 근거 파일을 남긴다."
+  },
+  "covenant": {
+    "min_cash_krw": 3000000000,
+    "rule": "매 영업일 closing_balance < 30억이면 위반(기한이익상실). 기간 평균 아님.",
+    "source": "00_common/calculation_definitions.md §1.2, 02_masil/financials/covenant_terms_ms.md"
+  },
+  "authority": {
+    "campaign_item_team_limit_krw": 10000000,
+    "campaign_plan_total_ceo_report_krw": 100000000,
+    "exclusive_contract_ceo_limit_krw": 1000000000,
+    "covenant_window_override": true,
+    "source": "00_common/approval_authority_policy.md"
+  },
+  "roles": {
+    "MARKETING_TEAM": "마케팅팀",
+    "MASIL_CEO": "Masil 대표",
+    "GROUP_CEO": "그룹 CEO/이사회",
+    "FINANCE": "Masil 재무팀",
+    "SCM": "SCM",
+    "CONTRACT_OWNER": "계약 담당",
+    "AGENCY": "에이전시(외부·모의)"
+  },
+  "contracts": [
+    {
+      "contract_id": "CT-INF001-2025",
+      "influencer_id": "INF-001",
+      "influencer_name": "혜인",
+      "type": "연간 전속",
+      "fixed_fee_krw": 2800000000,
+      "performance_fee": "GMV 연동(별도 정산, 조건 원문 미제공)",
+      "expiry_date": "2026-08-31",
+      "notice_deadline": "2026-07-17",
+      "auto_renewal": true,
+      "early_termination_penalty_ratio": 0.5,
+      "fixed_fee_payment_schedule": null,
+      "scale": "FULL",
+      "source": "02_masil/marketing/inf001_exclusive_contract_notice.md"
+    }
+  ],
+  "recommendation_thresholds": {
+    "real_roas_reject_below": 0.0,
+    "real_roas_conditional_below": 1.0,
+    "note": "실질 ROAS = 공헌이익/마케팅비. 0 미만이면 마케팅비를 회수하지 못함 → 재배분 권고. 0~1은 축소·조건부. 참가자 정의 임계값(가정 A-04)."
+  },
+  "supply": {
+    "safety_stock_weeks_min_default": 4,
+    "line_utilization_alert_pct": 95,
+    "source": "02_masil/master/m_sku_ms.csv, production/strat_capacity_cv.csv"
+  },
+  "regulation": {
+    "copy_max_retry": 2,
+    "source": "검증 함수 계약서 v1.2 §6.2 (코드잇 스프린트 팀 프로젝트 재사용)"
+  }
+}

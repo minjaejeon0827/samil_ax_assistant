@@ -1,0 +1,265 @@
+TAP version 13
+# Subtest: 두 단계 설명 × 조건 변경·재시작
+    # Subtest: AD01 설명을 쓰는 사이 조건을 연달아 바꿔도(90일 → 45일 → 보수 가정), 남는 설명은 지금 판단의 승인자와 맞고 모두 LLM 설명
+    not ok 1 - AD01 설명을 쓰는 사이 조건을 연달아 바꿔도(90일 → 45일 → 보수 가정), 남는 설명은 지금 판단의 승인자와 맞고 모두 LLM 설명
+      ---
+      duration_ms: 6119.361625
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        지난 조건으로 쓴 설명이 남음 14건
+        + actual - expected
+        
+        + [
+        +   "PLAN-001: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-002: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-003: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-004: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-008: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-009: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-010: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-015: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-016: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-017: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-021: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-022: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-023: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'",
+        +   "PLAN-024: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: "PLAN-001: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        1: "PLAN-002: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        2: "PLAN-003: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        3: "PLAN-004: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        4: "PLAN-008: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        5: "PLAN-009: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        6: "PLAN-010: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        7: "PLAN-015: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        8: "PLAN-016: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        9: "PLAN-017: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        10: "PLAN-021: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        11: "PLAN-022: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        12: "PLAN-023: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+        13: "PLAN-024: 설명 'Masil 대표' ≠ 판단 '그룹 CEO/이사회'"
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:60:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AD02 백그라운드에서 설명을 쓰는 중 서버가 강제 종료돼도, 다시 켜면 15초 안에 '작성 중'이 없어지고 LLM 설명으로 마무리됨
+    not ok 2 - AD02 백그라운드에서 설명을 쓰는 중 서버가 강제 종료돼도, 다시 켜면 15초 안에 '작성 중'이 없어지고 LLM 설명으로 마무리됨
+      ---
+      duration_ms: 18784.858241
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        재시작 15초 뒤에도 '작성 중' 26건
+        + actual - expected
+        
+        + [
+        +   'CT-INF001-2025',
+        +   'PLAN-001',
+        +   'PLAN-002',
+        +   'PLAN-003',
+        +   'PLAN-004',
+        +   'PLAN-005',
+        +   'PLAN-006',
+        +   'PLAN-007',
+        +   'PLAN-008',
+        +   'PLAN-009',
+        +   'PLAN-010',
+        +   'PLAN-011',
+        +   'PLAN-012',
+        +   'PLAN-013',
+        +   'PLAN-014',
+        +   'PLAN-015',
+        +   'PLAN-016',
+        +   'PLAN-017',
+        +   'PLAN-018',
+        +   'PLAN-019',
+        +   'PLAN-020',
+        +   'PLAN-021',
+        +   'PLAN-022',
+        +   'PLAN-023',
+        +   'PLAN-024',
+        +   'PLAN-025'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'CT-INF001-2025'
+        1: 'PLAN-001'
+        2: 'PLAN-002'
+        3: 'PLAN-003'
+        4: 'PLAN-004'
+        5: 'PLAN-005'
+        6: 'PLAN-006'
+        7: 'PLAN-007'
+        8: 'PLAN-008'
+        9: 'PLAN-009'
+        10: 'PLAN-010'
+        11: 'PLAN-011'
+        12: 'PLAN-012'
+        13: 'PLAN-013'
+        14: 'PLAN-014'
+        15: 'PLAN-015'
+        16: 'PLAN-016'
+        17: 'PLAN-017'
+        18: 'PLAN-018'
+        19: 'PLAN-019'
+        20: 'PLAN-020'
+        21: 'PLAN-021'
+        22: 'PLAN-022'
+        23: 'PLAN-023'
+        24: 'PLAN-024'
+        25: 'PLAN-025'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:84:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 1 - 두 단계 설명 × 조건 변경·재시작
+  ---
+  duration_ms: 25170.625749
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:45:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 외부 LLM 사용량 한도
+    # Subtest: AD03 제공자가 동시 요청 4건을 넘으면 429를 돌려줘도, 기안 25건 모두 LLM 설명이 붙고 바로 다음 접수도 LLM을 씀(차단기 열리지 않음)
+    not ok 1 - AD03 제공자가 동시 요청 4건을 넘으면 429를 돌려줘도, 기안 25건 모두 LLM 설명이 붙고 바로 다음 접수도 LLM을 씀(차단기 열리지 않음)
+      ---
+      duration_ms: 2983.683269
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        LLM 설명이 아닌 건 18/26(429 24회)
+        + actual - expected
+        
+        + [
+        +   'PLAN-002:대체문(openai 오류)',
+        +   'PLAN-003:대체문(openai 오류)',
+        +   'PLAN-004:대체문(openai 오류)',
+        +   'PLAN-008:대체문(openai 오류)',
+        +   'PLAN-009:대체문(openai 오류)',
+        +   'PLAN-010:대체문(openai 오류)',
+        +   'PLAN-011:대체문(openai 오류)',
+        +   'PLAN-012:대체문(openai 오류)',
+        +   'PLAN-013:대체문(openai 오류)',
+        +   'PLAN-014:대체문(openai 오류)',
+        +   'PLAN-015:대체문(openai 오류)',
+        +   'PLAN-016:대체문(openai 오류)',
+        +   'PLAN-021:대체문(openai 차단 중)',
+        +   'PLAN-022:대체문(openai 차단 중)',
+        +   'PLAN-023:대체문(openai 차단 중)',
+        +   'PLAN-024:대체문(openai 차단 중)',
+        +   'PLAN-025:대체문(openai 차단 중)',
+        +   'CT-INF001-2025:대체문(openai 차단 중)'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'PLAN-002:대체문(openai 오류)'
+        1: 'PLAN-003:대체문(openai 오류)'
+        2: 'PLAN-004:대체문(openai 오류)'
+        3: 'PLAN-008:대체문(openai 오류)'
+        4: 'PLAN-009:대체문(openai 오류)'
+        5: 'PLAN-010:대체문(openai 오류)'
+        6: 'PLAN-011:대체문(openai 오류)'
+        7: 'PLAN-012:대체문(openai 오류)'
+        8: 'PLAN-013:대체문(openai 오류)'
+        9: 'PLAN-014:대체문(openai 오류)'
+        10: 'PLAN-015:대체문(openai 오류)'
+        11: 'PLAN-016:대체문(openai 오류)'
+        12: 'PLAN-021:대체문(openai 차단 중)'
+        13: 'PLAN-022:대체문(openai 차단 중)'
+        14: 'PLAN-023:대체문(openai 차단 중)'
+        15: 'PLAN-024:대체문(openai 차단 중)'
+        16: 'PLAN-025:대체문(openai 차단 중)'
+        17: 'CT-INF001-2025:대체문(openai 차단 중)'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:105:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AD04 조건을 연달아 세 번 바꿔도 지나간 분석의 설명에는 LLM을 부르지 않음(호출 수가 마지막 분석 1회분의 1.5배 이하)
+    not ok 2 - AD04 조건을 연달아 세 번 바꿔도 지나간 분석의 설명에는 LLM을 부르지 않음(호출 수가 마지막 분석 1회분의 1.5배 이하)
+      ---
+      duration_ms: 8513.935103
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: 'LLM 호출 147회(한 번 바꿀 때 52회)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:128:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 2 - 외부 LLM 사용량 한도
+  ---
+  duration_ms: 11498.153308
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round17.e2e.test.cjs:91:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 서버 모드 화면
+    # Subtest: AD05 '작성 중'인 처리 건을 열어 두면, 새로 고치지 않아도 10초 안에 LLM 설명과 판사 결과로 바뀜
+    ok 1 - AD05 '작성 중'인 처리 건을 열어 두면, 새로 고치지 않아도 10초 안에 LLM 설명과 판사 결과로 바뀜
+      ---
+      duration_ms: 10141.14479
+      type: 'test'
+      ...
+    1..1
+ok 3 - 서버 모드 화면
+  ---
+  duration_ms: 10141.620898
+  type: 'suite'
+  ...
+1..3
+# tests 5
+# suites 3
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 46985.444085

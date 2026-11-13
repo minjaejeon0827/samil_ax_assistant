@@ -1,0 +1,447 @@
+TAP version 13
+# --------------
+# CREATE DATABASE IF NOT EXISTS aurora_desk DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+# --------------
+# ERROR 1273 (HY000) at line 2: Unknown collation: 'utf8mb4_0900_ai_ci'
+# Subtest: 운영 저장소(MySQL 호환 DB)
+    # Subtest: M00 저장소 스키마(schema.sql)가 MySQL 호환 DB에 그대로 적용됨
+    not ok 1 - M00 저장소 스키마(schema.sql)가 MySQL 호환 DB에 그대로 적용됨
+      ---
+      duration_ms: 1.561524
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        --------------
+        CREATE DATABASE IF NOT EXISTS aurora_desk DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+        --------------
+        
+        ERROR 1273 (HY000) at line 2: Unknown collation: 'utf8mb4_0900_ai_ci'
+        + actual - expected
+        
+        + '--------------\n' +
+        +   'CREATE DATABASE IF NOT EXISTS aurora_desk DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci\n' +
+        +   '--------------\n' +
+        +   '\n' +
+        +   "ERROR 1273 (HY000) at line 2: Unknown collation: 'utf8mb4_0900_ai_ci'"
+        - null
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: ~
+      actual: |-
+        --------------
+        CREATE DATABASE IF NOT EXISTS aurora_desk DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+        --------------
+        
+        ERROR 1273 (HY000) at line 2: Unknown collation: 'utf8mb4_0900_ai_ci'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:85:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    # Subtest: M01 MySQL 저장소 서버 모드와 브라우저 모드에서 같은 시연 여정 → 처리 건·결재자·작업·계약 상태·발송함이 같음
+    ok 2 - M01 MySQL 저장소 서버 모드와 브라우저 모드에서 같은 시연 여정 → 처리 건·결재자·작업·계약 상태·발송함이 같음
+      ---
+      duration_ms: 17646.456714
+      type: 'test'
+      ...
+    # Subtest: M02 같은 동작이면 두 모드의 안내 문구가 같은 사실을 알려 줌(처리 건 수·생성 작업 수)
+    not ok 3 - M02 같은 동작이면 두 모드의 안내 문구가 같은 사실을 알려 줌(처리 건 수·생성 작업 수)
+      ---
+      duration_ms: 1.082147
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        계약 접수: 브라우저 "CS-0001 분석 완료 → 승인 대기" / 서버 "1건 분석 완료" | 계약 승인: 브라우저 "CS-0001 승인 · 작업 4건 생성" / 서버 "결정 반영" | 통보 발송: 브라우저 "작업 완료: 에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함) · 채널 발송(모의)" / 서버 "작업 완료" | 기안 25건 접수: 브라우저 "기안 25건 분석 완료" / 서버 "25건 분석 완료" | 카피 수정: 브라우저 "CS-0017 수정 카피 재검증 → 승인 대기" / 서버 "수정 반영" | PLAN-024 승인: 브라우저 "CS-0025 승인 · 작업 4건 생성" / 서버 "결정 반영" | 재무 조건 변경: 브라우저 "조건 변경 → 미결 24건 재검증 · 기승인 무효·재상신: PLAN-024" / 서버 "1건 분석 완료" | 역제안 접수: 브라우저 "CS-0027 역제안 접수 → 확인 필요 (연락처 마스킹)" / 서버 "" | 확인 요청 발송: 브라우저 "작업 완료: [확인 요청] 지급 일정(현금 유출일) 미확인 — 하회 구간(2026-07-21~2026-08-28) 포함 여부 판정 불가 → 에이전시에 지급 일정 회신 요청 · 채널 발송(모의)" / 서버 "작업 완료" | 지급 일정 회신: 브라우저 "에이전시 회신 반영 → 재분석 1건" / 서버 "회신 반영" | 역제안 거절: 브라우저 "CS-0027 거절 · 작업 4건 생성" / 서버 "결정 반영"
+        + actual - expected
+        
+        + [
+        +   [
+        +     '계약 접수',
+        +     'CS-0001 분석 완료 → 승인 대기',
+        +     '1건 분석 완료'
+        +   ],
+        +   [
+        +     '계약 승인',
+        +     'CS-0001 승인 · 작업 4건 생성',
+        +     '결정 반영'
+        +   ],
+        +   [
+        +     '통보 발송',
+        +     '작업 완료: 에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함) · 채널 발송(모의)',
+        +     '작업 완료'
+        +   ],
+        +   [
+        +     '기안 25건 접수',
+        +     '기안 25건 분석 완료',
+        +     '25건 분석 완료'
+        +   ],
+        +   [
+        +     '카피 수정',
+        +     'CS-0017 수정 카피 재검증 → 승인 대기',
+        +     '수정 반영'
+        +   ],
+        +   [
+        +     'PLAN-024 승인',
+        +     'CS-0025 승인 · 작업 4건 생성',
+        +     '결정 반영'
+        +   ],
+        +   [
+        +     '재무 조건 변경',
+        +     '조건 변경 → 미결 24건 재검증 · 기승인 무효·재상신: PLAN-024',
+        +     '1건 분석 완료'
+        +   ],
+        +   [
+        +     '역제안 접수',
+        +     'CS-0027 역제안 접수 → 확인 필요 (연락처 마스킹)',
+        +     ''
+        +   ],
+        +   [
+        +     '확인 요청 발송',
+        +     '작업 완료: [확인 요청] 지급 일정(현금 유출일) 미확인 — 하회 구간(2026-07-21~2026-08-28) 포함 여부 판정 불가 → 에이전시에 지급 일정 회신 요청 · 채널 발송(모의)',
+        +     '작업 완료'
+        +   ],
+        +   [
+        +     '지급 일정 회신',
+        +     '에이전시 회신 반영 → 재분석 1건',
+        +     '회신 반영'
+        +   ],
+        +   [
+        +     '역제안 거절',
+        +     'CS-0027 거절 · 작업 4건 생성',
+        +     '결정 반영'
+        +   ]
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0:
+          0: '계약 접수'
+          1: 'CS-0001 분석 완료 → 승인 대기'
+          2: '1건 분석 완료'
+        1:
+          0: '계약 승인'
+          1: 'CS-0001 승인 · 작업 4건 생성'
+          2: '결정 반영'
+        2:
+          0: '통보 발송'
+          1: '작업 완료: 에이전시에 INF-001 조건변경 통보 발송(회신 기한 포함) · 채널 발송(모의)'
+          2: '작업 완료'
+        3:
+          0: '기안 25건 접수'
+          1: '기안 25건 분석 완료'
+          2: '25건 분석 완료'
+        4:
+          0: '카피 수정'
+          1: 'CS-0017 수정 카피 재검증 → 승인 대기'
+          2: '수정 반영'
+        5:
+          0: 'PLAN-024 승인'
+          1: 'CS-0025 승인 · 작업 4건 생성'
+          2: '결정 반영'
+        6:
+          0: '재무 조건 변경'
+          1: '조건 변경 → 미결 24건 재검증 · 기승인 무효·재상신: PLAN-024'
+          2: '1건 분석 완료'
+        7:
+          0: '역제안 접수'
+          1: 'CS-0027 역제안 접수 → 확인 필요 (연락처 마스킹)'
+          2: ''
+        8:
+          0: '확인 요청 발송'
+          1: '작업 완료: [확인 요청] 지급 일정(현금 유출일) 미확인 — 하회 구간(2026-07-21~2026-08-28) 포함 여부 판정 불가 → 에이전시에 지급 일정 회신 요청 · 채널 발송(모의)'
+          2: '작업 완료'
+        9:
+          0: '지급 일정 회신'
+          1: '에이전시 회신 반영 → 재분석 1건'
+          2: '회신 반영'
+        10:
+          0: '역제안 거절'
+          1: 'CS-0027 거절 · 작업 4건 생성'
+          2: '결정 반영'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:106:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: M03 MySQL 저장소: 기안 25건 일괄 판단·조건 변경 재검증이 각각 1초 이내(화면 반영 1.5초 예산 안)
+    not ok 4 - M03 MySQL 저장소: 기안 25건 일괄 판단·조건 변경 재검증이 각각 1초 이내(화면 반영 1.5초 예산 안)
+      ---
+      duration_ms: 3726.306591
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '일괄 2149ms · 조건 변경 1505ms'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:114:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: M04 MySQL 저장소: 두 결재자가 같은 건을 동시에 결정하면 하나만 반영되고 서버를 다시 켜도 그대로
+    ok 5 - M04 MySQL 저장소: 두 결재자가 같은 건을 동시에 결정하면 하나만 반영되고 서버를 다시 켜도 그대로
+      ---
+      duration_ms: 2104.163212
+      type: 'test'
+      ...
+    # Subtest: M05 감사 로그가 일어난 순서대로 보임(빠르게 연속된 30건)
+    ok 6 - M05 감사 로그가 일어난 순서대로 보임(빠르게 연속된 30건)
+      ---
+      duration_ms: 1945.004135
+      type: 'test'
+      ...
+# --------------
+# CREATE DATABASE IF NOT EXISTS aurora_desk DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+# --------------
+# ERROR 1273 (HY000) at line 2: Unknown collation: 'utf8mb4_0900_ai_ci'
+    # Subtest: M06 DB가 멈추면 서버가 내부 오류(500) 대신 원인을 알려 주고, 화면은 연결 실패로 표시
+    not ok 7 - M06 DB가 멈추면 서버가 내부 오류(500) 대신 원인을 알려 주고, 화면은 연결 실패로 표시
+      ---
+      duration_ms: 2809.277583
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        HTTP 200 {"ctx":{"id":"ctx","today":"2026-07-01","cash_assumption":"AS_IS","contract_stat
+        
+        200 !== 503
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 503
+      actual: 200
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:147:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..7
+not ok 1 - 운영 저장소(MySQL 호환 DB)
+  ---
+  duration_ms: 30752.287417
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:82:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 문서·영상과 시스템의 일치
+    # Subtest: V01 PRD·A04·리더 가이드·데이터 계보·시연 자막의 핵심 수치가 실제 계산값과 같음
+    not ok 1 - V01 PRD·A04·리더 가이드·데이터 계보·시연 자막의 핵심 수치가 실제 계산값과 같음
+      ---
+      duration_ms: 32.1578
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: 'fetch failed'
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        node:internal/deps/undici/undici:15456:13
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:156:22
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: V02 문서에 적힌 실행 명령·테스트 수가 실제와 같음(README·리더 가이드·A04)
+    not ok 2 - V02 문서에 적힌 실행 명령·테스트 수가 실제와 같음(README·리더 가이드·A04)
+      ---
+      duration_ms: 1132.962708
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'README: E2E 86 ≠ 99'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'README: E2E 86 ≠ 99'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:195:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+      ...
+    1..2
+not ok 2 - 문서·영상과 시스템의 일치
+  ---
+  duration_ms: 1165.38495
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:153:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 저장·채널·입력·장시간
+    # Subtest: S01 브라우저 저장 공간이 가득 차 저장에 실패하면 사용자에게 알림(조용히 잃지 않음)
+    not ok 1 - S01 브라우저 저장 공간이 가득 차 저장에 실패하면 사용자에게 알림(조용히 잃지 않음)
+      ---
+      duration_ms: 1371.380659
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        저장 실패를 알리지 않음
+        
+        0 !== 1
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 1
+      actual: 0
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:215:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: S02 MCP 원격 전송(streamable-http)으로 서버를 띄워 승인 대기 조회가 동작(API 서버와 포트가 겹치지 않음)
+    not ok 2 - S02 MCP 원격 전송(streamable-http)으로 서버를 띄워 승인 대기 조회가 동작(API 서버와 포트가 겹치지 않음)
+      ---
+      duration_ms: 1542.255418
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        MCP 서버가 시작되지 않음: ger started INFO:     Application startup complete. ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1', 8000): [errno 98] address already in use INFO:     Waiting for application shutdown. StreamableHTTP session manager shutting down INFO:     Application shutdown complete. 
+        + actual - expected
+        
+        + "MCP 서버가 시작되지 않음: ger started INFO:     Application startup complete. ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1', 8000): [errno 98] address already in use INFO:     Waiting for application shutdown. StreamableHTTP session manager shutting down INFO:     Application shutdown complete. "
+        - null
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: ~
+      actual: "MCP 서버가 시작되지 않음: ger started INFO:     Application startup complete. ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1', 8000): [errno 98] address already in use INFO:     Waiting for application shutdown. StreamableHTTP session manager shutting down INFO:     Application shutdown complete. "
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:223:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: S03 공백 없는 아주 긴 메모(URL 등)를 접수해도 목록·결재 서류가 화면 밖으로 넘치지 않음(데스크톱·휴대폰)
+    not ok 3 - S03 공백 없는 아주 긴 메모(URL 등)를 접수해도 목록·결재 서류가 화면 밖으로 넘치지 않음(데스크톱·휴대폰)
+      ---
+      duration_ms: 988.348235
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"desktop":{"page":2030,"sheet":2385},"mobile":{"page":1598,"sheet":2785}}
+        + actual - expected
+        
+          {
+            desktop: {
+        +     page: 2030,
+        +     sheet: 2385
+        -     page: 0,
+        -     sheet: 0
+            },
+            mobile: {
+        +     page: 1598,
+        +     sheet: 2785
+        -     page: 0,
+        -     sheet: 0
+            }
+          }
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        desktop:
+          page: 0
+          sheet: 0
+        mobile:
+          page: 0
+          sheet: 0
+      actual:
+        desktop:
+          page: 2030
+          sheet: 2385
+        mobile:
+          page: 1598
+          sheet: 2785
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:239:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: S04 오래 켜 둔 서버(요청 3,000건: 자동 갱신·스냅샷·결재·시계)에서도 메모리·응답 시간이 늘지 않음
+    ok 4 - S04 오래 켜 둔 서버(요청 3,000건: 자동 갱신·스냅샷·결재·시계)에서도 메모리·응답 시간이 늘지 않음
+      ---
+      duration_ms: 15913.819399
+      type: 'test'
+      ...
+    1..4
+not ok 3 - 저장·채널·입력·장시간
+  ---
+  duration_ms: 19816.273133
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round4.e2e.test.cjs:199:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..3
+# tests 13
+# suites 3
+# pass 4
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 52826.032836

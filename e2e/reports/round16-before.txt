@@ -1,0 +1,107 @@
+TAP version 13
+# Subtest: 느린 LLM과 다른 사용자
+    # Subtest: AC01 기안 25건 접수(LLM 1.5초/회) 중에도 다른 사용자의 결재가 1초 안에 끝남(같은 서버)
+    not ok 1 - AC01 기안 25건 접수(LLM 1.5초/회) 중에도 다른 사용자의 결재가 1초 안에 끝남(같은 서버)
+      ---
+      duration_ms: 8337.111445
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: '결재 응답 5892ms — 접수의 LLM 호출이 끝날 때까지 기다림'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:50:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AC02 서버 2대(같은 MySQL): A에서 접수하는 동안 B로 한 결재가 1초 안에 끝남
+    not ok 2 - AC02 서버 2대(같은 MySQL): A에서 접수하는 동안 B로 한 결재가 1초 안에 끝남
+      ---
+      duration_ms: 10245.546966
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: 'B 결재 응답 5983ms'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:63:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AC03 25건 접수 뒤 1.5초 안에 목록에 25건(규칙 판단·결재란) — AI 설명은 '작성 중'으로 표시되고, 작업이 끝나면 모두 LLM 설명
+    not ok 3 - AC03 25건 접수 뒤 1.5초 안에 목록에 25건(규칙 판단·결재란) — AI 설명은 '작성 중'으로 표시되고, 작업이 끝나면 모두 LLM 설명
+      ---
+      duration_ms: 7755.812458
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: '1.5초 안에 25건이 목록에 보이지 않음(LLM이 모두 끝나야 보임)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:86:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AC04 AI 설명이 '작성 중'일 때 결재해도, 늦게 온 설명이 결재 결과(상태·결재 기록)를 덮어쓰지 않음
+    not ok 4 - AC04 AI 설명이 '작성 중'일 때 결재해도, 늦게 온 설명이 결재 결과(상태·결재 기록)를 덮어쓰지 않음
+      ---
+      duration_ms: 2548.709285
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:14:29'
+      failureType: 'testCodeFailure'
+      error: '설명 작성 중에 결재할 건이 목록에 없음(접수가 끝나야 보임)'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:105:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:16:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AC05 설명을 쓰는 도중 LLM이 고장 나도 작업은 끝나고, '작성 중'인 채로 남는 건이 없음(근거 기반 대체문)
+    ok 5 - AC05 설명을 쓰는 도중 LLM이 고장 나도 작업은 끝나고, '작성 중'인 채로 남는 건이 없음(근거 기반 대체문)
+      ---
+      duration_ms: 2111.340518
+      type: 'test'
+      ...
+    1..5
+not ok 1 - 느린 LLM과 다른 사용자
+  ---
+  duration_ms: 31272.516248
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round16.e2e.test.cjs:43:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 5
+# suites 1
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31516.866805

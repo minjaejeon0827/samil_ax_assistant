@@ -1,0 +1,520 @@
+TAP version 13
+# Subtest: 브라우저 단독 — 저장소와 탭
+    # Subtest: R01 같은 브라우저의 두 탭: 한 탭의 처리 결과가 다른 탭의 작업으로 지워지지 않음
+    not ok 1 - R01 같은 브라우저의 두 탭: 한 탭의 처리 결과가 다른 탭의 작업으로 지워지지 않음
+      ---
+      duration_ms: 875.515095
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '탭 B가 저장하면서 탭 A의 계약 접수가 사라짐'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: |-
+        계약·메모
+        결정이 필요한 기안 25건
+        PLAN-001 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-002 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-003 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-004 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-005 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-006 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-007 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-008 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-009 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-010 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-011 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-012 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-013 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-014 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-015 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-016 캠페인 확대 기안
+        수정 필요
+        PLAN-017 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-018 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-019 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-020 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-021 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-022 캠페인 확대 기안
+        승인 대기
+        그룹 CEO/이사회
+        PLAN-023 캠페인 확대 기안
+        수정 필요
+        PLAN-024 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+        PLAN-025 캠페인 확대 기안
+        승인 대기
+        Masil 대표
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:55:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: R02 다른 탭의 변경이 새로고침 없이 이 탭에 반영됨
+    not ok 2 - R02 다른 탭의 변경이 새로고침 없이 이 탭에 반영됨
+      ---
+      duration_ms: 2326.251343
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.waitFor: Timeout 2000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('.cases .case-item').filter({ hasText: '갱신 통보' }) to be visible[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:63:64
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+      ...
+    # Subtest: R03 이전 버전 저장 형식이 남아 있으면 이유를 알리고, 이전 기록을 따로 보관
+    not ok 3 - R03 이전 버전 저장 형식이 남아 있으면 이유를 알리고, 이전 기록을 따로 보관
+      ---
+      duration_ms: 162.091844
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '안내 없음: ""'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: ''
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:72:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R04 손상된 저장 데이터·저장소 차단에서도 화면이 뜨고 처리 가능
+    ok 4 - R04 손상된 저장 데이터·저장소 차단에서도 화면이 뜨고 처리 가능
+      ---
+      duration_ms: 503.335454
+      type: 'test'
+      ...
+    1..4
+not ok 1 - 브라우저 단독 — 저장소와 탭
+  ---
+  duration_ms: 6015.614312
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:42:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 브라우저 단독 — 접근성·모바일·긴 사용
+    # Subtest: R05 키보드만으로 접수 → 결재 서류 열기 → 역할 변경 → 승인
+    not ok 1 - R05 키보드만으로 접수 → 결재 서류 열기 → 역할 변경 → 승인
+      ---
+      duration_ms: 291.452688
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '포커스 표시가 보이지 않음'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:103:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R06 모바일(iPhone 13) 전체 여정: 모든 탭에서 가로 넘침 없음, 결재까지 완료
+    not ok 2 - R06 모바일(iPhone 13) 전체 여정: 모든 탭에서 가로 넘침 없음, 결재까지 완료
+      ---
+      duration_ms: 958.433889
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '승인 결과가 화면 밖'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:124:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R07 '처음부터' 확인창에서 취소하면 기록이 그대로
+    ok 3 - R07 '처음부터' 확인창에서 취소하면 기록이 그대로
+      ---
+      duration_ms: 507.685643
+      type: 'test'
+      ...
+    # Subtest: R08 아주 긴 사용(기안 25건 + 시계 75일 + 조건 변경 반복) 후에도 클릭 반응 100ms 이내, 저장 크기 안정
+    ok 4 - R08 아주 긴 사용(기안 25건 + 시계 75일 + 조건 변경 반복) 후에도 클릭 반응 100ms 이내, 저장 크기 안정
+      ---
+      duration_ms: 4518.713108
+      type: 'test'
+      ...
+    1..4
+not ok 2 - 브라우저 단독 — 접근성·모바일·긴 사용
+  ---
+  duration_ms: 6276.907287
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:91:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 서버 모드 — 다중 사용자·장애·중복
+    # Subtest: R09 API·MCP로 같은 사건을 두 번 넣어도 중복 건이 생기지 않음
+    not ok 1 - R09 API·MCP로 같은 사건을 두 번 넣어도 중복 건이 생기지 않음
+      ---
+      duration_ms: 442.150545
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        기안 50건
+        
+        50 !== 25
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 25
+      actual: 50
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:160:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R10 화면에서 접수 버튼을 빠르게 두 번 눌러도 한 번만 접수
+    not ok 2 - R10 화면에서 접수 버튼을 빠르게 두 번 눌러도 한 번만 접수
+      ---
+      duration_ms: 1730.936063
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        50건
+        
+        50 !== 25
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 25
+      actual: 50
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:171:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R11 두 결재자가 동시에 보고 있을 때: 늦은 쪽은 충돌 안내와 함께 최신 상태로 갱신
+    not ok 3 - R11 두 결재자가 동시에 보고 있을 때: 늦은 쪽은 충돌 안내와 함께 최신 상태로 갱신
+      ---
+      duration_ms: 1612.631274
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        충돌 후에도 늦은 사용자 화면이 이전 상태(승인 대기)에 머묾
+        
+        0 !== 1
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 1
+      actual: 0
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:183:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R12 다른 사용자의 결정이 내 화면에 자동으로 반영(서버 모드)
+    not ok 4 - R12 다른 사용자의 결정이 내 화면에 자동으로 반영(서버 모드)
+      ---
+      duration_ms: 6436.132535
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.waitFor: Timeout 6000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('.cases .case-item').filter({ hasText: '갱신 통보' }) to be visible[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:190:64
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+      ...
+    # Subtest: R13 서버가 꺼졌을 때 한국어로 원인과 할 일을 안내하고, 서버 데이터인 척 브라우저 데이터를 보여주지 않음
+    not ok 5 - R13 서버가 꺼졌을 때 한국어로 원인과 할 일을 안내하고, 서버 데이터인 척 브라우저 데이터를 보여주지 않음
+      ---
+      duration_ms: 2846.088026
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '안내 문구: ⚠ Failed to fetch'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '⚠ Failed to fetch'
+      operator: 'doesNotMatch'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:202:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: R14 서버가 다시 켜지면 화면이 저절로 복구
+    not ok 6 - R14 서버가 다시 켜지면 화면이 저절로 복구
+      ---
+      duration_ms: 8081.608663
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.waitFor: Timeout 8000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('.cases .case-item').filter({ hasText: '갱신 통보' }) to be visible[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:210:64
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+      ...
+    # Subtest: R17 서버가 입력을 거부(422)하면 무엇이 문제인지 읽을 수 있게 안내
+    not ok 7 - R17 서버가 입력을 거부(422)하면 무엇이 문제인지 읽을 수 있게 안내
+      ---
+      duration_ms: 85.40995
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '안내 문구: ⚠ [object Object]'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '⚠ [object Object]'
+      operator: 'doesNotMatch'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:220:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+# HTTP Request: GET http://localhost:8000/api/cases/CS-9999 "HTTP/1.1 404 Not Found"
+# HTTP Request: POST http://localhost:8000/api/events "HTTP/1.1 202 Accepted"
+# HTTP Request: POST http://localhost:8000/api/events "HTTP/1.1 202 Accepted"
+# Tool 'list_pending_approvals' raised an unexpected exception
+# Traceback (most recent call last):
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+#     yield
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_transports/default.py", line 250, in handle_request
+#     resp = self._pool.handle_request(req)
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+#     raise exc from None
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+#     response = connection.handle_request(
+#         pool_request.request
+#     )
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+#     raise exc
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+#     stream = self._connect(request)
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+#     stream = self._network_backend.connect_tcp(**kwargs)
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+#     with map_exceptions(exc_map):
+#          ~~~~~~~~~~~~~~^^^^^^^^^
+#   File "/usr/local/lib/python3.13/contextlib.py", line 162, in __exit__
+#     self.gen.throw(value)
+#     ~~~~~~~~~~~~~~^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+#     raise to_exc(exc) from exc
+# httpcore.ConnectError: [Errno 111] Connection refused
+# The above exception was the direct cause of the following exception:
+# Traceback (most recent call last):
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+#     result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+#     return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+#     return await get_async_backend().run_sync_in_worker_thread(
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#         func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+#         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#     )
+#     ^
+#   File "/usr/local/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+#     return await future
+#            ^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+#     result = context.run(func, *args)
+#   File "/home/claude/aurora-campaign-desk/backend/app/mcp_server.py", line 64, in list_pending_approvals
+#     snap = _req("GET", "/api/snapshot")
+#   File "/home/claude/aurora-campaign-desk/backend/app/mcp_server.py", line 47, in _req
+#     r = c.request(method, path, json=json)
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_client.py", line 825, in request
+#     return self.send(request, auth=auth, follow_redirects=follow_redirects)
+#            ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_client.py", line 914, in send
+#     response = self._send_handling_auth(
+#         request,
+#     ...<2 lines>...
+#         history=[],
+#     )
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+#     response = self._send_handling_redirects(
+#         request,
+#         follow_redirects=follow_redirects,
+#         history=history,
+#     )
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+#     response = self._send_single_request(request)
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_client.py", line 1014, in _send_single_request
+#     response = transport.handle_request(request)
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_transports/default.py", line 249, in handle_request
+#     with map_httpcore_exceptions():
+#          ~~~~~~~~~~~~~~~~~~~~~~~^^
+#   File "/usr/local/lib/python3.13/contextlib.py", line 162, in __exit__
+#     self.gen.throw(value)
+#     ~~~~~~~~~~~~~~^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+#     raise mapped_exc(message) from exc
+# httpx.ConnectError: [Errno 111] Connection refused
+# The above exception was the direct cause of the following exception:
+# Traceback (most recent call last):
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+#     return await self.call_tool(params.name, params.arguments or {}, context)
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+#     return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+#     return await tool.run(arguments, context, convert_result=convert_result)
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/usr/local/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+#     raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+# mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool list_pending_approvals
+    # Subtest: R15 서버 모드 '처음부터' → 서버 기록 초기화
+    ok 8 - R15 서버 모드 '처음부터' → 서버 기록 초기화
+      ---
+      duration_ms: 445.381275
+      type: 'test'
+      ...
+    1..8
+not ok 3 - 서버 모드 — 다중 사용자·장애·중복
+  ---
+  duration_ms: 21681.224877
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:152:1'
+  failureType: 'subtestsFailed'
+  error: '7 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: MCP — 오류 경로
+    # Subtest: R16 MCP: 없는 건 조회·서버 중단 시 사람이 읽을 수 있는 안내
+    not ok 1 - R16 MCP: 없는 건 조회·서버 중단 시 사람이 읽을 수 있는 안내
+      ---
+      duration_ms: 1985.266674
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: "{'job_id': 'dc74d1daa9c7', 'status': 'queued', 'message': '처리 중입니다. 완료되면 결과를 조회할 수 있습니다.', 'result': None}"
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: "{'job_id': 'dc74d1daa9c7', 'status': 'queued', 'message': '처리 중입니다. 완료되면 결과를 조회할 수 있습니다.', 'result': None}"
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:235:12
+        TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:20:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    1..1
+not ok 4 - MCP — 오류 경로
+  ---
+  duration_ms: 1985.397086
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round2.e2e.test.cjs:231:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..4
+# tests 17
+# suites 4
+# pass 4
+# fail 13
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36415.809375

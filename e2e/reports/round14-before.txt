@@ -1,0 +1,189 @@
+TAP version 13
+# Subtest: 서버 재시작을 견디는가
+    # Subtest: Z01 로그아웃한 로그인(연장 전 토큰 포함)은 서버를 다시 켠 뒤에도 무효(메모리 파일·MySQL)
+    not ok 1 - Z01 로그아웃한 로그인(연장 전 토큰 포함)은 서버를 다시 켠 뒤에도 무효(메모리 파일·MySQL)
+      ---
+      duration_ms: 7048.297535
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        로그아웃이 재시작으로 풀림
+        + actual - expected
+        
+        + [
+        +   '메모리 파일: 재시작 뒤 {"t0":200,"t1":200,"refresh":200}',
+        +   'MySQL: 재시작 뒤 {"t0":200,"t1":200,"refresh":200}'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '메모리 파일: 재시작 뒤 {"t0":200,"t1":200,"refresh":200}'
+        1: 'MySQL: 재시작 뒤 {"t0":200,"t1":200,"refresh":200}'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:55:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:20:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: Z02 진행 중이던 접수의 결과를 서버를 다시 켠 뒤에도 조회할 수 있음(API·MCP가 '없음'으로 오해하지 않음)
+    not ok 2 - Z02 진행 중이던 접수의 결과를 서버를 다시 켠 뒤에도 조회할 수 있음(API·MCP가 '없음'으로 오해하지 않음)
+      ---
+      duration_ms: 5573.417818
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        재시작 뒤 작업 결과를 찾지 못함
+        + actual - expected
+        
+        + [
+        +   '메모리 파일: 404 {"detail":"작업을 찾을 수 없습니다"}',
+        +   'MySQL: 404 {"detail":"작업을 찾을 수 없습니다"}'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '메모리 파일: 404 {"detail":"작업을 찾을 수 없습니다"}'
+        1: 'MySQL: 404 {"detail":"작업을 찾을 수 없습니다"}'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:72:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:20:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 1 - 서버 재시작을 견디는가
+  ---
+  duration_ms: 12891.121349
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:31:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 로그인 아이디
+    # Subtest: Z03 아이디의 대문자·앞뒤 공백·끝 줄바꿈(휴대폰 자동 대문자, 비밀 파일)으로도 로그인되고, 대소문자를 바꿔 가며 틀려도 잠금을 피하지 못함
+    not ok 1 - Z03 아이디의 대문자·앞뒤 공백·끝 줄바꿈(휴대폰 자동 대문자, 비밀 파일)으로도 로그인되고, 대소문자를 바꿔 가며 틀려도 잠금을 피하지 못함
+      ---
+      duration_ms: 1664.042534
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        아이디 변형 로그인 {"\"Ceo.kang\"":401,"\" ceo.kang \"":401,"\"ceo.kang\\n\"":401,"\"CEO.KANG\"":401}
+        + actual - expected
+        
+          [
+        +   401,
+        +   401,
+        +   401,
+        +   401
+        -   200,
+        -   200,
+        -   200,
+        -   200
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 200
+        1: 200
+        2: 200
+        3: 200
+      actual:
+        0: 401
+        1: 401
+        2: 401
+        3: 401
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:91:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:20:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..1
+not ok 2 - 로그인 아이디
+  ---
+  duration_ms: 1664.380216
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:76:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 외부 LLM 출력 계약
+    # Subtest: Z04 LLM이 2만 자 설명·영어 설명·HTML 태그/외부 링크를 돌려주면 승인자에게는 근거 기반 대체문(1,500자 이하·한국어·태그 없음)이 보이고 사유가 남음
+    not ok 1 - Z04 LLM이 2만 자 설명·영어 설명·HTML 태그/외부 링크를 돌려주면 승인자에게는 근거 기반 대체문(1,500자 이하·한국어·태그 없음)이 보이고 사유가 남음
+      ---
+      duration_ms: 1557.867301
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'long: 28060자',
+        +   'long: 대체 표시 없음(openai)',
+        +   'english: 한국어 아님',
+        +   'english: 대체 표시 없음(openai)',
+        +   'html: 태그·외부 링크 그대로',
+        +   'html: 대체 표시 없음(openai)'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'long: 28060자'
+        1: 'long: 대체 표시 없음(openai)'
+        2: 'english: 한국어 아님'
+        3: 'english: 대체 표시 없음(openai)'
+        4: 'html: 태그·외부 링크 그대로'
+        5: 'html: 대체 표시 없음(openai)'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:121:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:20:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..1
+not ok 3 - 외부 LLM 출력 계약
+  ---
+  duration_ms: 1558.192465
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round14.e2e.test.cjs:100:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..3
+# tests 4
+# suites 3
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16295.761037

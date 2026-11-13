@@ -1,0 +1,264 @@
+TAP version 13
+# Subtest: 로그인 모드 — API
+    # Subtest: J01 역할 사칭 차단: 마케팅팀 계정으로 그룹 CEO 결재를 보내면 403, 그룹 CEO 계정은 승인되고 결정자가 기록됨
+    not ok 1 - J01 역할 사칭 차단: 마케팅팀 계정으로 그룹 CEO 결재를 보내면 403, 그룹 CEO 계정은 승인되고 결정자가 기록됨
+      ---
+      duration_ms: 10.386159
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        로그인 404 {"detail":"Not Found"}
+        
+        404 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:42:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: J02 로그인 없이 API 키만으로는 처리 건·감사 기록을 볼 수 없음(401), 상태 확인만 공개
+    not ok 2 - J02 로그인 없이 API 키만으로는 처리 건·감사 기록을 볼 수 없음(401), 상태 확인만 공개
+      ---
+      duration_ms: 13.182639
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        200 !== 401
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 401
+      actual: 200
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:62:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: J03 비밀번호를 5번 틀리면 잠시 잠기고(429) 한국어로 안내, 존재 여부는 드러내지 않음
+    not ok 3 - J03 비밀번호를 5번 틀리면 잠시 잠기고(429) 한국어로 안내, 존재 여부는 드러내지 않음
+      ---
+      duration_ms: 22.907714
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   404,
+        +   404,
+        +   404,
+        +   404,
+        +   404
+        -   401,
+        -   401,
+        -   401,
+        -   401,
+        -   401
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 401
+        1: 401
+        2: 401
+        3: 401
+        4: 401
+      actual:
+        0: 404
+        1: 404
+        2: 404
+        3: 404
+        4: 404
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:71:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: J04 토큰이 만료되면 401과 '다시 로그인' 안내(조용히 실패하지 않음)
+    not ok 4 - J04 토큰이 만료되면 401과 '다시 로그인' 안내(조용히 실패하지 않음)
+      ---
+      duration_ms: 3.538334
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        404 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:79:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: J05 위조·변조한 토큰(역할을 GROUP_CEO로 바꾼 것)은 거부
+    not ok 5 - J05 위조·변조한 토큰(역할을 GROUP_CEO로 바꾼 것)은 거부
+      ---
+      duration_ms: 4.658998
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '로그인 토큰 없음'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: ''
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:93:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..5
+not ok 1 - 로그인 모드 — API
+  ---
+  duration_ms: 3250.779277
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:39:1'
+  failureType: 'subtestsFailed'
+  error: '5 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 로그인 모드 — 화면·MCP
+    # Subtest: J06 화면: 서버 모드로 바꾸면 로그인 창 → 로그인한 역할로 고정 → 결재 → 감사 로그에 사용자 이름
+    not ok 1 - J06 화면: 서버 모드로 바꾸면 로그인 창 → 로그인한 역할로 고정 → 결재 → 감사 로그에 사용자 이름
+      ---
+      duration_ms: 5458.546315
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.fill: Timeout 5000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('[data-testid="login-user"]')[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:107:51
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+      ...
+    # Subtest: J07 MCP 계정: 마케팅팀 계정으로 연 MCP는 그룹 CEO 결재를 할 수 없고, 그룹 CEO 계정 MCP는 승인 가능
+    not ok 2 - J07 MCP 계정: 마케팅팀 계정으로 연 MCP는 그룹 CEO 결재를 할 수 없고, 그룹 CEO 계정 MCP는 승인 가능
+      ---
+      duration_ms: 2656.732649
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: '마케팅팀 MCP 결과: 처리됨: APPROVED — 생성된 작업 4건'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '처리됨: APPROVED — 생성된 작업 4건'
+      operator: 'match'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:137:12
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 2 - 로그인 모드 — 화면·MCP
+  ---
+  duration_ms: 8115.894056
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:98:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: 대화상자 키보드 접근성
+    # Subtest: J08 감사 로그 대화상자: Tab을 계속 눌러도 대화상자 밖으로 나가지 않고, Esc로 닫으면 연 버튼으로 돌아옴
+    not ok 1 - J08 감사 로그 대화상자: Tab을 계속 눌러도 대화상자 밖으로 나가지 않고, Esc로 닫으면 연 버튼으로 돌아옴
+      ---
+      duration_ms: 439.888073
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:18:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Tab 12번이 대화상자 밖으로 나감
+        + actual - expected
+        
+        + [
+        +   0,
+        +   1,
+        +   2,
+        +   3,
+        +   4,
+        +   5,
+        +   6,
+        +   7,
+        +   8,
+        +   9,
+        +   10,
+        +   11
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 0
+        1: 1
+        2: 2
+        3: 3
+        4: 4
+        5: 5
+        6: 6
+        7: 7
+        8: 8
+        9: 9
+        10: 10
+        11: 11
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:153:12
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:20:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..1
+not ok 3 - 대화상자 키보드 접근성
+  ---
+  duration_ms: 440.355971
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round7.e2e.test.cjs:142:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...

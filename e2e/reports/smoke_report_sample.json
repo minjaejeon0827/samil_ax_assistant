@@ -1,0 +1,111 @@
+{
+ "target": "http://localhost:9103/apps/samil-ax-assistant/",
+ "at": "2026-11-12T09:58:06.842Z",
+ "sent": {
+  "GET": 15
+ },
+ "summary": {
+  "pass": 10,
+  "warn": 3,
+  "fail": 0,
+  "info": 3
+ },
+ "results": [
+  {
+   "id": "H01",
+   "level": "WARN",
+   "title": "보안 헤더(화면 문서)",
+   "detail": "없음: x-content-type-options, referrer-policy, content-security-policy · 다른 사이트의 iframe에 넣기 막힘 없음 — 정적 호스트 설정에 따라 다름(서버 배포는 FastAPI가 붙임)"
+  },
+  {
+   "id": "H02",
+   "level": "WARN",
+   "title": "화면 문서 캐시",
+   "detail": "Cache-Control \"없음\" — 다시 배포한 뒤 옛 화면·흰 화면이 남을 수 있음(X-02)"
+  },
+  {
+   "id": "X03",
+   "level": "WARN",
+   "title": "HTTPS",
+   "detail": "http 주소 — 로그인·API 키가 암호화되지 않음(공개 배포는 https)"
+  },
+  {
+   "id": "P01",
+   "level": "PASS",
+   "title": "화면 문서(index.html) 응답",
+   "detail": "HTTP 200 · text/html · 31ms"
+  },
+  {
+   "id": "P02",
+   "level": "PASS",
+   "title": "화면 제목",
+   "detail": "\"Aurora 판단 데스크\""
+  },
+  {
+   "id": "P04",
+   "level": "PASS",
+   "title": "자산 경로",
+   "detail": "상대 경로(./assets/…) — 어느 주소에서도 열림"
+  },
+  {
+   "id": "P05",
+   "level": "PASS",
+   "title": "자산(JS·CSS) 응답과 형식",
+   "detail": "2개 모두 200·올바른 형식"
+  },
+  {
+   "id": "B01",
+   "level": "PASS",
+   "title": "React 버전(번들 안)",
+   "detail": "18.3.1 — 시험한 버전(18.3.1)과 같은 계열"
+  },
+  {
+   "id": "B02",
+   "level": "PASS",
+   "title": "데이터가 번들에 들어 있음",
+   "detail": "INF-001·PLAN-0xx 데이터 포함(정적 배포에서도 상황 1~3 실행 가능)"
+  },
+  {
+   "id": "X01",
+   "level": "PASS",
+   "title": "설정·원본 파일 노출",
+   "detail": "10개 경로 모두 막힘(또는 화면 문서로 대체)"
+  },
+  {
+   "id": "U01",
+   "level": "PASS",
+   "title": "화면이 뜸(PC 1440px)",
+   "detail": "293ms · 브라우저 단독 빌드 · 콘솔 오류 0건 · 가로 넘침 없음 · 캡처 /tmp/claude-0/-home-claude/8e31d64c-b5ca-5f0d-82c9-b8d9821a83ef/scratchpad/smoke/smoke_1440.png"
+  },
+  {
+   "id": "U02",
+   "level": "PASS",
+   "title": "상황 1 접수 → 새로고침 유지(브라우저 단독)",
+   "detail": "접수 됨 · 새로고침 뒤 그대로 · 서버로 간 쓰기 요청 0"
+  },
+  {
+   "id": "U01",
+   "level": "PASS",
+   "title": "화면이 뜸(휴대폰 390px)",
+   "detail": "155ms · 브라우저 단독 빌드 · 콘솔 오류 0건 · 가로 넘침 없음 · 캡처 /tmp/claude-0/-home-claude/8e31d64c-b5ca-5f0d-82c9-b8d9821a83ef/scratchpad/smoke/smoke_390.png"
+  },
+  {
+   "id": "P06",
+   "level": "INFO",
+   "title": "자산 캐시",
+   "detail": "해시 파일명 자산 2개의 Cache-Control \"없음\" — 길게 캐시해도 안전(성능 참고, 고치지 않아도 됨)"
+  },
+  {
+   "id": "X02",
+   "level": "INFO",
+   "title": "없는 주소의 응답",
+   "detail": "404"
+  },
+  {
+   "id": "A00",
+   "level": "INFO",
+   "title": "배포 방식",
+   "detail": "정적 배포(브라우저 단독) — /api가 없음. 2부 기능(SSO·MySQL·계약서 업로드·체인 검증)은 이 주소에서 동작하지 않음"
+  }
+ ]
+}

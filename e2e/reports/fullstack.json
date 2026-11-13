@@ -1,0 +1,57 @@
+{
+ "at": "2026-11-10T15:59:17.860Z",
+ "suite": "fullstack",
+ "results": [
+  {
+   "id": "S01",
+   "name": "실행 위치를 FastAPI 서버로 전환 → 서버 스냅샷 표시",
+   "ok": true,
+   "ms": 677
+  },
+  {
+   "id": "S02",
+   "name": "화면에서 접수 → 서버 비동기 작업 → 화면 갱신(응답 1.5초 이내)",
+   "ok": true,
+   "ms": 129
+  },
+  {
+   "id": "S03",
+   "name": "화면 승인(그룹 CEO) → 서버 상태 APPROVED·작업 4건",
+   "ok": true,
+   "ms": 174
+  },
+  {
+   "id": "S04",
+   "name": "권한 없는 승인 시도 → 서버 403 메시지를 화면에 표시",
+   "ok": true,
+   "ms": 450
+  },
+  {
+   "id": "S05",
+   "name": "새로고침 후에도 서버 모드·상태 유지",
+   "ok": true,
+   "ms": 92
+  },
+  {
+   "id": "S07",
+   "name": "재무팀이 화면에서 현금 전망 가정을 바꾸면 서버가 전 건을 다시 판단",
+   "ok": true,
+   "ms": 219
+  },
+  {
+   "id": "S06",
+   "name": "콘솔 오류 0건(S04에서 의도적으로 받은 403 응답 기록만 제외)",
+   "ok": true,
+   "ms": 1
+  }
+ ],
+ "pageErrors": [
+  "console: Failed to load resource: the server responded with a status of 403 (Forbidden)"
+ ],
+ "perf": [
+  {
+   "label": "API 모드 접수→화면 반영",
+   "ms": 123
+  }
+ ]
+}

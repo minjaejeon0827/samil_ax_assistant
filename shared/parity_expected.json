@@ -1,0 +1,989 @@
+{
+ "base": {
+  "cash_window": [
+   "2026-07-21",
+   "2026-08-21"
+  ],
+  "cash_min": 1647835595,
+  "contract": {
+   "recommendation": "CHANGE_TERMS",
+   "approver": "GROUP_CEO",
+   "needs_info": false,
+   "covenant_override": false
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ },
+ "legacy45": {
+  "cash_window": null,
+  "cash_min": 4834848520,
+  "contract": {
+   "recommendation": "CHANGE_TERMS",
+   "approver": "GROUP_CEO",
+   "needs_info": false,
+   "covenant_override": false
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ },
+ "conservative": {
+  "cash_window": [
+   "2026-07-21",
+   "2026-08-28"
+  ],
+  "cash_min": 1467664440,
+  "contract": {
+   "recommendation": "CHANGE_TERMS",
+   "approver": "GROUP_CEO",
+   "needs_info": false,
+   "covenant_override": false
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ },
+ "counter": {
+  "cash_window": [
+   "2026-07-21",
+   "2026-08-21"
+  ],
+  "cash_min": 1647835595,
+  "contract": {
+   "recommendation": "NEEDS_INFO",
+   "approver": null,
+   "needs_info": true,
+   "covenant_override": false
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ },
+ "counter_sched": {
+  "cash_window": [
+   "2026-07-21",
+   "2026-08-21"
+  ],
+  "cash_min": 1647835595,
+  "contract": {
+   "recommendation": "REJECT",
+   "approver": "GROUP_CEO",
+   "needs_info": false,
+   "covenant_override": true
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ },
+ "terminated": {
+  "cash_window": [
+   "2026-07-21",
+   "2026-08-21"
+  ],
+  "cash_min": 1647835595,
+  "contract": {
+   "recommendation": "CHANGE_TERMS",
+   "approver": "GROUP_CEO",
+   "needs_info": false,
+   "covenant_override": false
+  },
+  "plans": {
+   "PLAN-001": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-002": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-003": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-004": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-005": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-006": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-007": {
+    "recommendation": "REJECT",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-008": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-009": {
+    "recommendation": "REJECT",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-010": {
+    "recommendation": "CONDITIONAL",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-011": {
+    "recommendation": "HOLD_SUPPLY",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "warn"
+   },
+   "PLAN-012": {
+    "recommendation": "CONDITIONAL",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-013": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-014": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-015": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-016": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-017": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-018": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-019": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-020": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-021": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-022": {
+    "recommendation": "APPROVE",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "pass"
+   },
+   "PLAN-023": {
+    "recommendation": "HOLD_COPY",
+    "approver": "GROUP_CEO",
+    "covenant_override": true,
+    "copy_action": "warn"
+   },
+   "PLAN-024": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   },
+   "PLAN-025": {
+    "recommendation": "APPROVE",
+    "approver": "MASIL_CEO",
+    "covenant_override": false,
+    "copy_action": "pass"
+   }
+  }
+ }
+}

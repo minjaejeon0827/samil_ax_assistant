@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: 결재하는 동안 바뀐 결재 서류(서버 모드 화면)
+    # Subtest: AG01 결정 의견을 쓰는 도중 AI 설명이 도착해도, 쓰던 의견과 입력 커서가 그대로
+    not ok 1 - AG01 결정 의견을 쓰는 도중 AI 설명이 도착해도, 쓰던 의견과 입력 커서가 그대로
+      ---
+      duration_ms: 13596.937765
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        AI 설명이 도착하자 쓰던 결정 의견이 지워짐(남은 값: "")
+        + actual - expected
+        
+        + ''
+        - '근거 확인함 — 7월 16일까지 발송 조건으로 승인'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: '근거 확인함 — 7월 16일까지 발송 조건으로 승인'
+      actual: ''
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:71:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AG02 화면이 갱신되기 전(느린 망)에 승인을 누르면, 보지 못한 서류로 결재되지 않고 'AI 설명이 바뀌었다'고 알리며 의견은 그대로
+    not ok 2 - AG02 화면이 갱신되기 전(느린 망)에 승인을 누르면, 보지 못한 서류로 결재되지 않고 'AI 설명이 바뀌었다'고 알리며 의견은 그대로
+      ---
+      duration_ms: 11421.236279
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: '이유가 틀림: ⚠ 다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요. — 화면을 최신 상태로 갱신했습니다.'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '⚠ 다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요. — 화면을 최신 상태로 갱신했습니다.'
+      operator: 'doesNotMatch'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:95:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AG03 '승인자용 설명문'을 펼쳐 읽는 중 AI 설명이 도착하면, 펼친 채로 새 설명을 보여 주고 '설명이 바뀌었다'고 알림
+    not ok 3 - AG03 '승인자용 설명문'을 펼쳐 읽는 중 AI 설명이 도착하면, 펼친 채로 새 설명을 보여 주고 '설명이 바뀌었다'고 알림
+      ---
+      duration_ms: 12738.997555
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: "AI 설명이 도착하자 읽던 '승인자용 설명문'이 접힘"
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:116:14
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AG04 (회귀 방지) 다른 사람이 다른 건을 결재해도, 쓰던 결정 의견이 그대로
+    ok 4 - AG04 (회귀 방지) 다른 사람이 다른 건을 결재해도, 쓰던 결정 의견이 그대로
+      ---
+      duration_ms: 7217.752891
+      type: 'test'
+      ...
+    1..4
+not ok 1 - 결재하는 동안 바뀐 결재 서류(서버 모드 화면)
+  ---
+  duration_ms: 45238.865671
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:60:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: API
+    # Subtest: AG05 설명만 바뀐 서류에 옛 판 번호로 결재하면 409와 '설명이 바뀜' 안내, 새 판 번호로는 결재됨
+    not ok 1 - AG05 설명만 바뀐 서류에 옛 판 번호로 결재하면 409와 '설명이 바뀜' 안내, 새 판 번호로는 결재됨
+      ---
+      duration_ms: 7075.813043
+      type: 'test'
+      location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:20:29'
+      failureType: 'testCodeFailure'
+      error: '안내: 다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요.'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: '다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요.'
+      operator: 'doesNotMatch'
+      stack: |-
+        /home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:159:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:22:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..1
+not ok 2 - API
+  ---
+  duration_ms: 7076.135948
+  type: 'suite'
+  location: '/home/claude/aurora-campaign-desk/e2e/round20.e2e.test.cjs:143:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..2
+# tests 5
+# suites 2
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 52504.392773
