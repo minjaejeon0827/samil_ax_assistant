@@ -1,6 +1,9 @@
 version: axhub/v1
 name: samil-ax-assistant
-root: frontend
 build:
-  deploy_method: static
-  static_output_dir: dist
+  deploy_method: docker
+runtime:
+  port: 8000
+  health_path: /api/health
+  healthcheck:
+    start_period: 120s
