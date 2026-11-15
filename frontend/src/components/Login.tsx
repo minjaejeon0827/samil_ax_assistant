@@ -19,8 +19,8 @@ export function LoginDialog({ onLogin, ssoLabel, onSso, onLocal }: { onLogin: (u
       <form className="dialog login" role="dialog" aria-modal="true" aria-labelledby="login-title" onSubmit={submit} onKeyDown={(e) => trapTab(e)}>
         <h2 id="login-title">서버 모드 로그인</h2>
         <p className="hint">이 서버는 로그인한 계정의 역할로만 결재합니다. 계정은 관리자에게 받으세요.</p>
-        <label>아이디<input ref={first} data-testid="login-user" type="text" placeholder="test.aurora" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={user} onChange={(e) => setUser(e.target.value)} required /></label>
-        <label>비밀번호<input data-testid="login-password" type="password" placeholder="0000" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+        <label>아이디<input ref={first} data-testid="login-user" type="text" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={user} onChange={(e) => setUser(e.target.value)} required /></label>
+        <label>비밀번호<input data-testid="login-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
         {error && <p className="alert seal" role="alert">{error}</p>}
         <button type="submit" data-testid="login-submit" disabled={busy}>{busy ? "확인 중…" : "로그인"}</button>
         {/* v1.21(§15-1): 사내 SSO(OIDC) — 서버에 설정돼 있을 때만 */}
