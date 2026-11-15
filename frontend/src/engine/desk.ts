@@ -8,7 +8,7 @@ import type { Case, Ctx, Decision, DeskState, NodeTrace, Snapshot, Task, TaskSpe
 
 export const SCHEMA = 4;   // v4: hold_reason·MEMO 유형·resume_case 작업(E2E 결함 수정)
 export const ROLE_KO: Record<string, string> = { MARKETING_TEAM: "마케팅팀", MASIL_CEO: "Masil 대표", GROUP_CEO: "그룹 CEO/이사회", FINANCE: "재무팀",
-  SCM: "SCM", CONTRACT_OWNER: "계약 담당", AGENCY: "에이전시(모의)", SYSTEM: "시스템" };
+  SCM: "SCM", CONTRACT_OWNER: "계약 담당", TEST_AURORA: "테스트(Aurora)", AGENCY: "에이전시(모의)", SYSTEM: "시스템" };
 export const CONTRACT_STATUS_KO: Record<string, string> = {
   UNDER_REVIEW: "갱신 통보 접수·검토 중", NOTICE_APPROVED: "조건변경 통보 승인(발송 대기)", NOTICE_SENT: "조건변경 통보 발송·회신 대기",
   COUNTER_OFFER: "에이전시 역제안 검토 중", TERMINATION_APPROVED: "미갱신 결정(통보 발송 대기)", TERMINATION_SENT: "미갱신 통보 발송",

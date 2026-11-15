@@ -114,7 +114,7 @@ async function checkPage() {
     // 32차(31차 AR-02): 권한표(PRD §9)에 없는 역할 이름표(예: TEST_AURORA)가 든 번들 — 이 소스와 다른 사본에서 빌드된 신호
     const roleMap = js.match(/\{[^{}]*MARKETING_TEAM:"마케팅팀"[^{}]*\}/);
     if (roleMap) {
-      const known = new Set(["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "AGENCY", "SYSTEM"]);
+      const known = new Set(["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA", "AGENCY", "SYSTEM"]);   // TEST_AURORA: 시연·점검용 계정 역할(유지)
       const extra = [...roleMap[0].matchAll(/([A-Z][A-Z0-9_]+):"/g)].map((x) => x[1]).filter((k) => !known.has(k));
       add("B05", extra.length ? "FAIL" : "PASS", "번들의 역할 이름표", extra.length ? `권한표에 없는 역할 ${extra.join(", ")} — 시험 계정·역할을 운영 번들에서 빼고 이 소스로 다시 빌드(빌드 확인: frontend/scripts/check-bundle.cjs)` : "권한표의 역할 6개 + 에이전시(모의)·시스템뿐");
     } else add("B05", "INFO", "번들의 역할 이름표", "역할 이름표를 찾지 못함(다른 빌드 방식)");

@@ -117,6 +117,6 @@ def test_AR02_unknown_role_in_users_refuses_to_start(monkeypatch):
     from app.api.auth import Auth
     monkeypatch.setenv("AUTH_MODE", "jwt")
     monkeypatch.setenv("JWT_SECRET", "x" * 32)
-    monkeypatch.setenv("USERS", "test.aurora:Strong-pass-123:TEST_AURORA")
+    monkeypatch.setenv("USERS", "guest.user:Strong-pass-123:UNKNOWN_ROLE")
     with pytest.raises(ValueError, match="역할이 올바르지 않습니다"):
         Auth()

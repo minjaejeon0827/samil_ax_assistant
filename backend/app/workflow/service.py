@@ -86,7 +86,7 @@ def state_ko(name: str) -> str:
 
 
 ROLE_KO = {"MARKETING_TEAM": "마케팅팀", "MASIL_CEO": "Masil 대표", "GROUP_CEO": "그룹 CEO/이사회",
-           "FINANCE": "재무팀", "SCM": "SCM", "CONTRACT_OWNER": "계약 담당", "AGENCY": "에이전시(모의)", "SYSTEM": "시스템"}
+           "FINANCE": "재무팀", "SCM": "SCM", "CONTRACT_OWNER": "계약 담당", "TEST_AURORA": "테스트(Aurora)", "AGENCY": "에이전시(모의)", "SYSTEM": "시스템"}
 CONTRACT_STATUS_KO = {
     "UNDER_REVIEW": "갱신 통보 접수·검토 중", "NOTICE_APPROVED": "조건변경 통보 승인(발송 대기)",
     "NOTICE_SENT": "조건변경 통보 발송·회신 대기", "COUNTER_OFFER": "에이전시 역제안 검토 중",

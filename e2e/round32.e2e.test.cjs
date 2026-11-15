@@ -145,7 +145,7 @@ describe("31차 결함 × v1.30", () => {
       const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "as02-"));
       const mkBad = (name, fn) => { const d = path.join(tmp, name); fs.cpSync(DIST, d, { recursive: true }); for (const f of fs.readdirSync(path.join(d, "assets")).filter((x) => x.endsWith(".js"))) { const p = path.join(d, "assets", f); fs.writeFileSync(p, fn(fs.readFileSync(p, "utf8"))); } return d; };
       const dPh = mkBad("ph", (s) => s.replace(/"data-testid":"login-user"/g, '"data-testid":"login-user",placeholder:"test.aurora"'));
-      const dRole = mkBad("role", (s) => s.replace(/MARKETING_TEAM:"마케팅팀"/, 'TEST_AURORA:"테스트(Aurora)",MARKETING_TEAM:"마케팅팀"'));
+      const dRole = mkBad("role", (s) => s.replace(/MARKETING_TEAM:"마케팅팀"/, 'UNKNOWN_ROLE:"미등록 역할",MARKETING_TEAM:"마케팅팀"'));
       const run = (d) => spawnSync("node", [chk, d], { encoding: "utf8" });
       good = run(DIST); ph = run(dPh); role = run(dRole);
       if (good.status !== 0) bad.push(`정상 번들인데 실패: ${good.stdout}${good.stderr}`);
@@ -154,8 +154,8 @@ describe("31차 결함 × v1.30", () => {
       if (/test\.aurora/.test(ph.stdout + ph.stderr)) bad.push("확인 결과에 예시 글자 값이 그대로 찍힘");
     }
     // 서버: 권한표에 없는 역할의 계정으로는 기동하지 않음(31차 배포는 이 소스와 다른 사본)
-    const p = spawnSync("python3", ["-c", "import os; os.environ.update(AUTH_MODE='jwt', JWT_SECRET='x'*32, USERS='test.aurora:Strong-pass-123:TEST_AURORA'); from app.api.auth import Auth; Auth()"], { cwd: path.join(H.ROOT, "backend"), encoding: "utf8" });
-    if (p.status === 0 || !/역할이 올바르지 않습니다/.test(p.stderr)) bad.push(`TEST_AURORA 계정으로 서버가 기동됨: ${p.stderr.slice(-160)}`);
+    const p = spawnSync("python3", ["-c", "import os; os.environ.update(AUTH_MODE='jwt', JWT_SECRET='x'*32, USERS='guest.user:Strong-pass-123:UNKNOWN_ROLE'); from app.api.auth import Auth; Auth()"], { cwd: path.join(H.ROOT, "backend"), encoding: "utf8" });
+    if (p.status === 0 || !/역할이 올바르지 않습니다/.test(p.stderr)) bad.push(`권한표에 없는 역할 계정으로 서버가 기동됨: ${p.stderr.slice(-160)}`);
     assert.deepEqual(bad, []);
     return { good: (good?.stdout || "").trim().slice(0, 120), placeholder: (ph?.stdout || "").trim().slice(0, 120), role: (role?.stdout || "").trim().slice(0, 120) };
   });
@@ -316,7 +316,7 @@ describe("31차 결함 × v1.30", () => {
     fs.cpSync(DIST, bad, { recursive: true });
     for (const f of fs.readdirSync(path.join(bad, "assets")).filter((x) => x.endsWith(".js"))) {
       const fp = path.join(bad, "assets", f);
-      fs.writeFileSync(fp, fs.readFileSync(fp, "utf8").replace(/"data-testid":"login-user"/g, '"data-testid":"login-user",placeholder:"test.aurora"').replace(/MARKETING_TEAM:"마케팅팀"/, 'TEST_AURORA:"테스트(Aurora)",MARKETING_TEAM:"마케팅팀"'));
+      fs.writeFileSync(fp, fs.readFileSync(fp, "utf8").replace(/"data-testid":"login-user"/g, '"data-testid":"login-user",placeholder:"test.aurora"').replace(/MARKETING_TEAM:"마케팅팀"/, 'UNKNOWN_ROLE:"미등록 역할",MARKETING_TEAM:"마케팅팀"'));
     }
     const run = async (dist) => {
       const api = await H.startApi(port, { ...JWT, SERVE_FRONTEND: "1", FRONTEND_DIST: dist, ALLOWED_ORIGINS: "" });

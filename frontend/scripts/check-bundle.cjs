@@ -6,7 +6,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const dir = path.resolve(process.argv[2] || "dist");
-const ROLES = new Set(["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "AGENCY", "SYSTEM"]);
+const ROLES = new Set(["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA", "AGENCY", "SYSTEM"]);   // TEST_AURORA: 시연·점검용 계정 역할(사용자 결정으로 유지)
 const assets = path.join(dir, "assets");
 if (!fs.existsSync(assets)) { console.error(`check-bundle: ${assets} 없음 — 빌드 결과 폴더를 넘겨 주세요`); process.exit(2); }
 const problems = [];
