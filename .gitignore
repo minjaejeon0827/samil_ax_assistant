@@ -16,3 +16,7 @@ e2e/.mariadb/
 demo/tts_model/
 demo/raw/
 e2e/.venv-clean/
+
+# 로컬 상태·빌드 캐시
+.axhub/
+*.tsbuildinfo
