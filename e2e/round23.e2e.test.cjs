@@ -318,7 +318,7 @@ describe("§15 남은 일 · 새 기능 × 기존 보장", () => {
 // ---------------- §14 리스크와 한계 · §15 대조 ----------------
 // 행 ↔ 테스트 짝은 e2e/risk_guards.cjs(22차와 함께 씀)
 // 23차보다 뒤에 실행되는 묶음(round24)의 짝은 여기서 보지 않는다
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[4-8]|30):/.test(r))]));
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[4-8]|3[02]):/.test(r))]));
 // v1.23에서 한 일 — §15 '남은 일' 열에 남아 있으면 안 됨
 const DONE_IN_V123 = [/back-channel|IdP가 먼저 끊는/, /서버 여러 대의 공동 한도/];
 const SUITES = () => (fs.readFileSync(path.join(__dirname, "run_all.sh"), "utf8").match(/for s in ([^;]+);/) || [, ""])[1].trim().split(/\s+/);

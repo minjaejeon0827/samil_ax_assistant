@@ -10,7 +10,7 @@
 """
 from __future__ import annotations
 
-ALL = ("MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA")
+ALL = ("MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER")
 
 COMMAND_ROLES: dict[str, tuple[str, ...]] = {
     "change_condition": ("FINANCE", "SYSTEM"),      # 현금 전망 가정(SYSTEM: 재무 회신 사건이 내부에서 호출)

@@ -20,7 +20,7 @@ export function App() {
     const set = () => document.documentElement.style.setProperty("--top-h", `${Math.ceil(el.getBoundingClientRect().height)}px`);
     set(); const ro = new ResizeObserver(set); ro.observe(el); return () => ro.disconnect();
   }, []);
-  const { snap, ui, setUi, dispatch, reset, toast, busy, intaking, uploadContract, ssoLabel, ssoStart, changePassword, offline, saveError, loadAudit, verifyAudit, role, session, needLogin, login, logout, newVersion, deliveries, redeliver, intakeMsg, renewalApi } = useDesk();
+  const { snap, ui, setUi, dispatch, reset, toast, busy, intaking, uploadContract, ssoLabel, ssoStart, changePassword, offline, saveError, loadAudit, verifyAudit, role, session, needLogin, login, logout, newVersion, deliveries, redeliver, intakeMsg, renewalApi, loading } = useDesk();
   const [pwOpen, setPwOpen] = useState(false);   // v1.21(§15-1): 비밀번호 변경 창
   // E-04: 결재 서류에서 결정하면 서류가 새로 그려져 포커스가 사라지고(키보드) 결과가 화면 밖에 남았다(모바일)
   //       → 사용자가 서류에서 직접 한 동작 뒤에 다시 그려질 때만 제목으로 포커스·스크롤을 옮긴다
@@ -44,7 +44,9 @@ export function App() {
         <p className={`deadline ${dday <= 3 ? "seal" : ""}`}>INF-001 통보 기한 {fmtDate(CONTRACT.notice_deadline)} <b>{dday >= 0 ? `D-${dday}` : "경과"}</b></p>
         <label className="role">결재자 역할
           {/* J-01: 로그인 모드에서는 역할을 토큰이 정하므로 바꿀 수 없다 */}
-          <select data-testid="role-select" value={role} disabled={!!session} onChange={(e) => setUi((u) => ({ ...u, role: e.target.value }))}>{ROLES.map((r) => <option key={r} value={r}>{ROLE_KO[r]}</option>)}</select>
+          <select data-testid="role-select" value={role} disabled={!!session} onChange={(e) => setUi((u) => ({ ...u, role: e.target.value }))}>{ROLES.map((r) => <option key={r} value={r}>{ROLE_KO[r]}</option>)}
+            {/* 32차(AR-02): 선택지에 없는 역할로 로그인했으면 첫 항목(그룹 CEO)으로 보이지 않게 그 역할 이름을 그대로 보여 준다 */}
+            {!ROLES.includes(role) && <option value={role}>{ROLE_KO[role] ?? role}(권한표에 없는 역할)</option>}</select>
         </label>
         {API_ENABLED && <label className="role">실행 위치
           <select value={ui.mode} onChange={(e) => setUi((u) => ({ ...u, mode: e.target.value as "local" | "api" }))}><option value="local">브라우저</option><option value="api">FastAPI 서버</option></select></label>}
@@ -75,12 +77,16 @@ export function App() {
         {ui.tab === "facts" && (<><FactsView /><h3 className="sec">배분은 성과를 따라가는가</h3><AllocationChart /><h3 className="sec">13주 현금 재전망</h3><CashChart assumption={snap.ctx.cash_assumption} /></>)}
       </main>
 
-      <aside className="right" tabIndex={0} aria-label="부서 작업·상태 기록·발송함·감사 로그">
-        <Tasks snap={snap} role={role} dispatch={dispatch} />
-        <StateRegister snap={snap} role={role} dispatch={dispatch} />
-        <Outbox snap={snap} />
-        {deliveries && <Deliveries items={deliveries} role={role} onRetry={(eid) => void redeliver(eid)} />}
-        <AuditLog who={session?.user ?? ""} snap={snap} loadAudit={loadAudit} verifyAudit={verifyAudit} />
+      <aside className="right" tabIndex={0} aria-label="부서 작업·상태 기록·발송함·감사 로그" aria-busy={loading}>
+        {/* 32차(AR-06): 서버 기록이 오기 전에는 빈 칸을 그렸다가 데이터가 오면 아래 칸이 한꺼번에 밀렸다(로그인 상태 새로고침 CLS 0.106).
+            받기 전에는 칸을 그리지 않는다 — 새로 나타나는 것은 밀림으로 세지 않는다 */}
+        {loading ? <p className="loading-note">{needLogin ? "로그인하면 서버 기록을 불러옵니다." : "서버 기록을 불러오는 중…"}</p> : <>
+          <Tasks snap={snap} role={role} dispatch={dispatch} />
+          <StateRegister snap={snap} role={role} dispatch={dispatch} />
+          <Outbox snap={snap} />
+          {deliveries && <Deliveries items={deliveries} role={role} onRetry={(eid) => void redeliver(eid)} />}
+          <AuditLog who={session?.user ?? ""} snap={snap} loadAudit={loadAudit} verifyAudit={verifyAudit} />
+        </>}
       </aside>
 
       {needLogin && <LoginDialog onLogin={login} ssoLabel={ssoLabel} onSso={ssoStart} onLocal={() => setUi((u) => ({ ...u, mode: "local" }))} />}

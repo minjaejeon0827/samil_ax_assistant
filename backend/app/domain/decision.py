@@ -219,8 +219,11 @@ class DecisionEngine:
         t, chk, cite = rec.get("terms") or {}, rec.get("checks") or [], rec.get("citations") or {}
         name = t.get("counterparty") or "상대방 미상"
         src = lambda k: f"{t.get('filename', '계약서')} {cite.get(k, {}).get('ref', '')}".strip()  # noqa: E731
-        deadline = t.get("notice_deadline") or t.get("expiry") or ctx.today
-        dday = (date.fromisoformat(deadline) - date.fromisoformat(ctx.today)).days
+        # 32차(AR-04): 자동 갱신(또는 갱신 여부 미확인)인데 통보 기한을 못 찾으면 기한 칸을 비운다 — 만료일을 통보 기한처럼 쓰면
+        # 결재 서류의 D-day·확인 작업 기한이 실제 기한보다 늦어진다(31차: 실제 11/1인데 12/31·D-183·작업 ~12/24)
+        notice_unknown = t.get("auto_renew") is not False and not t.get("notice_deadline")
+        deadline = None if notice_unknown else (t.get("notice_deadline") or t.get("expiry") or ctx.today)
+        dday = None if deadline is None else (date.fromisoformat(deadline) - date.fromisoformat(ctx.today)).days
         fee = t.get("annual_fee_krw")
         fc = self.cash(ctx)
         evidence = []
@@ -228,7 +231,9 @@ class DecisionEngine:
             evidence.append(ev("ORIGINAL", f"계약 만료 {t['expiry']}" + (f", 자동 갱신 {t.get('renewal_years') or '?'}년" if t.get("auto_renew") else (", 자동 갱신하지 않음(계약서에 명시)" if t.get("auto_renew") is False else ", 자동 갱신 여부 미확인(원문 확인)")), src("expiry"), "FULL"))
         if t.get("notice_deadline"):
             left = f" — D-{dday}" if dday >= 0 else f" — {-dday}일 지남"
-            evidence.append(ev("ORIGINAL", f"해지·조건변경 통보 기한 {t['notice_deadline']}" + (f"(만료 {t['notice_days']}일 전)" if t.get("notice_days") else "") + left, src("notice_deadline"), "FULL"))
+            human = "notice_deadline" in (t.get("provided") or {})   # 32차(O-7): 사람이 넣은 통보 일수로 계산한 기한은 원문 조항이 출처가 아니다
+            evidence.append(ev("CALC" if human else "ORIGINAL", f"해지·조건변경 통보 기한 {t['notice_deadline']}" + (f"(만료 {t['notice_days']}일 전)" if t.get("notice_days") else "") + left,
+                               "사람 입력(contract_facts) — 만료일 − 확인한 통보 일수" if human else src("notice_deadline"), "NA" if human else "FULL"))
         if fee is not None:
             evidence.append(ev("ORIGINAL", f"연간 고정 금액 {won(fee)}({t.get('fee_basis')})" + (f" + 변동 {t['variable_fee']}" if t.get("variable_fee") else ""), src("annual_fee_krw"), "FULL"))
         for k, pv in (t.get("provided") or {}).items():   # 24차: 사람이 확인해 넣은 값은 원문과 구분해 표시
@@ -272,6 +277,7 @@ class DecisionEngine:
             # 30차(R30-01): 스캔 OCR이 '60일'을 못 읽자 만료일(12/31)을 통보 기한처럼 결재 서류에 올렸다(실제 기한 11/1을 지나 자동 갱신될 수 있음)
             needs.append("통보 기한 미확인 — 자동 갱신 조항은 있는데 '만료 며칠 전 통보'를 찾지 못함(만료일을 통보 기한으로 쓰지 않음, 원문 확인)")
         high = [c for c in chk if c["level"] == "high"]
+        dl_text = deadline or f"미확인(만료 {t.get('expiry') or '미상'} — 원문의 '만료 n일 전' 확인)"
         if t.get("auto_renew") is None:
             reco, label = "APPROVE", "자동 갱신 여부 확인 필요 — 원문의 갱신 조항을 확인한 뒤 결정"
             proposal = f"{name} 계약 — 자동 갱신 여부를 원문에서 확인(만료 {t.get('expiry') or '미상'})"
@@ -280,16 +286,20 @@ class DecisionEngine:
             proposal = f"{name} 계약 만료({t.get('expiry') or '미상'}) 관리 — 갱신 여부는 만료 전 별도 결정"
         elif high:
             reco, label = "CHANGE_TERMS", "조건변경 통보 권고 — 위약금·선급·기한 위험을 그대로 자동 갱신하지 않음"
-            proposal = f"{name} 계약 '조건변경 통보' 발송(위약금·선급 조건 재협상) — 통보 기한 {deadline} 전"
+            proposal = f"{name} 계약 '조건변경 통보' 발송(위약금·선급 조건 재협상) — 통보 기한 {dl_text}" + (" 전" if deadline else "")
         else:
             reco, label = "APPROVE", "동일 조건 갱신 검토 가능 — 기한 전 결정 기록"
-            proposal = f"{name} 계약 동일 조건 갱신(통보하지 않음)을 승인으로 기록 — 기한 {deadline}"
-        before = (date.fromisoformat(deadline) - timedelta(days=1)).isoformat()
-        notify = task("CONTRACT_OWNER", f"{name}에 조건변경 통보 발송(통보 기한 {deadline} 전)", before, "NOTIFY", channel="email:counterparty", effect="RENEWAL_NOTICE_SENT",
-                      message=f"[Masil Commerce → {name}] 계약 조건변경 통보: 현 조건 동일 갱신 불가. 위약금·지급 조건 재협상을 요청드립니다. 통보 기한 {deadline} 이전 회신 바랍니다.")
+            proposal = f"{name} 계약 동일 조건 갱신(통보하지 않음)을 승인으로 기록 — 기한 {dl_text}"
+        if deadline is None:   # 기한을 모르면 결재로 올리지 않는다(확인 필요) — 아래 작업은 쓰이지 않지만 형식은 같게
+            deadline_for_tasks = t.get("expiry") or ctx.today
+        else:
+            deadline_for_tasks = deadline
+        before = (date.fromisoformat(deadline_for_tasks) - timedelta(days=1)).isoformat()
+        notify = task("CONTRACT_OWNER", f"{name}에 조건변경 통보 발송(통보 기한 {deadline_for_tasks} 전)", before, "NOTIFY", channel="email:counterparty", effect="RENEWAL_NOTICE_SENT",
+                      message=f"[Masil Commerce → {name}] 계약 조건변경 통보: 현 조건 동일 갱신 불가. 위약금·지급 조건 재협상을 요청드립니다. 통보 기한 {deadline_for_tasks} 이전 회신 바랍니다.")
         on_approve = ([notify] if reco == "CHANGE_TERMS" else []) + [task("FINANCE", f"{name} 계약 지급 일정을 현금 계획에 반영", before)]
         on_reject = [task("CONTRACT_OWNER", f"{name} 계약 — 기한 전 재검토 후 재상신", before, "ESCALATE"),
-                     task("CONTRACT_OWNER", f"{deadline} 기한 관리: 미결정 시 자동 갱신(=승인 없는 체결) 경고", before, "WATCH")]
+                     task("CONTRACT_OWNER", f"{deadline_for_tasks} 기한 관리: 미결정 시 자동 갱신(=승인 없는 체결) 경고", before, "WATCH")]
         return {
             "subject": {"type": "RENEWAL", "id": rid, "name": name, "deadline": deadline, "dday": dday},
             "proposal": proposal, "recommendation": "NEEDS_INFO" if needs else reco,

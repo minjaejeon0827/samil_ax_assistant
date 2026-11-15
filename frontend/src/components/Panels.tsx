@@ -32,7 +32,8 @@ export function Intake({ dispatch, snap, busy = false, onUpload }: { dispatch: (
         </li>
         <li>
           <p className="scen-title">정보 부족·승인 거절</p>
-          <button onClick={() => dispatch({ type: "reply", key: "agency_payment_schedule" })} disabled={!needInfo}>에이전시 지급 일정 회신</button>
+          <button onClick={() => dispatch({ type: "reply", key: "agency_payment_schedule" })} disabled={!needInfo}
+            title={needInfo ? "" : snap.ctx.offer?.payment_schedule ? "지급 일정 회신은 이미 받았습니다(같은 회신은 다시 반영하지 않음)" : "지급 일정 회신을 기다리는 계약 건이 없습니다(역제안이 '확인 필요'일 때 켜짐)"}>에이전시 지급 일정 회신</button>
           <button onClick={() => dispatch({ type: "reply", key: "agency_accepts_termination" })} disabled={snap.ctx.contract_status !== "TERMINATION_SENT"}>에이전시 미갱신 수령 확인</button>
         </li>
       </ol>

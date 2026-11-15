@@ -1,6 +1,7 @@
 // 시연 영상 2부(v1.21~v1.24, PRD §15 다음 단계) — 서버 모드: 사내 SSO 로그인 → 계약서 업로드(LLM 요약) → 조항 추출·자동 확인 → 같은 엔진의 결재
 // → 요약 평가 → 결재 뒤 AI 설명 보관함 → 실패한 전자결재 전송 다시 보내기 → 외화 계약의 확인한 값 넣기 → 11쪽 스캔 진행 표시 → IdP가 먼저 끊는 로그아웃.
 // 24차: 자막마다 AI 음성 해설(demo/narration_src.json → demo/tts.py → encode.sh가 MP4에 넣음).
+// 32차(기능 고정): 제출 장면 순서의 '6. 추가 확장'으로 들어가고 1080p로 녹화. 5분 미만을 지키려고 요약 평가·결재 뒤 설명 보관함(최대 40초 대기)·실패 전송 복구·IdP 백채널 장면은 뺐다(기능은 그대로, E2E가 확인).
 // 28차(기능 고정): 장면은 그대로, 끝 자막의 E2E 수만 바꿈(감사 기록의 머리값 문구는 '→ 메신저 전송 요청').
 // 27차: 운영 DB 장면을 화면의 '체인 검증' 버튼으로(v1.27), 머리값 정기 기록(AUDIT_ANCHOR_S=20), 5분 미만을 지키려고 모의 LLM 지연 4→2·12→11초(설명이 결재 뒤에 도착해야 보관함 장면이 됨).
 // 26차: 운영 DB 장면에 트리거 우회 → 해시 체인 검증을 더하고, 5분 미만을 지키려고 '적대적 파일' 자막을 스캔 장면에 합침.
@@ -43,20 +44,24 @@ async function waitHttp(u) { for (let i = 0; i < 100; i++) { try { if ((await fe
       SERVE_FRONTEND: "1", FRONTEND_DIST: path.join(ROOT, "frontend", "dist-docker"), ALLOWED_ORIGINS: "" } });
   try {
     await waitHttp(`http://127.0.0.1:${IDP}/jwks`); await waitHttp(`http://127.0.0.1:${LLM}/__stats`); await waitHttp(`http://127.0.0.1:${ESIGN}/__received`); await waitHttp(`${BASE}/api/health`);
-    await ctl(LLM, { mode: "ok", latency: 2 }); await ctl(ESIGN, { fail: 100 });   // LLM은 느리게(요약·설명 '작성 중'), 전자결재는 장애 중
+    await ctl(LLM, { mode: "ok", latency: 2 }); await ctl(ESIGN, { fail: 0 });   // LLM은 느리게(요약·설명 '작성 중'). 32차: 전자결재 장애 장면을 빼서 정상 응답
     await fetch(`http://127.0.0.1:${IDP}/__user`, { method: "POST", body: JSON.stringify({ sub: "u-1001", preferred_username: "kim.ceo@aurora.example", aurora_role: "GROUP_CEO" }) });
     const browser = await chromium.launch();
-    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, recordVideo: { dir: OUT, size: { width: 1440, height: 900 } } });
+    const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 }, recordVideo: { dir: OUT, size: { width: 1920, height: 1080 } } });   // 32차: 1080p
     const p = await ctx.newPage();
     p.on("dialog", (d) => d.accept());
     const wait = (ms) => p.waitForTimeout(ms);
-    const { caption, save } = require("./narrate.cjs").makeCaption(p, "part2", { pointerEvents: "none" });   // 24차: AI 음성 해설
+    const { caption, save } = require("./narrate.cjs").makeCaption(p, "part2", { pointerEvents: "none", font: "18px/1.55 'IBM Plex Sans KR', sans-serif", maxWidth: "760px", bottom: "90px" });   // 24차: AI 음성 해설
     await p.goto(BASE); await p.waitForSelector(".top");
     await p.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await p.reload(); await p.waitForSelector(".top");
     await p.locator(".role select").nth(1).selectOption("api"); await wait(700);
-    await caption("2부 — 사내 SSO 로그인", "서버 모드 로그인 창의 '사내 SSO로 로그인'. 인가 코드 + PKCE, IdP 공개키(JWKS)로 서명·대상·만료·nonce를 검증하고 역할은 IdP가 정합니다.");
+    const scene = () => p.evaluate(() => { let el = document.getElementById("demo-scene"); if (!el) { el = document.createElement("div"); el.id = "demo-scene";
+      Object.assign(el.style, { position: "fixed", top: "12px", right: "130px", zIndex: 99, background: "#1d2a36", color: "#fff", padding: "6px 14px", borderRadius: "4px",
+        font: "600 16px 'IBM Plex Sans KR', sans-serif", pointerEvents: "none" }); document.body.appendChild(el); } el.textContent = "장면 6/6 · 추가 확장(서버 모드)"; });
+    await scene();
+    await caption("추가 확장 · 서버 모드와 사내 SSO", "서버 모드 · 운영 DB(MariaDB)는 실제 작동, 사내 SSO(IdP)·LLM·전자결재는 모의 서버. 인가 코드 + PKCE, IdP 공개키(JWKS)로 서명·대상·만료·nonce를 검증하고 역할은 IdP가 정합니다.");
     await p.locator('[data-testid="login-sso"]').click();
-    await p.locator('[data-testid="whoami"]').waitFor({ timeout: 10000 }); await wait(500);
+    await p.locator('[data-testid="whoami"]').waitFor({ timeout: 10000 }); await scene(); await wait(500);
     await caption("SSO 계정으로 로그인", "kim.ceo@aurora.example · 그룹 CEO/이사회 · SSO. 주소창의 인가 코드는 바로 지우고 감사 기록에 남깁니다.");
     await p.locator("#contract-file").scrollIntoViewIfNeeded();
     await caption("계약서 업로드 → 조항 추출", "광고 대행 계약서(합성 견본). 조항을 나눠 검색(BM25)하고 규칙으로 기간·통보 기한·금액·지급·위약금을 뽑습니다.");
@@ -72,33 +77,9 @@ async function waitHttp(u) { for (let i = 0; i < 100; i++) { try { if ((await fe
     await caption("결재 → 통보 작업", "AI 설명이 '작성 중'일 때 승인했습니다. 결재 서류에는 결재한 사람이 본 근거 기반 설명이 그대로 남습니다.");
     await p.evaluate(() => document.querySelector('[data-testid="contract-checks"]')?.scrollIntoView({ behavior: "smooth", block: "center" })); await wait(700);
     await caption("위약금·지급 조건 자동 확인", "위약금 60%·선급 50%는 위험, 통보 기한 7/17 D-16. 연락처·계좌는 가리고, 못 찾은 값은 '확인 필요'로 남깁니다.");
-    await p.evaluate(() => document.querySelector('[data-testid="contract-summary"]')?.scrollIntoView({ behavior: "smooth", block: "center" })); await wait(600);
-    await p.locator('[data-testid="summary-up"]').click().catch(() => {}); await wait(500);
-    await caption("요약 평가(v1.24)", "LLM 요약은 참고용 — 결재자가 '도움됨·부정확함'(사유)을 누르면 한 사람 한 표로 쌓이고 LLM별 도움 비율로 집계됩니다.");
-    await p.locator('[data-testid="explain-archive"]').waitFor({ timeout: 40000 });
-    await p.evaluate(() => { const d = document.querySelector('[data-testid="explain-archive"]'); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "center" }); } }); await wait(600);
-    await caption("결재 뒤 AI 설명 보관함", "결재 뒤 도착한 AI 설명은 서류를 바꾸지 않고 보관함에 남습니다 — 누가 언제 결재한 뒤 왔는지, 판사 점수와 함께.");
-    await p.locator('[data-testid="deliveries"] [data-testid^="redeliver-"]').first().waitFor({ timeout: 15000 });
-    await p.evaluate(() => document.querySelector('[data-testid="deliveries"]')?.scrollIntoView({ behavior: "smooth", block: "start" })); await wait(600);
-    await caption("실패한 전자결재 전송", "전자결재 장애로 결재 요청·종료가 실패했습니다. 실패한 전송은 '외부 채널 전송' 맨 앞에 보입니다.");
-    await ctl(ESIGN, { fail: 0 });
-    const eids = await p.locator('[data-testid="deliveries"] [data-testid^="redeliver-"]').evaluateAll((els) => els.map((e) => e.getAttribute("data-testid").slice(10)));
-    for (const id of eids) { await p.locator(`[data-testid="redeliver-${id}"]`).click(); await wait(400); }
-    await caption("복구 → 다시 보내기", "같은 이벤트 번호로 다시 보냅니다(받는 쪽이 중복을 거름). 여럿이 동시에 눌러도 한 번만 보냅니다.");
-    // 외화 계약 → 확인 필요 → 확인한 값 넣기(v1.23 외화 표시 · v1.24 끝맺음)
+    // 32차: 요약 평가 · 결재 뒤 AI 설명 보관함 · 실패한 전자결재 전송 복구 장면은 5분 미만을 지키려고 뺐다(E2E round21·22·24가 계속 확인).
+    // 32차: 외화 계약 → 확인한 값 넣기 장면은 5분 미만을 지키려고 뺐다(확인 필요의 끝맺음은 1부 장면 4와 E2E round24·round32가 확인).
     await ctl(LLM, { mode: "ok", latency: 0 });
-    await p.locator("#contract-file").scrollIntoViewIfNeeded();
-    await p.locator('[data-testid="contract-file"]').setInputFiles(path.join(ROOT, "data", "samples", "contracts", "variants", "freight_en_usd.md"));
-    await p.locator(".cases .case-item", { hasText: "Pacific" }).waitFor({ timeout: 15000 }); await wait(400);
-    await p.locator(".cases .case-item", { hasText: "Pacific" }).click(); await wait(700);
-    await p.evaluate(() => document.querySelector('[data-testid="contract-checks"]')?.scrollIntoView({ behavior: "smooth", block: "center" })); await wait(600);
-    await caption("외화 계약 — 확인 필요", "영문 USD 계약(합성). 외화는 원화로 바꾸지 않고 '확인 필요'로 멈춥니다. 갱신 조항을 못 찾아도 '없음'으로 단정하지 않습니다.");
-    await p.evaluate(() => document.querySelector('[data-testid="contract-facts"]')?.scrollIntoView({ behavior: "smooth", block: "center" })); await wait(500);
-    await p.locator('[data-testid="facts-fee"]').fill("1324800000"); await wait(200);
-    await p.locator('[data-testid="facts-note"]').fill("USD 80,000 × 12 × 1,380원(재무팀 7/1 환율)"); await wait(300);
-    await caption("확인한 값 넣기(v1.24)", "재무팀·계약 담당·그룹 CEO가 확인한 값을 넣으면 '사람 입력'(누가·언제·근거)으로 남고 다시 판단해 결재로 올라갑니다.");
-    await p.locator('[data-testid="facts-save"]').click(); await wait(1200);
-    await p.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" })); await wait(500);
     // v1.23 스캔 PDF 11쪽 — 업로드 즉시 접수, 진행 표시
     await p.locator("#contract-file").scrollIntoViewIfNeeded();
     await p.locator('[data-testid="contract-file"]').setInputFiles(LONG_SCAN);
@@ -111,8 +92,8 @@ async function waitHttp(u) { for (let i = 0; i < 100; i++) { try { if ((await fe
       let el = document.getElementById("demo-sql");
       if (!el) {
         el = document.createElement("div"); el.id = "demo-sql";
-        Object.assign(el.style, { position: "fixed", right: "18px", top: "64px", zIndex: 98, width: "820px", maxHeight: "650px", overflow: "hidden", background: "#13202b",
-          color: "#d8e6ef", padding: "14px 18px 16px", borderRadius: "4px", font: "13px/1.55 'IBM Plex Mono', ui-monospace, monospace", boxShadow: "0 4px 18px rgba(0,0,0,.35)", pointerEvents: "none" });
+        Object.assign(el.style, { position: "fixed", right: "18px", top: "64px", zIndex: 98, width: "980px", maxHeight: "820px", overflow: "hidden", background: "#13202b",
+          color: "#d8e6ef", padding: "14px 18px 16px", borderRadius: "4px", font: "15px/1.55 'IBM Plex Mono', ui-monospace, monospace", boxShadow: "0 4px 18px rgba(0,0,0,.35)", pointerEvents: "none" });
         document.body.appendChild(el);
       }
       el.replaceChildren();
@@ -120,7 +101,7 @@ async function waitHttp(u) { for (let i = 0; i < 100; i++) { try { if ((await fe
       el.append(h);
       for (const b of bl) {
         if (b.rows) {
-          const tb = document.createElement("table"); Object.assign(tb.style, { borderCollapse: "collapse", margin: "4px 0 10px", font: "13px/1.4 'IBM Plex Sans KR', sans-serif" });
+          const tb = document.createElement("table"); Object.assign(tb.style, { borderCollapse: "collapse", margin: "4px 0 10px", font: "15px/1.4 'IBM Plex Sans KR', sans-serif" });
           b.rows.forEach((r, ri) => { const tr = tb.insertRow(); r.forEach((c) => { const td = tr.insertCell(); td.textContent = c;
             Object.assign(td.style, { border: "1px solid #3a5163", padding: "3px 10px", color: ri ? "#e8f1f6" : "#9fc3d9", fontWeight: ri ? "400" : "600", textAlign: /^\d+$/.test(c) ? "right" : "left" }); }); });
           el.append(tb);
@@ -167,11 +148,7 @@ async function waitHttp(u) { for (let i = 0; i < 100; i++) { try { if ((await fe
       { s: `GET /api/health → 지금까지 맺은 DB 연결 ${health.db.opened}개 · 쉬는 연결 ${health.db.idle}개 · 트리거·보기 ${Object.values(health.db.guards).filter(Boolean).length}/${Object.keys(health.db.guards).length}`, dim: true }]);
     await caption("운영 DB — 백업과 복구", "서버가 쓰는 중에도 잠그지 않고 백업하고, 새 DB로 복구하면 트리거·보기까지 살아 있습니다. 연결은 풀에서 재사용합니다.");
     await p.evaluate(() => document.getElementById("demo-sql")?.remove());
-    // v1.23 IdP가 먼저 끊는 로그아웃(Back-Channel)
-    await caption("IdP가 먼저 로그아웃시키면", "퇴사·계정 잠금처럼 사내 SSO가 먼저 로그아웃을 알리면 이 시스템의 그 사람 로그인도 모두 끊깁니다.");
-    await fetch(`http://127.0.0.1:${IDP}/__backchannel`, { method: "POST", body: JSON.stringify({ to: `${BASE}/api/auth/oidc/backchannel`, sub: "u-1001", no_sid: true }) });
-    await p.locator('[data-testid="login-sso"]').waitFor({ timeout: 10000 }); await wait(800);
-    await caption("끝 — v1.21~v1.28", "SSO·백채널 로그아웃 · 전자결재 다시 보내기 · 계약서 추출(스캔·영문·문구 변형)·LLM 요약과 평가 · 확인 필요의 끝맺음 · 토큰 한도 · 운영 DB(연결 풀·정규화·트리거·보기·백업 복구·위변조 탐지·머리값). v1.28은 기능 고정 — E2E 275개 통과.");
+    await caption("끝 — 시험과 버전(v1.30)", "v1.30은 기능 고정 — 31차 결함(배포 번들 검사·업로드 계약서 확인 경로·기한 경과 뒤 작업 정리·화면 밀림)만 고쳤습니다. pytest 230 · vitest 31 · E2E 296개 통과.");
     save();
     await ctx.close(); await browser.close();
   } finally {

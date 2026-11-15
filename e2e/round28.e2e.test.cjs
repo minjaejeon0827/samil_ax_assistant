@@ -14,7 +14,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { execFileSync, spawn, spawnSync } = require("node:child_process");
 const H = require("./helpers.cjs");
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !r.startsWith("round30:"))]));   // 30차는 28차 뒤에 돈다
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round3[02]:/.test(r))]));   // 30차는 28차 뒤에 돈다
 
 const KEY = "e2e-key";
 const PORT = 3328, SOCK = `/tmp/aurora-e2e-${PORT}.sock`, DATADIR = path.join(H.ROOT, "e2e", ".mariadb");

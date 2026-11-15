@@ -48,7 +48,7 @@ from dataclasses import dataclass
 
 from fastapi import HTTPException, Request
 
-ROLES = {"MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA"}   # TEST_AURORA: 시연·점검용 계정(조회·일반 접수만, 특수 권한 없음)
+ROLES = {"MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER"}
 CURRENT_USER: ContextVar[str | None] = ContextVar("current_user", default=None)   # 감사 로그의 '누가'
 _ITER = 100_000
 LOCK_AFTER, LOCK_WINDOW_S, LOCK_ACCOUNT_MAX = 5, 60, 30

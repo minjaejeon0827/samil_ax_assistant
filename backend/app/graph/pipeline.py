@@ -233,7 +233,9 @@ def security_output_node(state: CaseState) -> dict:
     masked = sum(1 for x in verdicts.values() if x == "warn")
     return {"decision": d, "explanation": explanation, "llm": llm, "judge": judged,
             "validation": {**state.get("validation", {}), "output": verdicts},
-            "trace": _t(state, "security_output", f"check_output — 마스킹 {masked}건", t0)}
+            # 32차(O-9): '마스킹 0건'만 쓰면 가린 것이 없다고 읽힌다 — 접수 단계에서 이미 가린 사실을 함께 남긴다
+            "trace": _t(state, "security_output", f"check_output — 출력 단계 추가 마스킹 {masked}건"
+                        + (" · 접수 단계에서 연락처·계좌를 이미 가림" if "****" in (state.get("event_text") or "") else ""), t0)}
 
 
 def route_after_input(state: CaseState) -> str:

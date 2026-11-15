@@ -20,9 +20,10 @@ OUT = HERE / "raw" / "voice"
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
+    # 32차: 말 빠르기 1.05 → 1.0(제출 장면 순서로 다시 짜며 5분 미만을 지키려고). 더 느리게 들으려면 TTS_LENGTH=1.05
     cfg = sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(vits=sherpa_onnx.OfflineTtsVitsModelConfig(
         model=str(MODEL / "ko_KO-kss_low.onnx"), tokens=str(MODEL / "tokens.txt"), data_dir=str(MODEL / "espeak-ng-data"),
-        noise_scale=0.333, length_scale=float(os.getenv("TTS_LENGTH", "1.05"))), num_threads=2))
+        noise_scale=0.333, length_scale=float(os.getenv("TTS_LENGTH", "1.0"))), num_threads=2))
     tts = sherpa_onnx.OfflineTts(cfg)
     src = json.loads((HERE / "narration_src.json").read_text(encoding="utf-8"))
     man, total = {}, 0.0

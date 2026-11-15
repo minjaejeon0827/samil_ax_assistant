@@ -231,3 +231,39 @@ describe("v1.29 rule fixes (browser engine = server)", () => {
     expect(i).toBeLessThan(j);
   });
 });
+
+// 32차(31차 배포 주소에서 찾은 결함) — 서버(backend/tests/test_v130.py)와 같은 규칙
+describe("v1.30 rule fixes (browser engine = server)", () => {
+  const rejected = () => {
+    let s = run(initialState(), { type: "intake", kind: "CONTRACT_RENEWAL_NOTICE" });
+    const n = Object.values(s.cases).find((c) => c.kind === "CONTRACT_RENEWAL_NOTICE")!;
+    s = run(s, { type: "decide", caseId: n.id, actor: "GROUP_CEO", action: "approve" });
+    const send = Object.values(s.tasks).find((t) => t.effect === "CONTRACT_NOTICE_SENT")!;
+    s = run(s, { type: "taskDone", taskId: send.id, actor: send.dept }, { type: "intake", kind: "AGENCY_COUNTER_OFFER" }, { type: "reply", key: "agency_payment_schedule" });
+    const co = Object.values(s.cases).find((c) => c.kind === "AGENCY_COUNTER_OFFER")!;
+    return run(s, { type: "decide", caseId: co.id, actor: "GROUP_CEO", action: "reject" });
+  };
+  it("AR-05: auto-renewal closes pre-deadline notice tasks, adds legal/finance follow-ups, refuses the notice", () => {
+    let s = rejected();
+    const term = Object.values(s.tasks).find((t) => t.effect === "CONTRACT_TERMINATION_SENT")!;
+    s = run(s, { type: "clock", to: "2026-07-18", actor: "GROUP_CEO" });
+    expect(s.ctx.contract_status).toBe("AUTO_RENEWED");
+    expect(s.tasks[term.id].status).toBe("CANCELLED");
+    const follow = Object.values(s.tasks).filter((t) => t.status === "OPEN" && t.title.startsWith("[기한 경과]"));
+    expect(new Set(follow.map((t) => t.dept))).toEqual(new Set(["CONTRACT_OWNER", "FINANCE"]));
+    const r = apply(s, { type: "taskDone", taskId: term.id, actor: "CONTRACT_OWNER" });
+    expect(r.info).toContain("닫힌 작업");
+    expect(r.state.ctx.contract_status).toBe("AUTO_RENEWED");
+  });
+  it("O-8: manual info request due is 7 days before the deadline", () => {
+    const s = run(initialState(), { type: "intake", kind: "BUDGET_PLAN_BATCH" });
+    const p19 = find(s, "PLAN-019");
+    const n = run(s, { type: "decide", caseId: p19.id, actor: p19.approval!.approver!, action: "request_info", comment: "근거" });
+    expect(Object.values(n.tasks).find((t) => t.case_id === p19.id && t.kind === "INFO_REQUEST")?.due).toBe("2026-09-04");
+  });
+  it("O-9: output-stage trace mentions intake masking", () => {
+    const s = run(initialState(), { type: "intake", kind: "CONTRACT_RENEWAL_NOTICE" }, { type: "intake", kind: "AGENCY_COUNTER_OFFER" }, { type: "reply", key: "agency_payment_schedule" });
+    const co = Object.values(s.cases).find((c) => c.kind === "AGENCY_COUNTER_OFFER")!;
+    expect(co.trace?.filter((x) => x.node === "security_output").at(-1)?.note).toContain("접수 단계");
+  });
+});

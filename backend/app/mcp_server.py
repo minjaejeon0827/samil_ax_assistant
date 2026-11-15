@@ -43,7 +43,7 @@ _calls: deque[float] = deque(maxlen=30)
 
 
 # ---- 입력 검증(I-01·I-02: 기존에는 API의 영문 Pydantic 오류를 그대로 돌려주고, 이상한 ID로 다른 API 경로를 부를 수 있었음) ----
-ROLES = ("MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA")
+ROLES = ("MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER")
 ACTIONS = ("approve", "reject", "request_info")
 KINDS = ("CONTRACT_RENEWAL_NOTICE", "BUDGET_PLAN_BATCH", "AGENCY_COUNTER_OFFER", "MARKETING_CLAIM", "FINANCE_OVERDUE_AR", "FREE_TEXT")
 REPLIES = ("agency_payment_schedule", "agency_accepts_termination")

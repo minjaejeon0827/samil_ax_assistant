@@ -18,7 +18,7 @@ Text = Annotated[str, AfterValidator(_whole_unicode)]
 
 CLOCK_MIN, CLOCK_MAX = date(2026, 7, 1), date(2027, 6, 30)   # 기준일 ~ 계약 갱신 1년
 
-Role = Literal["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "TEST_AURORA", "AGENCY", "SYSTEM"]
+Role = Literal["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "AGENCY", "SYSTEM"]
 EventKind = Literal["CONTRACT_RENEWAL_NOTICE", "BUDGET_PLAN_BATCH", "AGENCY_COUNTER_OFFER", "MARKETING_CLAIM",
                     "FINANCE_OVERDUE_AR", "FREE_TEXT"]
 

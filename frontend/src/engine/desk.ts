@@ -8,7 +8,7 @@ import type { Case, Ctx, Decision, DeskState, NodeTrace, Snapshot, Task, TaskSpe
 
 export const SCHEMA = 4;   // v4: hold_reason·MEMO 유형·resume_case 작업(E2E 결함 수정)
 export const ROLE_KO: Record<string, string> = { MARKETING_TEAM: "마케팅팀", MASIL_CEO: "Masil 대표", GROUP_CEO: "그룹 CEO/이사회", FINANCE: "재무팀",
-  SCM: "SCM", CONTRACT_OWNER: "계약 담당", TEST_AURORA: "테스트(Aurora)", AGENCY: "에이전시(모의)", SYSTEM: "시스템" };
+  SCM: "SCM", CONTRACT_OWNER: "계약 담당", AGENCY: "에이전시(모의)", SYSTEM: "시스템" };
 export const CONTRACT_STATUS_KO: Record<string, string> = {
   UNDER_REVIEW: "갱신 통보 접수·검토 중", NOTICE_APPROVED: "조건변경 통보 승인(발송 대기)", NOTICE_SENT: "조건변경 통보 발송·회신 대기",
   COUNTER_OFFER: "에이전시 역제안 검토 중", TERMINATION_APPROVED: "미갱신 결정(통보 발송 대기)", TERMINATION_SENT: "미갱신 통보 발송",
@@ -124,7 +124,7 @@ function runPipeline(s: S, c: Case): void {
   d.evidence = d.evidence.map((e) => { const o = checkOutput(e.text); if (o.action === "warn") { masked++; return { ...e, text: o.masked_text }; } return e; });
   const ov = checkOutput(text);
   if (ov.action === "warn") masked++;
-  step("security_output", `check_output — 마스킹 ${masked}건`);
+  step("security_output", `check_output — 출력 단계 추가 마스킹 ${masked}건${(c.event_text ?? "").includes("****") ? " · 접수 단계에서 연락처·계좌를 이미 가림" : ""}`); // 32차(O-9)
   Object.assign(c, { decision: d, explanation: ov.masked_text, judge: jg, trace, policy_hits: hits, llm: "offline",
     validation: { ...c.validation, self_check: sc, regulation: d.regulation?.verdict } });
   c.approval = { approver: d.approver, proposal: d.proposal, recommendation: d.recommendation, label: d.label, decision: null };
@@ -255,7 +255,9 @@ function exec(s: S, cmd: Command): string {
       if (cmd.action === "request_info") {
         transition(s, c, "request_info", "NEEDS_INFO", cmd.actor, cmd.comment || "추가 확인 요청");
         c.hold_reason = "MANUAL";
-        createTask(s, c.id, { dept: infoDept(c), title: `[확인 요청] ${c.target_id}: ${cmd.comment || "근거 보완"}`, due: c.decision?.subject.deadline ?? null, kind: "INFO_REQUEST", resume_case: true });
+        const dl = c.decision?.subject.deadline; // 32차(O-8): 확정기한 7일 전(오늘보다 앞이면 오늘)
+        const due = dl ? (addDays(dl, -7) < s.ctx.today ? s.ctx.today : addDays(dl, -7)) : addDays(s.ctx.today, 3);
+        createTask(s, c.id, { dept: infoDept(c), title: `[확인 요청] ${c.target_id}: ${cmd.comment || "근거 보완"}`, due, kind: "INFO_REQUEST", resume_case: true });
         audit(s, "case.info_requested", `${c.title} 확인 요청${cmd.comment ? ` — ${cmd.comment}` : ""}`, cmd.actor, c.id); // 30차(AP-08)
         c.version++;
         return `${c.id} 확인 요청`;
@@ -305,7 +307,10 @@ function exec(s: S, cmd: Command): string {
       const t = s.tasks[cmd.taskId];
       if (!t) throw new DeskError("작업을 찾을 수 없습니다.");
       if (cmd.actor !== t.dept) throw new DeskError(`이 작업은 ${ROLE_KO[t.dept] ?? t.dept}의 작업입니다(${ROLE_KO[cmd.actor] ?? cmd.actor} 불가).`);   // P-02(서버와 같은 규칙)
-      if (t.status !== "OPEN") throw new DeskError("이미 처리된 작업입니다.");
+      if (t.status !== "OPEN") throw new DeskError(t.status === "DONE" ? "이미 처리된 작업입니다." : `이미 닫힌 작업입니다(${t.result ?? t.status}).`);
+      // 32차(AR-05): 자동 갱신이 기록된 계약에는 '기한 전' 통보를 보내지 않음(서버와 같은 규칙)
+      if (NOTICE_EFFECTS.includes(t.effect ?? "") && s.ctx.contract_status === "AUTO_RENEWED")
+        throw new DeskError("INF-001은 통보 기한 경과로 동일 조건 자동 갱신이 기록됐습니다 — 기한 전 통보 작업은 완료할 수 없습니다(법무 확인 작업으로 처리).");
       Object.assign(t, { status: "DONE", done_by: cmd.actor, done_on: s.ctx.today });
       let info = `작업 완료: ${t.title}`;
       if (t.channel) {
@@ -366,7 +371,7 @@ function exec(s: S, cmd: Command): string {
         if (OPEN.has(c.state) && dl && dl < cmd.to) {
           c.history.push({ sim_date: cmd.to, from: c.state, to: "AUTO_COMMITTED", by: "SYSTEM", note: `확정기한 ${dl} 경과 — 미결정이 묵시적 승인으로 확정(철회 불가)` });
           c.state = "AUTO_COMMITTED"; c.version++;
-          if (c.type === "CONTRACT") s.ctx.contract_status = "AUTO_RENEWED";
+          if (c.type === "CONTRACT" && s.ctx.contract_status !== "AUTO_RENEWED") { s.ctx.contract_status = "AUTO_RENEWED"; afterAutoRenewal(s, cmd.to); }
           audit(s, "deadline.expired", `⚠ ${c.target_id} 기한 경과 자동 확정 — 승인 권한을 거치지 않은 체결`, "SYSTEM", c.id);
           expired.push(c.target_id);
         }
@@ -376,6 +381,7 @@ function exec(s: S, cmd: Command): string {
         const what = sent ? `미갱신 통보 미발송(조건변경 통보는 ${sent.done_on} 발송 — 갱신 거절 통보로 볼 수 있는지 법무 확인 필요)` : "통보 미발송";
         audit(s, "deadline.expired", `⚠ INF-001 통보 기한 ${CONTRACT.notice_deadline}까지 ${what}(${CONTRACT_STATUS_KO[s.ctx.contract_status]}) — 동일 조건 자동 갱신(승인 없는 체결)`);
         s.ctx.contract_status = "AUTO_RENEWED";
+        afterAutoRenewal(s, cmd.to);
       }
       for (const c of Object.values(s.cases)) {
         const dl = c.decision?.subject.deadline;
@@ -387,6 +393,24 @@ function exec(s: S, cmd: Command): string {
       return `기준일 ${cmd.to}${expired.length ? ` · 기한 경과 자동 확정 ${expired.length}건` : ""}`;
     }
   }
+}
+
+const NOTICE_EFFECTS = ["CONTRACT_NOTICE_SENT", "CONTRACT_TERMINATION_SENT", "CONTRACT_RENEWED"];
+/** 32차(AR-05): 자동 갱신 기록 뒤 '기한 전' 전제 작업은 닫고 법무 확인·현금 계획 작업을 만든다(서버 _after_auto_renewal과 같은 규칙). */
+function afterAutoRenewal(s: S, today: string) {
+  const ids = Object.values(s.cases).filter((c) => c.type === "CONTRACT").map((c) => c.id);
+  if (!ids.length) return;
+  for (const t of Object.values(s.tasks)) {
+    if (t.status !== "OPEN" || !ids.includes(t.case_id)) continue;
+    const stale = NOTICE_EFFECTS.includes(t.effect ?? "") || (!!t.due && t.due <= CONTRACT.notice_deadline && !["HOLD_LINKED_PLANS", "REJECT_LINKED_PLANS"].includes(t.effect ?? "") && t.kind !== "REPORT");
+    if (!stale) continue;
+    Object.assign(t, { status: "CANCELLED", done_on: today, result: "통보 기한 경과(자동 갱신 기록)로 취소" });
+    audit(s, "task.cancelled", `취소(기한 경과): ${t.title}`, "SYSTEM", t.case_id);
+  }
+  const last = ids.sort((a, b) => Number(a.split("-")[1]) - Number(b.split("-")[1])).at(-1)!;
+  const due = addDays(today, 7);
+  createTask(s, last, { dept: "CONTRACT_OWNER", kind: "WATCH", due, title: "[기한 경과] INF-001 동일 조건 자동 갱신으로 기록 — 법무 확인(보낸 통보의 효력·갱신 뒤 해지 조건·위약금 50%) 후 결정안 재상신" });
+  createTask(s, last, { dept: "FINANCE", kind: "ACTION", due, title: "[기한 경과] INF-001 자동 갱신 반영 — 고정 피 연 28억 지급 일정을 현금 계획에 다시 반영(covenant 하회 구간 대조)" });
 }
 
 function effects(s: S, c: Case, action: string) {

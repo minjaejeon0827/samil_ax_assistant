@@ -133,7 +133,11 @@ export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, 
     <article className="sheet" aria-labelledby="sheet-title" data-testid="case-sheet">
       <header className="sheet-head">
         <div>
-          <p className="sheet-meta">{c.id} · 접수 {fmtDate(c.received_on)} · <StateChip state={c.state} />{d && (() => { const left = daysBetween(today, d.subject.deadline); return <> · 기한 {fmtDate(d.subject.deadline)} <b data-testid="dday" className={left <= 3 ? "seal" : ""}>({left >= 0 ? `D-${left}` : "기한 경과"})</b></>; })()}</p>
+          <p className="sheet-meta">{c.id} · 접수 {fmtDate(c.received_on)} · <StateChip state={c.state} />{d && (() => {
+            // 32차(AR-04): 통보 기한을 모르는 업로드 계약서는 만료일을 기한처럼 보이지 않고 '미확인'으로 경고
+            if (!d.subject.deadline) return <> · <b data-testid="dday" className="seal">통보 기한 미확인 — 원문 확인 필요</b></>;
+            const left = daysBetween(today, d.subject.deadline);
+            return <> · 기한 {fmtDate(d.subject.deadline)} <b data-testid="dday" className={left <= 3 ? "seal" : ""}>({left >= 0 ? `D-${left}` : "기한 경과"})</b></>; })()}</p>
           <h2 id="sheet-title" ref={head} tabIndex={-1}>{c.title}</h2>
           <p className="event">{c.event_text}{c.inbound?.masked && <span className="badge kind-MOCK">연락처 마스킹</span>}</p>
         </div>
@@ -182,7 +186,9 @@ export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, 
             )}
             {c.state === "NEEDS_INFO" && <p className="hint">{c.hold_reason === "MANUAL"
               ? "담당 부서가 오른쪽 ‘부서 작업’의 확인 요청을 완료하면 이 건을 다시 판단해 결재로 돌려보냅니다."
-              : "에이전시 회신을 기다리는 중입니다. 왼쪽 ‘에이전시 지급 일정 회신’으로 모의 회신을 받으면 이어서 판단합니다."}</p>}
+              : c.type === "RENEWAL"   // 32차(AR-03): 업로드 계약서는 에이전시 회신이 아니라 원문 확인 → 확인한 값 넣기
+                ? "계약 담당이 원문을 확인해 아래 ‘확인한 값 넣기’에 입력하면 이어서 판단합니다(외부 발송 없음)."
+                : "에이전시 회신을 기다리는 중입니다. 왼쪽 ‘에이전시 지급 일정 회신’으로 모의 회신을 받으면 이어서 판단합니다."}</p>}
             {c.state === "HOLD_LINKED" && <p className="hint">상위 전속계약(INF-001) 결정이 나면 함께 처리됩니다.</p>}
           </section>
 

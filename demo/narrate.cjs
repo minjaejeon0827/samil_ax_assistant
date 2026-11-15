@@ -19,7 +19,7 @@ function makeCaption(p, part, styleExtra = {}) {
           color: "#fff", padding: "12px 16px", borderRadius: "4px", font: "14px/1.55 'IBM Plex Sans KR', sans-serif", boxShadow: "0 2px 10px rgba(0,0,0,.25)", pointerEvents: "none", ...st });
         document.body.appendChild(el);
       }
-      el.innerHTML = `<b style="font-size:15px">${t}</b>${b ? `<div style="opacity:.85;margin-top:3px">${b}</div>` : ""}`;
+      el.innerHTML = `<b style="font-size:1.08em">${t}</b>${b ? `<div style="opacity:.85;margin-top:3px">${b}</div>` : ""}`;
     }, [title, body, styleExtra]);
     const v = man[title];
     if (!say[title]) throw new Error(`해설 대본에 없는 자막: ${title}`);

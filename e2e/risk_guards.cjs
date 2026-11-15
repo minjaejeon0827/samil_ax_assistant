@@ -45,5 +45,9 @@ const RISK_GUARDS = {
   "로그인 화면·번들의 계정 노출": ["round30:AQ03", "round30:AQ10", "pytest:test_AP02_weak_shared_plaintext_users_warn_without_values"],
   "결재를 멈추는 권한·보류를 푸는 다른 길": ["round30:AQ04", "round30:AQ05", "round30:AQ09", "pytest:test_AP03_only_the_approver_can_request_info", "pytest:test_AP05_same_reply_twice_is_refused_and_manual_hold_stays", "pytest:test_AP06_released_hold_is_rechecked_by_the_next_condition_change"],
   "판단 규칙의 덮어쓰기 순서": ["round30:AQ06", "round30:AQ09", "pytest:test_AP07_copy_violation_with_supply_constraint_needs_the_fix_first", "pytest:test_AP07_violating_copy_cannot_be_approved_even_against_a_reject_recommendation"],
+  "배포 번들이 시험한 소스와 다름": ["round32:AS02", "round32:AS08", "pytest:test_AR02_unknown_role_in_users_refuses_to_start"],
+  "업로드 계약서의 확인 경로": ["round32:AS03", "round32:AS07", "pytest:test_AR03_AR04_upload_needs_info_makes_an_internal_task_with_a_short_due", "pytest:test_AR04_unknown_notice_deadline_is_not_the_expiry", "pytest:test_AR04_unknown_notice_still_auto_renews_at_expiry"],
+  "기한 경과 뒤 남은 작업": ["round32:AS04", "round32:AS07", "pytest:test_AR05_auto_renewal_closes_pre_deadline_tasks_and_adds_follow_ups", "pytest:test_AR05_notice_task_cannot_complete_once_auto_renewed"],
+  "데이터가 들어올 때 화면 밀림": ["round32:AS05"],
 };
 module.exports = { RISK_GUARDS };

@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 // 배포 확인 스크립트(읽기 전용) — 배포한 Aurora 판단 데스크 주소에 대고 '배포 환경에서만 생기는 문제'를 확인합니다.
 //
-//   node smoke_remote.cjs <배포 URL> [--api-key 키] [--browser] [--report 파일.json] [--expect-version 1.29.0]
+//   node smoke_remote.cjs <배포 URL> [--api-key 키] [--browser] [--report 파일.json] [--expect-version 1.30.0]
 //
 // 원칙
 //   - 읽기만 합니다: 서버에 보내는 요청은 GET·HEAD·OPTIONS뿐입니다(실행 끝에 보낸 요청의 방식별 개수를 보여 줌).
@@ -28,7 +28,7 @@ const opt = (name, def) => { const i = argv.indexOf(name); return i >= 0 ? (argv
 const flag = (name) => argv.includes(name);
 const target = argv.find((a) => /^https?:\/\//i.test(a));
 if (!target || flag("--help") || flag("-h")) {
-  console.log(`사용법: node smoke_remote.cjs <배포 URL> [--api-key 키] [--browser] [--report 파일.json] [--expect-version 1.29.0] [--timeout 초]
+  console.log(`사용법: node smoke_remote.cjs <배포 URL> [--api-key 키] [--browser] [--report 파일.json] [--expect-version 1.30.0] [--timeout 초]
   예) node smoke_remote.cjs https://samil-ax-assistant.example.com
       node smoke_remote.cjs https://…/apps/samil-ax-assistant/ --browser
       node smoke_remote.cjs https://… --api-key demo-public-key        (서버 배포일 때)`);
@@ -37,7 +37,7 @@ if (!target || flag("--help") || flag("-h")) {
 const BASE = target.endsWith("/") ? target : `${target}/`;           // 하위 경로 배포도 그대로(…/apps/samil-ax-assistant/)
 const ORIGIN = new URL(BASE).origin;
 const API_KEY = opt("--api-key", process.env.AURORA_API_KEY || "");
-const EXPECT_VERSION = opt("--expect-version", "1.29.0");
+const EXPECT_VERSION = opt("--expect-version", "1.30.0");
 const TIMEOUT_MS = Number(opt("--timeout", "15")) * 1000;
 const REPORT = opt("--report", "smoke_report.json");
 const SENT = {};                                                       // 보낸 요청의 방식별 개수(읽기 전용 증명)
@@ -111,6 +111,13 @@ async function checkPage() {
     add("B01", !react ? "INFO" : react.startsWith("18.3.") ? "PASS" : "WARN", "React 버전(번들 안)", react ? `${react}${react.startsWith("18.3.") ? " — 시험한 버전(18.3.1)과 같은 계열" : " — 시험한 버전은 18.3.1(템플릿의 React 19가 깔렸을 수 있음, package.json 확인)"}` : "번들에서 버전 문자열을 찾지 못함");
     const data = /INF-001/.test(js) && /PLAN-0\d\d/.test(js);
     add("B02", data ? "PASS" : "FAIL", "데이터가 번들에 들어 있음", data ? "INF-001·PLAN-0xx 데이터 포함(정적 배포에서도 상황 1~3 실행 가능)" : "데이터(src/data/dataset.json)가 번들에 없음 — 다른 앱이거나 src가 바뀜");
+    // 32차(31차 AR-02): 권한표(PRD §9)에 없는 역할 이름표(예: TEST_AURORA)가 든 번들 — 이 소스와 다른 사본에서 빌드된 신호
+    const roleMap = js.match(/\{[^{}]*MARKETING_TEAM:"마케팅팀"[^{}]*\}/);
+    if (roleMap) {
+      const known = new Set(["MARKETING_TEAM", "MASIL_CEO", "GROUP_CEO", "FINANCE", "SCM", "CONTRACT_OWNER", "AGENCY", "SYSTEM"]);
+      const extra = [...roleMap[0].matchAll(/([A-Z][A-Z0-9_]+):"/g)].map((x) => x[1]).filter((k) => !known.has(k));
+      add("B05", extra.length ? "FAIL" : "PASS", "번들의 역할 이름표", extra.length ? `권한표에 없는 역할 ${extra.join(", ")} — 시험 계정·역할을 운영 번들에서 빼고 이 소스로 다시 빌드(빌드 확인: frontend/scripts/check-bundle.cjs)` : "권한표의 역할 6개 + 에이전시(모의)·시스템뿐");
+    } else add("B05", "INFO", "번들의 역할 이름표", "역할 이름표를 찾지 못함(다른 빌드 방식)");
     if (/sourceMappingURL=/.test(js)) add("B04", "INFO", "소스맵", "번들에 소스맵 주소가 있음 — 원본 코드가 공개될 수 있음(대회 제출용이면 무방)");
   }
 

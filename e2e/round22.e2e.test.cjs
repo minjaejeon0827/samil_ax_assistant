@@ -220,7 +220,7 @@ describe("다음 후보 ⑤⑥⑦", () => {
 // ---------------- §14 리스크와 한계 ----------------
 // 행 이름(앞부분) → 그 위험을 지키는 테스트. 'suite:ID'는 e2e/reports/<suite>.json, 'pytest:이름'은 단위 테스트, 'round22:ID'는 이번 실행.
 // 행 ↔ 테스트 짝은 e2e/risk_guards.cjs(23차와 함께 씀). 22차보다 뒤에 실행되는 묶음(round23)의 짝은 여기서 보지 않는다.
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[3-8]|30):/.test(r))]));
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[3-8]|3[02]):/.test(r))]));
 const SUITES = () => (fs.readFileSync(path.join(__dirname, "run_all.sh"), "utf8").match(/for s in ([^;]+);/) || [, ""])[1].trim().split(/\s+/);
 
 describe("§14 리스크와 한계", () => {

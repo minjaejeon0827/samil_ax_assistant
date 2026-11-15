@@ -19,7 +19,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const { execFileSync, spawn, spawnSync } = require("node:child_process");
 const H = require("./helpers.cjs");
-const RISK_GUARDS = require("./risk_guards.cjs").RISK_GUARDS;
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !r.startsWith("round32:"))]));   // 32차는 30차 뒤에 돈다
 
 const KEY = "e2e-key";
 const PORT = 3330;

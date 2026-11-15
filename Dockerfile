@@ -8,7 +8,8 @@ COPY shared/ /shared/
 ARG VITE_ENABLE_API=1
 ARG VITE_API_KEY=demo-public-key
 ENV VITE_ENABLE_API=$VITE_ENABLE_API VITE_API_KEY=$VITE_API_KEY
-RUN npm run build
+# 32차(31차 AR-01·AR-02): npm run build 끝에서 로그인 칸 예시 글자·권한표에 없는 역할 이름표가 든 번들이면 빌드가 멈춘다(scripts/check-bundle.cjs)
+RUN npm run build && node scripts/check-bundle.cjs dist
 
 FROM python:3.12-slim
 WORKDIR /app

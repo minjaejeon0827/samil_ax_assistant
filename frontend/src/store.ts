@@ -495,6 +495,8 @@ export function useDesk() {
 
   return { newVersion: ui.mode === "api" && newVersion, snap, ui, setUi, dispatch, reset, toast, busy, intaking: ui.mode === "api" && intakeBusy, uploadContract, ssoLabel, ssoStart, changePassword, offline: ui.mode === "api" && offline, saveError: ui.mode === "local" ? saveError : "", loadAudit,
     verifyAudit: ui.mode === "api" ? verifyAudit : undefined,
+    // 32차(AR-06): 서버 기록을 받기 전(로그인 창이 떠 있을 때 포함)에는 오른쪽 칸을 그리지 않는다 — 로그인 직후 칸을 지웠다 다시 그리면 누르려던 버튼이 사라짐(round28 AO06)
+    loading: ui.mode === "api" && !remote && !offline,
     role, session: ui.mode === "api" ? session : null, needLogin, login, logout, intakeMsg: intakeBusy ? intakeMsg : "",
     deliveries: ui.mode === "api" && channel === "webhook" ? deliveries : null, redeliver, renewalApi };
 }

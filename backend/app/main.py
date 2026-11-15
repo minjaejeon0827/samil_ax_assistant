@@ -82,7 +82,7 @@ def _start_anchor_timer() -> threading.Event:
     return stop
 
 
-app = FastAPI(title="Aurora 캠페인·계약 판단 데스크 API", version="1.29.0", lifespan=lifespan)
+app = FastAPI(title="Aurora 캠페인·계약 판단 데스크 API", version="1.30.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,

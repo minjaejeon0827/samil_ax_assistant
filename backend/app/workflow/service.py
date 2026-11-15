@@ -37,6 +37,19 @@ def copy_unresolved(case: dict) -> bool:
     return case.get("type") == "PLAN" and bool(reg.get("findings"))
 
 
+NOTICE_EFFECTS = ("CONTRACT_NOTICE_SENT", "CONTRACT_TERMINATION_SENT", "CONTRACT_RENEWED")
+
+
+def hard_deadline(case: dict) -> str | None:
+    """기한 감시가 쓰는 마지막 선. 32차(AR-04): 업로드 계약서의 통보 기한이 미확인이면 결재 서류의 기한은 비어 있지만,
+    만료일이 지나면 어차피 자동 갱신이므로 만료일을 마지막 선으로 쓴다."""
+    d = case.get("decision") or {}
+    dl = (d.get("subject") or {}).get("deadline")
+    if not dl and case.get("type") == "RENEWAL":
+        dl = (d.get("terms") or {}).get("expiry")
+    return dl
+
+
 def info_dept(case: dict) -> str:
     """30차(AP-04): 결재권자의 '확인 요청'을 받아 근거를 보완할 부서 = 그 건을 올린 부서(계약 건·다른 계약서 → 계약 담당, 기안 → 마케팅팀)."""
     return "CONTRACT_OWNER" if case.get("type") in ("CONTRACT", "RENEWAL") else "MARKETING_TEAM"
@@ -73,7 +86,7 @@ def state_ko(name: str) -> str:
 
 
 ROLE_KO = {"MARKETING_TEAM": "마케팅팀", "MASIL_CEO": "Masil 대표", "GROUP_CEO": "그룹 CEO/이사회",
-           "FINANCE": "재무팀", "SCM": "SCM", "CONTRACT_OWNER": "계약 담당", "TEST_AURORA": "테스트(Aurora)", "AGENCY": "에이전시(모의)", "SYSTEM": "시스템"}
+           "FINANCE": "재무팀", "SCM": "SCM", "CONTRACT_OWNER": "계약 담당", "AGENCY": "에이전시(모의)", "SYSTEM": "시스템"}
 CONTRACT_STATUS_KO = {
     "UNDER_REVIEW": "갱신 통보 접수·검토 중", "NOTICE_APPROVED": "조건변경 통보 승인(발송 대기)",
     "NOTICE_SENT": "조건변경 통보 발송·회신 대기", "COUNTER_OFFER": "에이전시 역제안 검토 중",
@@ -559,7 +572,18 @@ class OpsDesk:
             case["approval"] = {"approver": d["approver"], "proposal": d["proposal"], "recommendation": d["recommendation"],
                                 "label": d["label"], "decision": None}
         self._transition(case, "analysis_done", new, "SYSTEM", (d or {}).get("label") or (res.get("issues") or [{}])[0].get("message", ""))
-        if new == "NEEDS_INFO":
+        if new == "NEEDS_INFO" and case["type"] == "RENEWAL":
+            # 32차(AR-03): 업로드한 계약서의 '확인 필요'는 원문을 다시 보는 내부 일이다 — 외부 발송 없음, 해소는 '확인한 값 넣기'.
+            # 기존: 사유와 상관없이 INF-001 에이전시 지급 일정 회신 요청(email:agency)을 만들어 엉뚱한 상대에게 사실과 다른 메시지가 나갔다
+            # AR-04: 기한을 모를 수 있으므로 작업 기한은 접수 뒤 3일(통보 기한이 그보다 이르면 그 7일 전, 오늘보다 앞이면 오늘)
+            q = d["needs_info"][0]
+            due = self._add(self.ctx()["today"], 3)
+            dl = d["subject"].get("deadline")
+            if dl:
+                due = max(self.ctx()["today"], min(due, self._before(dl, 7)))
+            self._create_task(case["id"], {"dept": "CONTRACT_OWNER", "kind": "INFO_REQUEST", "due": due,
+                                           "title": f"[원문 확인] {d['subject'].get('name')}: {q} → 결재 서류의 '확인한 값 넣기'에 입력(외부 발송 없음)"})
+        elif new == "NEEDS_INFO":
             for q in d["needs_info"]:
                 self._create_task(case["id"], {"dept": "CONTRACT_OWNER", "title": f"[확인 요청] {q} → 에이전시에 지급 일정 회신 요청",
                                                "due": self._before(d["subject"].get("deadline"), 7), "kind": "INFO_REQUEST",
@@ -572,6 +596,11 @@ class OpsDesk:
         self.bus.publish("case.analyzed", {"case_id": case["id"], "actor": actor,
                                            "detail": f"{case['title']} → {state_of(new).label} ({(d or {}).get('label','')})"})
         return case
+
+    @staticmethod
+    def _add(day: str, days: int) -> str:
+        from datetime import timedelta
+        return (date.fromisoformat(day) + timedelta(days=days)).isoformat()
 
     @staticmethod
     def _before(deadline: str | None, days: int) -> str | None:
@@ -833,8 +862,11 @@ class OpsDesk:
             self._transition(case, "request_info", "NEEDS_INFO", actor, comment or "추가 확인 요청")
             case["hold_reason"] = "MANUAL"   # D-10: 사람이 건 확인 요청은 조건 변경 재검증으로 풀리지 않음
             # 30차(AP-04): 확인 작업은 그 건의 기안 부서로(기존: 항상 마케팅팀 → 계약 건을 계약 담당이 풀 수 없었음)
+            dl = (case.get("decision") or {}).get("subject", {}).get("deadline")
+            # 32차(O-8): 확인 요청서 양식의 원칙 — 확정기한 7일 전까지 회신(오늘보다 앞이면 오늘). 기존: 확정기한 당일
+            due = max(self.ctx()["today"], self._before(dl, 7)) if dl else self._add(self.ctx()["today"], 3)
             self._create_task(case_id, {"dept": info_dept(case), "title": f"[확인 요청] {case['target_id']}: {comment or '근거 보완'}",
-                                        "due": (case.get("decision") or {}).get("subject", {}).get("deadline"), "kind": "INFO_REQUEST",
+                                        "due": due, "kind": "INFO_REQUEST",
                                         "resume_case": True})
             # 30차(AP-08): 감사에 행위와 대상을 남긴다(기존: 의견만 — 의견이 없으면 빈 행)
             self.bus.publish("case.info_requested", {"case_id": case_id, "actor": actor,
@@ -1024,7 +1056,14 @@ class OpsDesk:
         if actor != t["dept"]:   # P-02: 부서 작업은 그 부서만(기존: 누구나 완료 → 다른 부서가 통보를 대신 발송)
             raise PermissionDenied(f"이 작업은 {ROLE_KO.get(t['dept'], t['dept'])}의 작업입니다({ROLE_KO.get(actor, actor)} 불가).")
         if t["status"] != "OPEN":
-            raise InvalidTransition("이미 완료된 작업입니다.")
+            raise InvalidTransition("이미 완료된 작업입니다." if t["status"] == "DONE" else f"이미 닫힌 작업입니다({t.get('result') or t['status']}).")
+        # 32차(AR-05): 기한 경과로 자동 갱신이 기록된 계약에는 '기한 전' 통보를 보내지 않는다(기존: 사실과 다른 통보 + 상태가 되돌아감)
+        if t.get("effect") in NOTICE_EFFECTS and self.ctx()["contract_status"] == "AUTO_RENEWED":
+            raise InvalidTransition("INF-001은 통보 기한 경과로 동일 조건 자동 갱신이 기록됐습니다 — 기한 전 통보 작업은 완료할 수 없습니다(법무 확인 작업으로 처리).")
+        if t.get("effect") == "RENEWAL_NOTICE_SENT":
+            rid = self._get("cases", t["case_id"])["target_id"]
+            if (self.renewals().get(rid) or {}).get("status") == "AUTO_RENEWED":
+                raise InvalidTransition("이 계약은 통보 기한 경과로 자동 갱신이 기록됐습니다 — 기한 전 통보 작업은 완료할 수 없습니다.")
         t.update(status="DONE", done_by=actor, done_on=self.ctx()["today"])
         self.repo.put("tasks", t)
         msg = resumed = None
@@ -1103,13 +1142,14 @@ class OpsDesk:
         self.bus.publish("clock.advanced", {"actor": actor, "detail": f"시계 진행 {cur} → {to}"})
         expired = []
         for c in self._cases(lambda x: state_of(x["state"]).open_decision and x.get("decision")):
-            dl = c["decision"]["subject"].get("deadline")
+            dl = hard_deadline(c)
             if dl and dl < to:
                 c["history"].append({"sim_date": to, "from": c["state"], "to": "AUTO_COMMITTED", "by": "SYSTEM",
                                      "note": f"확정기한 {dl} 경과 — 미결정이 묵시적 승인으로 확정(철회 불가)"})
                 c["state"] = "AUTO_COMMITTED"
-                if c["type"] == "CONTRACT":
+                if c["type"] == "CONTRACT" and self.ctx()["contract_status"] != "AUTO_RENEWED":
                     self._set_ctx(contract_status="AUTO_RENEWED")
+                    self._after_auto_renewal(to)
                 self.bus.publish("deadline.expired", {"case_id": c["id"], "detail": f"⚠ {c['target_id']} 기한 경과 자동 확정 — 승인 권한을 거치지 않은 체결"})
                 expired.append(self._save(c))
         # 전속계약: 결정은 했어도 통보가 기한 내 '발송'되지 않으면 계약상 자동 갱신된다
@@ -1121,14 +1161,18 @@ class OpsDesk:
                     else "통보 미발송")
             self.bus.publish("deadline.expired", {"detail": f"⚠ INF-001 통보 기한 {notice_dl}까지 {what}({CONTRACT_STATUS_KO[self.ctx()['contract_status']]}) — 동일 조건 자동 갱신(승인 없는 체결)"})
             self._set_ctx(contract_status="AUTO_RENEWED")
+            self._after_auto_renewal(to)
         # v1.21(§15-4): 다른 자동 갱신 계약도 같은 원칙 — 결정했어도 통보를 기한 안에 보내지 않으면 자동 갱신(승인 없는 체결)
         for rid, r in self.renewals().items():
-            dl = (r.get("terms") or {}).get("notice_deadline")
-            if (r.get("terms") or {}).get("auto_renew") and dl and cur <= dl < to and r.get("status") not in ("NOTICE_SENT", "AUTO_RENEWED"):
+            tm = r.get("terms") or {}
+            dl = tm.get("notice_deadline") or (tm.get("expiry") if tm.get("auto_renew") is not False else None)   # 32차(AR-04): 통보 기한 미확인이면 만료일이 마지막 선
+            if tm.get("auto_renew") is not False and dl and cur <= dl < to and r.get("status") not in ("NOTICE_SENT", "AUTO_RENEWED"):
                 rc = next(iter(self._cases(lambda x: x["type"] == "RENEWAL" and x["target_id"] == rid)), None)
                 self.bus.publish("deadline.expired", {"case_id": rc["id"] if rc else None,
                                                       "detail": f"⚠ {r['terms'].get('counterparty')} 계약 통보 기한 {dl}까지 통보 미발송 — 동일 조건 자동 갱신(승인 없는 체결)"})
                 self._renewal_status(rid, "AUTO_RENEWED")
+                if rc:   # 32차(AR-05): 그 계약의 '기한 전' 통보 작업은 닫는다(완료하면 사실과 다른 통보가 나감)
+                    self._close_stale_tasks(lambda t, rc=rc: t["case_id"] == rc["id"] and t.get("effect") == "RENEWAL_NOTICE_SENT", to)
         # D-3 이내 미결정 건 경보 작업
         for c in self._cases(lambda x: state_of(x["state"]).open_decision and x.get("decision")):
             dl = c["decision"]["subject"].get("deadline")
@@ -1137,6 +1181,35 @@ class OpsDesk:
                     self._create_task(c["id"], {"dept": (c.get("approval") or {}).get("approver") or "CONTRACT_OWNER",
                                                 "title": f"[기한 임박 D-{(date.fromisoformat(dl) - date.fromisoformat(to)).days}] {c['title']} 결정 필요", "due": dl, "kind": "DEADLINE_ALERT"})
         return {"today": to, "expired": [c["id"] for c in expired]}
+
+    def _close_stale_tasks(self, pred, today: str) -> list[dict]:
+        closed = []
+        for t in self.repo.list("tasks"):
+            if t["status"] == "OPEN" and pred(t):
+                t.update(status="CANCELLED", done_on=today, result="통보 기한 경과(자동 갱신 기록)로 취소")
+                self.repo.put("tasks", t)
+                self.bus.publish("task.cancelled", {"case_id": t["case_id"], "detail": f"취소(기한 경과): {t['title']}"})
+                closed.append(t)
+        return closed
+
+    def _after_auto_renewal(self, today: str) -> None:
+        """32차(AR-05): INF-001이 통보 기한 경과로 동일 조건 자동 갱신 기록되면, '기한 전'을 전제로 한 작업(미갱신·조건변경 통보,
+        고정 피를 뺀 현금 계획, 기한 전 재검토)은 닫고 사람이 할 일을 새로 만든다. 연계 기안 작업(마케팅)·이사회 보고는 그대로.
+        기존: 통보 작업이 열린 채 남아, 완료하면 '기한 내 미갱신 통보' 메시지가 나가고 계약 상태가 자동 갱신 → 미갱신 통보 발송으로 되돌아갔다."""
+        notice_dl = self.dr.policy["contracts"][0]["notice_deadline"]
+        contract_ids = {c["id"] for c in self._cases(lambda x: x["type"] == "CONTRACT")}
+        if not contract_ids:
+            return
+        self._close_stale_tasks(lambda t: t["case_id"] in contract_ids and (
+            t.get("effect") in NOTICE_EFFECTS
+            or (t.get("due") and t["due"] <= notice_dl and t.get("effect") not in ("HOLD_LINKED_PLANS", "REJECT_LINKED_PLANS")
+                and t.get("kind") not in ("REPORT",))), today)
+        last = sorted(contract_ids, key=lambda i: id_order({"id": i}))[-1]
+        due = self._add(today, 7)
+        self._create_task(last, {"dept": "CONTRACT_OWNER", "kind": "WATCH", "due": due,
+                                 "title": "[기한 경과] INF-001 동일 조건 자동 갱신으로 기록 — 법무 확인(보낸 통보의 효력·갱신 뒤 해지 조건·위약금 50%) 후 결정안 재상신"})
+        self._create_task(last, {"dept": "FINANCE", "kind": "ACTION", "due": due,
+                                 "title": "[기한 경과] INF-001 자동 갱신 반영 — 고정 피 연 28억 지급 일정을 현금 계획에 다시 반영(covenant 하회 구간 대조)"})
 
     # ---------- 조회 ----------
     def snapshot(self, audit_limit: int = 200) -> dict:

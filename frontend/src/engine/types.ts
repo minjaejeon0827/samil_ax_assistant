@@ -1,5 +1,5 @@
 // 백엔드(app/workflow/service.py) 스냅샷과 같은 모양. 브라우저 단독 모드와 API 모드가 같은 화면을 쓴다.
-export type Role = "MARKETING_TEAM" | "MASIL_CEO" | "GROUP_CEO" | "FINANCE" | "SCM" | "CONTRACT_OWNER" | "TEST_AURORA" | "AGENCY" | "SYSTEM";
+export type Role = "MARKETING_TEAM" | "MASIL_CEO" | "GROUP_CEO" | "FINANCE" | "SCM" | "CONTRACT_OWNER" | "AGENCY" | "SYSTEM";
 export type EvKind = "ORIGINAL" | "CALC" | "ASSUMPTION" | "CLAIM" | "MOCK";
 export type Scale = "SAMPLE" | "FULL" | "NA";
 export type CashAssumption = "AS_IS" | "CONSERVATIVE" | "LEGACY45";
