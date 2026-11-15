@@ -39,7 +39,7 @@ const approveWhileWriting = async (base, llmMode) => {
   const asIs = Object.fromEntries((await snap(base)).cases.filter((c) => c.decision).map((c) => [c.id, c.decision.approver]));
   await mode(llmMode, 1.5);
   await cond(base, "LEGACY45");
-  const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.approval?.approver === "MASIL_CEO" && asIs[c.id] === "GROUP_CEO");
+  const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.approval?.approver === "MASIL_CEO" && asIs[c.id] === "GROUP_CEO" && !c.decision?.regulation?.findings?.length);   // 30차(AP-07): 위반 카피가 남은 기안(PLAN-001)은 승인 불가라 제외
   assert.ok(t, "시험 전제: 45일 가정에서 작성 중인 Masil 대표 결재 건이 없음");
   const r = await call(base, "POST", `/api/cases/${t.id}/decision`, { actor: "MASIL_CEO", action: "approve", comment: "작성 중 결재" });
   assert.equal(r.status, 200);

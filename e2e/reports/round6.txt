@@ -3,87 +3,87 @@ TAP version 13
     # Subtest: A01 Anthropic ok: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
     ok 1 - A01 Anthropic ok: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
       ---
-      duration_ms: 1588.239214
+      duration_ms: 1368.25055
       type: 'test'
       ...
     # Subtest: A02 Anthropic hallucinate: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
     ok 2 - A02 Anthropic hallucinate: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
       ---
-      duration_ms: 72.940065
+      duration_ms: 71.936216
       type: 'test'
       ...
     # Subtest: A03 Anthropic error: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
     ok 3 - A03 Anthropic error: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
       ---
-      duration_ms: 491.125555
+      duration_ms: 454.549256
       type: 'test'
       ...
     # Subtest: A04 Anthropic hang: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
     ok 4 - A04 Anthropic hang: 판단·결재는 그대로, 승인자에게 근거 없는 수치 없음, 10초 안에 끝남
       ---
-      duration_ms: 6439.805747
+      duration_ms: 6544.235878
       type: 'test'
       ...
     1..4
 ok 1 - 두 번째 LLM 제공자(Anthropic 호환)
   ---
-  duration_ms: 11019.357707
+  duration_ms: 10997.295864
   type: 'suite'
   ...
 # Subtest: 메신저 채널(MCP) — 원격 보안과 입력 오류
     # Subtest: N01 외부에 여는 원격 MCP(0.0.0.0)는 접근 토큰 없이 시작하지 않음(승인 도구가 무방비로 열리지 않음)
     ok 1 - N01 외부에 여는 원격 MCP(0.0.0.0)는 접근 토큰 없이 시작하지 않음(승인 도구가 무방비로 열리지 않음)
       ---
-      duration_ms: 678.134245
+      duration_ms: 627.334771
       type: 'test'
       ...
     # Subtest: N02 토큰을 둔 원격 MCP: 토큰 없는 요청은 401, 토큰이 있으면 승인 대기 조회 동작
     ok 2 - N02 토큰을 둔 원격 MCP: 토큰 없는 요청은 401, 토큰이 있으면 승인 대기 조회 동작
       ---
-      duration_ms: 1725.857332
+      duration_ms: 1658.208843
       type: 'test'
       ...
     # Subtest: N03 MCP 도구에 잘못된 값(행동·역할·사건 종류·회신 종류)을 넣으면 한국어로 무엇이 틀렸는지와 허용 값을 안내
     ok 3 - N03 MCP 도구에 잘못된 값(행동·역할·사건 종류·회신 종류)을 넣으면 한국어로 무엇이 틀렸는지와 허용 값을 안내
       ---
-      duration_ms: 1235.507929
+      duration_ms: 1314.062729
       type: 'test'
       ...
     # Subtest: N04 MCP에 이상한 건 ID('../snapshot' 등)를 넣어도 다른 API를 부르거나 멈추지 않고 형식 오류로 안내
     ok 4 - N04 MCP에 이상한 건 ID('../snapshot' 등)를 넣어도 다른 API를 부르거나 멈추지 않고 형식 오류로 안내
       ---
-      duration_ms: 1089.334822
+      duration_ms: 1244.559189
       type: 'test'
       ...
     1..4
 ok 2 - 메신저 채널(MCP) — 원격 보안과 입력 오류
   ---
-  duration_ms: 4729.333828
+  duration_ms: 4844.699106
   type: 'suite'
   ...
 # Subtest: 감사 로그·장기 사용·날짜 한계
     # Subtest: K01 감사 로그가 200건을 넘어도 가장 오래된 기록까지 화면에서 찾아 볼 수 있음(서버 모드)
     ok 1 - K01 감사 로그가 200건을 넘어도 가장 오래된 기록까지 화면에서 찾아 볼 수 있음(서버 모드)
       ---
-      duration_ms: 2935.988926
+      duration_ms: 2935.673853
       type: 'test'
       ...
     # Subtest: K02 메모 500건이 쌓여도 결정할 기안이 목록 위쪽에 보이고, 클릭 반응 100ms·저장 크기 2MB 이내(브라우저 모드)
     ok 2 - K02 메모 500건이 쌓여도 결정할 기안이 목록 위쪽에 보이고, 클릭 반응 100ms·저장 크기 2MB 이내(브라우저 모드)
       ---
-      duration_ms: 763.266159
+      duration_ms: 729.933641
       type: 'test'
       ...
     # Subtest: D01 시뮬레이션 날짜 한계(2027-06-30)를 브라우저 모드도 서버와 똑같이 지키고, 이유를 알려 줌
     ok 3 - D01 시뮬레이션 날짜 한계(2027-06-30)를 브라우저 모드도 서버와 똑같이 지키고, 이유를 알려 줌
       ---
-      duration_ms: 427.496593
+      duration_ms: 340.616202
       type: 'test'
       ...
     1..3
 ok 3 - 감사 로그·장기 사용·날짜 한계
   ---
-  duration_ms: 4127.123726
+  duration_ms: 4006.623434
   type: 'suite'
   ...
 1..3
@@ -94,4 +94,4 @@ ok 3 - 감사 로그·장기 사용·날짜 한계
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 20246.994418
+# duration_ms 20145.629275

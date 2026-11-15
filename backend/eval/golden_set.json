@@ -22,7 +22,7 @@
     {"id": "D-05", "case": "PLAN-015", "ctx": {}, "expect": {"recommendation": "APPROVE", "approver": "GROUP_CEO"}},
     {"id": "D-06", "case": "PLAN-015", "ctx": {"cash_assumption": "LEGACY45"}, "expect": {"recommendation": "APPROVE", "approver": "MASIL_CEO"}},
     {"id": "D-07", "case": "PLAN-016", "ctx": {}, "expect": {"recommendation": "HOLD_COPY", "approver": "GROUP_CEO"}},
-    {"id": "D-08", "case": "PLAN-011", "ctx": {}, "expect": {"recommendation": "HOLD_SUPPLY", "approver": "MASIL_CEO"}},
+    {"id": "D-08", "case": "PLAN-011", "ctx": {"copy_overrides": {"PLAN-011": "Lila's derma ampoule — 진정 효과로 트러블 케어까지 #ad"}}, "expect": {"recommendation": "HOLD_SUPPLY", "approver": "MASIL_CEO"}},
     {"id": "D-09", "case": "PLAN-005", "ctx": {}, "expect": {"recommendation": "REJECT", "approver": "MASIL_CEO"}},
     {"id": "D-10", "case": "PLAN-024", "ctx": {"cash_assumption": "CONSERVATIVE"}, "expect": {"recommendation": "APPROVE", "approver": "GROUP_CEO"}},
     {"id": "D-11", "case": "PLAN-001", "ctx": {"contract_status": "TERMINATION_APPROVED"}, "expect": {"recommendation": "REJECT", "approver": "GROUP_CEO"}},

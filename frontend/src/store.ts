@@ -234,7 +234,8 @@ export function useDesk() {
   const sending = useRef(false);   // 보내는 중(queued)인 전송이 있으면 다음 갱신에서도 다시 본다
   const ssoDone = useRef(false);
   const needLogin = ui.mode === "api" && authMode === "jwt" && !session;
-  const role = session?.role ?? ui.role;     // 로그인 모드에서는 토큰의 역할만 쓴다
+  // 로그인 모드에서는 토큰의 역할만 쓴다. 30차(AP-12): 서버 로그인이 남은 채 브라우저 모드로 바꾸면 고른 역할을 쓴다(기존: 로그인 역할에 고정)
+  const role = ui.mode === "api" && session ? session.role : ui.role;
   const lost = useCallback((e: unknown) => {   // 토큰 만료·무효 → 로그인 창으로(조용히 실패하지 않음)
     if (e instanceof ApiError && e.status === 401 && SESSION) { setSessionStore(null); setSession(null); return true; }
     return false;

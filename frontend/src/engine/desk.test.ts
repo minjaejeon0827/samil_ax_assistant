@@ -50,7 +50,8 @@ describe("three demo scenarios (browser engine)", () => {
 
   it("re-analysis keeps one FIX task per case", () => {
     const s = run(initialState(), { type: "intake", kind: "BUDGET_PLAN_BATCH" }, { type: "condition", actor: "FINANCE", cash: "CONSERVATIVE" }, { type: "condition", actor: "FINANCE", cash: "AS_IS" });
-    expect(Object.values(s.tasks).filter((t) => t.kind === "FIX" && t.status === "OPEN")).toHaveLength(2);
+    // 30차(AP-07): PLAN-011(카피 위반 + 공급 제약)도 카피 수정이 먼저 → 수정 작업 3건(PLAN-011·016·023)
+    expect(Object.values(s.tasks).filter((t) => t.kind === "FIX" && t.status === "OPEN")).toHaveLength(3);
   });
 
   it("deadline watcher auto-renews when undecided", () => {
@@ -181,5 +182,52 @@ describe("13차 E2E 회귀(v1.13)", () => {
     const s = run(initialState(), { type: "intake", kind: "BUDGET_PLAN_BATCH" });
     const p16 = Object.values(s.cases).find((c) => c.target_id === "PLAN-016")!;
     expect((p16.policy_hits ?? []).map((h) => h.source)).toContain("legal_kb:화장품법 제13조 제1항 제3호");
+  });
+});
+
+// 30차(29차 배포 주소에서 찾은 결함) — 서버(backend/tests/test_v129.py)와 같은 규칙
+describe("v1.29 rule fixes (browser engine = server)", () => {
+  const counterPending = () => {
+    const s = run(initialState(), { type: "intake", kind: "CONTRACT_RENEWAL_NOTICE" }, { type: "intake", kind: "AGENCY_COUNTER_OFFER" }, { type: "reply", key: "agency_payment_schedule" });
+    return { s, co: Object.values(s.cases).find((c) => c.kind === "AGENCY_COUNTER_OFFER")! };
+  };
+  it("AP-03: only the approver can request info", () => {
+    const { s, co } = counterPending();
+    const r = apply(s, { type: "decide", caseId: co.id, actor: "CONTRACT_OWNER", action: "request_info" });
+    expect(r.info).toContain("결재권자");
+    expect(r.state.cases[co.id].state).toBe("PENDING_APPROVAL");
+  });
+  it("AP-04·AP-08: info task goes to the drafting dept, audit names the case", () => {
+    const { s, co } = counterPending();
+    const n = run(s, { type: "decide", caseId: co.id, actor: "GROUP_CEO", action: "request_info", comment: "근거" });
+    expect(Object.values(n.tasks).find((t) => t.case_id === co.id && t.kind === "INFO_REQUEST" && t.status === "OPEN")?.dept).toBe("CONTRACT_OWNER");
+    expect(n.audit.at(-1)?.detail).toBe(`${co.title} 확인 요청 — 근거`);
+  });
+  it("AP-05·AP-06: same reply refused, manual hold kept, released hold rechecked", () => {
+    const { s, co } = counterPending();
+    let n = run(s, { type: "decide", caseId: co.id, actor: "GROUP_CEO", action: "request_info", comment: "근거" });
+    const dup = apply(n, { type: "reply", key: "agency_payment_schedule" });
+    expect(dup.info).toContain("이미 받은 회신");
+    expect(dup.state.cases[co.id].hold_reason).toBe("MANUAL");
+    const t = Object.values(n.tasks).find((x) => x.case_id === co.id && x.kind === "INFO_REQUEST" && x.status === "OPEN")!;
+    n = run(n, { type: "taskDone", taskId: t.id, actor: "CONTRACT_OWNER" }, { type: "condition", actor: "FINANCE", cash: "CONSERVATIVE" });
+    expect(n.cases[co.id].hold_reason).toBeUndefined();
+    expect(n.cases[co.id].decision?.cash?.window?.[1]).toBe("2026-08-28");
+  });
+  it("AP-07: PLAN-011 copy fix first, violating copy never approvable", () => {
+    let s = run(initialState(), { type: "intake", kind: "BUDGET_PLAN_BATCH" });
+    const p11 = find(s, "PLAN-011"), p01 = find(s, "PLAN-001");
+    expect(p11.state).toBe("ACTION_REQUIRED");
+    expect(apply(s, { type: "decide", caseId: p01.id, actor: p01.approval!.approver!, action: "approve" }).info).toContain("카피 위반");
+    s = run(s, { type: "fix", caseId: p11.id, actor: "MARKETING_TEAM" });
+    expect(s.cases[p11.id].state).toBe("PENDING_APPROVAL");
+    expect(s.cases[p11.id].decision?.recommendation).toBe("HOLD_SUPPLY");
+  });
+  it("O-5: reply audited before its result", () => {
+    const { s, co } = counterPending();
+    const i = s.audit.findIndex((a) => a.topic === "reply.received");
+    const j = s.audit.map((a) => a.case_id === co.id && a.topic === "case.analyzed").lastIndexOf(true);
+    expect(i).toBeGreaterThanOrEqual(0);
+    expect(i).toBeLessThan(j);
   });
 });

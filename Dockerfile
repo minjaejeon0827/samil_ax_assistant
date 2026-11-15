@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils t
     && rm -rf /var/lib/apt/lists/*
 COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
+# 30차(AP-01): 배포 이미지에 계약서 PDF 읽기·글자 인식 도구가 빠지면 빌드에서 바로 멈춘다(기존: 배포 뒤 업로드가 422)
+RUN python -c "import pypdf, jwt, faiss, langgraph, pymysql, shutil, sys; sys.exit(0 if shutil.which('pdftoppm') and shutil.which('tesseract') else 'PDF 글자 인식 도구(poppler-utils·tesseract) 없음')" \
+    && tesseract --list-langs 2>/dev/null | grep -qx kor
 COPY backend/ backend/
 COPY shared/ shared/
 COPY data/ data/

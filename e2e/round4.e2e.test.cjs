@@ -181,8 +181,8 @@ describe("문서·영상과 시스템의 일치", () => {
       ["12건", `${ceo}건`, "CEO 결재로 바뀌는 기안 수"],
       ["14건", `${ceo2}건`, "보수 가정에서 CEO 결재 기안 수"],
       ["부결·재배분 권고 6건", `부결·재배분 권고 ${reco("REJECT")}건`, "A04 개선 효과"],
-      ["카피 보류 2건", `카피 보류 ${reco("HOLD_COPY")}건`, "A04 개선 효과"],
-      ["공급 보류 1건", `공급 보류 ${reco("HOLD_SUPPLY")}건`, "A04 개선 효과"],
+      ["카피 보류 3건", `카피 보류 ${reco("HOLD_COPY")}건`, "A04 개선 효과"],   // 30차(AP-07): PLAN-011도 카피 수정이 먼저
+      ["공급 제약 1건", `공급 제약 ${plans.filter((c) => c.decision.supply?.constrained).length}건`, "A04 개선 효과"],
       ["7/21~8/21", cash.window ? `${Number(cash.window[0].slice(5, 7))}/${Number(cash.window[0].slice(8))}~${Number(cash.window[1].slice(5, 7))}/${Number(cash.window[1].slice(8))}` : "?", "하회 구간"],
       ["16.48억", cash.min_balance != null ? `${(cash.min_balance / 1e8).toFixed(2)}억` : "?", "재전망 최저"],
       ["16.48억(7/27)", cash.min_date ? `${(cash.min_balance / 1e8).toFixed(2)}억(${Number(cash.min_date.slice(5, 7))}/${Number(cash.min_date.slice(8))})` : "?", "재전망 최저일"],

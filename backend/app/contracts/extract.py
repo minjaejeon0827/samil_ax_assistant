@@ -39,6 +39,29 @@ MAX_PAGE_IN = 20.0          # 23차 AJ05: 한 변이 20인치(A3 긴 변 16.5인
 OCR_PX = 2339               # 페이지 긴 변을 이 화소로 맞춰 그림(A4 200dpi) — 페이지가 커도 메모리는 일정
 
 
+_READY: dict | None = None
+
+
+def readiness() -> dict:
+    """30차(AP-01): 계약서 PDF를 읽을 준비가 됐는가 — /api/health가 알려 배포 확인(읽기 전용)에서 업로드 없이 잡는다. 한 번만 확인."""
+    global _READY
+    if _READY is None:
+        try:
+            import pypdf  # noqa: F401
+            pdf = True
+        except ImportError:
+            pdf = False
+        ocr = bool(shutil.which("pdftoppm") and shutil.which("tesseract"))
+        if ocr:
+            try:
+                langs = subprocess.run(["tesseract", "--list-langs"], capture_output=True, text=True, timeout=10).stdout.split()
+                ocr = "kor" in langs
+            except Exception:  # noqa: BLE001
+                ocr = False
+        _READY = {"pdf": pdf, "ocr": ocr}
+    return _READY
+
+
 def ocr_plan(data: bytes) -> dict:
     """글자 인식 전에 싸게 확인(수 ms): 쪽수·페이지 크기. 너무 큰 페이지는 ContractError(그리기 전에 거절)."""
     from pypdf import PdfReader
@@ -116,6 +139,10 @@ def read_text_ex(filename: str, data: bytes, defer_ocr: bool = False) -> tuple[s
     if name.endswith(".pdf"):
         try:
             from pypdf import PdfReader
+        except ImportError:   # 30차(AP-01): 서버 구성 문제를 '스캔 PDF라면…'처럼 사용자 파일 탓으로 안내하지 않는다
+            raise ContractError("서버에 PDF 읽기 구성 요소가 없어 PDF를 읽지 못했습니다(관리자 확인: backend/requirements.txt로 다시 배포). "
+                                "그동안은 계약서를 .md·.txt로 올려 주세요.", 503) from None
+        try:
             text = "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(data)).pages)
         except Exception as e:  # noqa: BLE001
             raise ContractError(f"PDF에서 글자를 읽지 못했습니다({type(e).__name__}). 스캔 이미지 PDF라면 글자 인식(OCR) 후 올려 주세요.") from None
@@ -293,7 +320,10 @@ def extract(text: str, filename: str, today: str, ocr: bool | dict = False) -> d
     if m:
         t["counterparty"] = re.split(r"\s*[\(（]|\s+(?:Party\s*[A-Z]|갑)\s*[:：]", m.group(1).strip())[0].strip(" *") or None
     else:
-        t["counterparty"] = None
+        # 30차(O-3): 한 줄 당사자 문형 '주식회사 마실커머스(이하 "갑")와 주식회사 한결물류(이하 "을")'
+        m2 = re.search(r"([^()（）\"“”:：\n]{1,40}?)\s*[\(（]\s*이하\s*[\"“”'‘’]?\s*을\s*[\"“”'‘’]?\s*[\)）]", text)
+        name = re.sub(r"^\s*(?:와|과|및|그리고|,)\s*", "", m2.group(1)).strip(" *,") if m2 else ""
+        t["counterparty"] = name or None
     # 기간·만료일
     exp, c = first("term", lambda s: (dates_in(s)[-1] if re.search(r"만료|까지|기간|expir|until|terminat|\bterm\b", s, re.I) and dates_in(s) else None))
     if exp:

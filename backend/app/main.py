@@ -40,6 +40,7 @@ from .domain.data import get_dataroom
 from .graph.pipeline import engine
 from .domain.decision import Context
 from .repo.base import StorageUnavailable
+from .contracts.extract import readiness as contract_readiness
 from .repo.memory import MemoryRepository
 from .workflow.service import (AnchorAuditCommand, AdvanceClockCommand, ApplyFixCommand, ChangeConditionCommand, CompleteTaskCommand, ContractFactsCommand, SummaryFeedbackCommand,
                                DecideCommand, Duplicate, NotFound, OpsDesk, ReceiveReplyCommand, ROLE_KO)
@@ -81,7 +82,7 @@ def _start_anchor_timer() -> threading.Event:
     return stop
 
 
-app = FastAPI(title="Aurora 캠페인·계약 판단 데스크 API", version="1.28.0", lifespan=lifespan)
+app = FastAPI(title="Aurora 캠페인·계약 판단 데스크 API", version="1.29.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
@@ -439,6 +440,7 @@ async def health():
         return JSONResponse(status_code=503, content={"status": "degraded", "repo": settings.repo, "detail": "저장소(데이터베이스)에 연결할 수 없습니다."})
     return {"status": "ok", "repo": settings.repo, "auth": get_auth().mode, "oidc": oidc.enabled, "oidc_label": oidc.label if oidc.enabled else None,
             "channel": "webhook" if desk.channel.webhook else "outbox",
+            "contracts": await run_in_threadpool(contract_readiness),   # 30차(AP-01): PDF 읽기·글자 인식 준비(배포 확인 스크립트 A14)
             # v1.25: DB 연결 재사용·감사 기록 보호 트리거·보기 상태(운영자 확인용 — 트리거가 False면 schema.sql을 관리자 계정으로 적용)
             **({"db": {"opened": desk.repo.opened, "open": desk.repo.open_now, "idle": desk.repo._pool.qsize(), "waited": desk.repo.waited,
                       "guards": desk.repo.db_guards}} if hasattr(desk.repo, "_pool") else {})}

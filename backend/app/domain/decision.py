@@ -268,6 +268,9 @@ class DecisionEngine:
             needs.append(f"연간 금액이 외화({t.get('fee_basis')}) — 재무팀 환율로 원화 환산 필요(승인 권한 판정 불가)" if t.get("currency") else "연간 금액 미확인 — 승인 권한 판정 불가(원문 확인)")
         if t.get("auto_renew") is None:   # 23차 AJ06: 못 찾은 갱신 조항을 '없음'으로 단정하지 않음
             needs.append("자동 갱신 여부 미확인 — 원문의 기간·갱신 조항 확인(통보 기한이 있을 수 있음)")
+        elif t.get("auto_renew") and not t.get("notice_deadline"):
+            # 30차(R30-01): 스캔 OCR이 '60일'을 못 읽자 만료일(12/31)을 통보 기한처럼 결재 서류에 올렸다(실제 기한 11/1을 지나 자동 갱신될 수 있음)
+            needs.append("통보 기한 미확인 — 자동 갱신 조항은 있는데 '만료 며칠 전 통보'를 찾지 못함(만료일을 통보 기한으로 쓰지 않음, 원문 확인)")
         high = [c for c in chk if c["level"] == "high"]
         if t.get("auto_renew") is None:
             reco, label = "APPROVE", "자동 갱신 여부 확인 필요 — 원문의 갱신 조항을 확인한 뒤 결정"
@@ -347,10 +350,16 @@ class DecisionEngine:
         evidence.append(ev("ASSUMPTION" if plan_id in self.dr.ad_copies else "ORIGINAL",
                            f"광고 카피 초안: “{copy}”", "data/assumptions/ad_copies.csv (합성 A-07)", "NA"))
 
+        supply_hold = False
         if sup and sup["constrained"]:
             evidence.append(ev("CALC", f"{c.product_line} 재고 커버 최저 {sup['min_cover_weeks']:.1f}주({sup['min_cover_sku']}) < 안전재고 {sup['safety_min']:.0f}주, 리드타임 {sup['lead_time_weeks']:.0f}주, 생산라인 {sup['product_id']} 가동률 {sup['line_utilization_pct']:.0f}%",
                                "sku_inventory·sku_weekly_sales·m_sku·strat_capacity", "FULL"))
-            if reco not in ("REJECT",):
+            if reco == "HOLD_COPY":
+                # 30차(AP-07): 카피 수정이 먼저 — 공급 제약이 겹쳐도 '수정 필요'를 덮어쓰지 않는다(기존: 공급 보류 승인 대기로 바뀌어 위반 카피 승인 가능)
+                supply_hold = True
+                label = "카피 수정 필요 — 수정안 재검증 통과 후 승인 · 공급 제약도 있음(제품 전환 또는 입고 후 일정 조정)"
+            elif reco not in ("REJECT",):
+                supply_hold = True
                 reco, label = "HOLD_SUPPLY", "공급 제약 — 제품 전환 또는 입고 후로 일정 조정"
 
         if c.influencer_id == self._contract()["influencer_id"] and ctx.contract_status in HOLD_STATUSES:
@@ -375,10 +384,11 @@ class DecisionEngine:
             alternatives.append({"code": "SCALE_DOWN", "label": f"요청액 50% 축소 집행({won(amount/2)})"})
         if reco == "HOLD_COPY":
             alternatives.append({"code": "REWRITE", "label": f"수정안: “{reg['rewrite']}”"})
-        if reco == "HOLD_SUPPLY":
+        if supply_hold and reco in ("HOLD_SUPPLY", "HOLD_COPY"):
             alts = [k for k, v in self._supply.items() if not v["constrained"] and k in ("기초", "선케어", "색조")]
             alternatives.append({"code": "SWITCH_PRODUCT", "label": f"제품 전환({'/'.join(alts)}) 또는 입고 후 일정 연기"})
-        alternatives.append({"code": "AS_PROPOSED", "label": "원안 그대로 확정"})
+        if not (reg and reg["findings"]):   # 30차(AP-07): 위반 카피가 남아 있으면 '원안 그대로'는 대안이 아니다
+            alternatives.append({"code": "AS_PROPOSED", "label": "원안 그대로 확정"})
 
         on_approve = [task("MARKETING_TEAM", f"{plan_id} 집행 확정·계약 체결", p["contract_deadline"], "EXECUTE", effect="PLAN_CONFIRMED"),
                       task("FINANCE", f"{plan_id} 정산 {p['settlement_date']} {won(amount)} 현금계획 반영", p["settlement_date"])]
@@ -389,7 +399,7 @@ class DecisionEngine:
         if sup and c.product_line in self._supply:
             on_approve.append(task("SCM", f"{c.product_line} 캠페인 확대 수요 공유(커버 {sup['min_cover_weeks']:.1f}주)", p["contract_deadline"], "INFO"))
         on_reject = [task("MARKETING_TEAM", f"{plan_id} 부결 통보·예산 재배분안 작성(실질 공헌이익 기준)", p["contract_deadline"], "REALLOCATE", effect="PLAN_REJECTED")]
-        if reco == "HOLD_SUPPLY":
+        if supply_hold and reco in ("HOLD_SUPPLY", "HOLD_COPY"):
             on_reject.append(task("SCM", f"{c.product_line} 입고 일정 회신(전환 가능 제품 포함)", p["contract_deadline"]))
 
         return {

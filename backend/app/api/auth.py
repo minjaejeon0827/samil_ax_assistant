@@ -99,6 +99,8 @@ class Auth:
                 self.users[uid] = [role, int(it), _unb64(salt), _unb64(digest), None]
             else:
                 self.users[uid] = [role, _ITER, None, None, pw]
+        if self.mode == "jwt":
+            self._warn_users()
         self._fails: dict[tuple[str, str], deque[float]] = defaultdict(deque)
         self._acct: dict[str, deque[float]] = defaultdict(deque)
         self._revoked: dict[str, float] = {}     # jti → 만료 시각(지나면 정리)
@@ -113,6 +115,26 @@ class Auth:
         self._pw: dict[str, dict] = {}
         self._pw_at = 0.0
         self._rt_update = None
+
+    def _warn_users(self) -> None:
+        """AP-02(29차): 배포 주소에서 6개 계정이 같은 약한 평문 비밀번호였다(로그인 창 예시 글자로 노출). 막지는 않되(시연·시험 계정)
+        기동할 때 운영자에게 알린다 — 비밀번호 값과 아이디는 로그에 쓰지 않고 개수만."""
+        from .sso import password_problems
+        plain = {uid: v[4] for uid, v in self.users.items() if v[4] is not None}
+        if not plain:
+            return
+        weak = sum(1 for uid, pw in plain.items() if password_problems(uid, pw, ""))
+        groups: dict[str, int] = defaultdict(int)
+        for pw in plain.values():
+            groups[pw] += 1
+        shared = sum(n for n in groups.values() if n > 1)
+        parts = [f"평문 비밀번호 {len(plain)}개"]
+        if weak:
+            parts.append(f"비밀번호 규칙(10자 이상·영문·숫자·기호 중 두 종류) 미달 {weak}개")
+        if shared:
+            parts.append(f"여러 계정이 같은 비밀번호를 공용으로 씀 {shared}개 계정")
+        sys.stderr.write("경고: USERS — " + " · ".join(parts) + ". 공개 주소라면 계정마다 다른 비밀번호를 정해 "
+                         "`python -m app.api.auth hash`로 해시해 넣고, 로그인 화면·문서·번들에 적지 마세요.\n")
 
     # ---- AB-02(15차): 로그인 실패 기록 공유 ----
     def attach_fails(self, load, update) -> None:

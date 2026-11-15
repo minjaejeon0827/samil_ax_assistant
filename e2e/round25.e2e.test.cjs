@@ -15,7 +15,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const H = require("./helpers.cjs");
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round2[6-8]:/.test(r))]));   // 26차는 25차 뒤에 돈다
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[6-8]|30):/.test(r))]));   // 26차는 25차 뒤에 돈다
 
 const KEY = "e2e-key";
 const SAMPLES = path.join(H.ROOT, "data", "samples", "contracts");
@@ -93,7 +93,7 @@ describe("운영 DB(MySQL 호환) — 연결·정규화·제약·VIEW·트랜잭
       }
       execFileSync("mariadb", ["-uroot", `--socket=${db.sock}`, "--default-character-set=utf8mb4", "--max-allowed-packet=256M", "aurora_desk"], { input: fs.readFileSync(f) });
       const kvBytes = Number(sqlRows("SELECT IFNULL(MAX(LENGTH(doc)),0) FROM kv")[0][0]);
-      const plan = (await snap(base)).cases.find((c) => c.type === "PLAN" && c.state === "PENDING_APPROVAL");
+      const plan = (await snap(base)).cases.find((c) => c.type === "PLAN" && c.state === "PENDING_APPROVAL" && !c.decision?.regulation?.findings?.length);   // 30차(AP-07): 위반 카피 기안은 승인 불가라 제외
       const [dms, dr] = await timed(() => call(base, "POST", `/api/cases/${plan.id}/decision`, { actor: plan.approval.approver, action: "approve", comment: "정규화 시험" }));
       assert.equal(dr.status, 200, await dr.text());
       const [ums, uj] = await timed(() => upload(base, path.join(SAMPLES, "logistics_3pl_renewal.md")).then((r) => r.json()).then((b) => jobOf(base, b.job_id)));

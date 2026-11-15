@@ -15,7 +15,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync, spawn } = require("node:child_process");
 const H = require("./helpers.cjs");
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round2[78]:/.test(r))]));   // 27차는 26차 뒤에 돈다
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[78]|30):/.test(r))]));   // 27차는 26차 뒤에 돈다
 
 const KEY = "e2e-key";
 const SAMPLES = path.join(H.ROOT, "data", "samples", "contracts");

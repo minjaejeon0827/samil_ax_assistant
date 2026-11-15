@@ -10,3 +10,4 @@ frontend/dist-api
 frontend/dist-docker
 e2e/reports
 demo/raw
+e2e/.venv-clean

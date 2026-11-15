@@ -61,7 +61,7 @@ const OUT = path.resolve(__dirname, "raw");
   await p.getByRole("tab", { name: "확대 기안 25건" }).click(); await wait(1500);
   await caption("같은 기안, 다른 결재자", "정산일이 하회 구간에 들어가는 12건은 소액이어도 그룹 CEO 결재(covenant 우선 규정). 나머지는 Masil 대표.", 4200);
   await p.locator(".plans tr", { hasText: "PLAN-016" }).click(); await wait(800); await top();
-  await caption("확장: 표시광고법 게이트", "성과가 좋은 코코라운지 기안도 카피에 '주름 개선'이 있어 수정 필요로 멈춥니다(화장품법 제13조). 정책 근거에도 그 법 조항이 붙습니다.", 2400);
+  await caption("확장: 표시광고법 게이트", "성과가 좋은 코코라운지 기안도 카피에 '주름 개선'이 있어 수정 필요로 멈춥니다(화장품법 제13조). 공급 제약이 겹친 PLAN-011도 카피 수정이 먼저입니다(v1.29).", 2400);
   await scrollTo(".copy-diff", 1300);
   await p.locator("summary", { hasText: "검색된 정책 조각" }).click(); await p.locator(".hits").scrollIntoViewIfNeeded(); await wait(1300); await top();
   await role("MARKETING_TEAM");   // 카피 수정은 기안 부서만(v1.8 권한 정책)

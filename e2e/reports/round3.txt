@@ -3,137 +3,137 @@ TAP version 13
     # Subtest: Q01 FastAPI 한 프로세스가 화면을 서빙하고, 같은 출처로 서버 모드 여정이 끝까지 동작
     ok 1 - Q01 FastAPI 한 프로세스가 화면을 서빙하고, 같은 출처로 서버 모드 여정이 끝까지 동작
       ---
-      duration_ms: 740.73469
+      duration_ms: 692.754078
       type: 'test'
       ...
     # Subtest: Q02 없는 주소로 직접 들어오거나 새로고침해도 화면이 뜸(SPA 대체 경로)
     ok 2 - Q02 없는 주소로 직접 들어오거나 새로고침해도 화면이 뜸(SPA 대체 경로)
       ---
-      duration_ms: 97.749361
+      duration_ms: 98.687058
       type: 'test'
       ...
     # Subtest: Q03 경로 탐색 공격으로 서버의 소스·데이터·설정 파일을 내려받을 수 없음
     ok 3 - Q03 경로 탐색 공격으로 서버의 소스·데이터·설정 파일을 내려받을 수 없음
       ---
-      duration_ms: 15.878259
+      duration_ms: 17.344064
       type: 'test'
       ...
     # Subtest: Q04 응답에 기본 보안 헤더(nosniff·프레임 차단·리퍼러 제한)가 있음
     ok 4 - Q04 응답에 기본 보안 헤더(nosniff·프레임 차단·리퍼러 제한)가 있음
       ---
-      duration_ms: 4.09069
+      duration_ms: 3.448268
       type: 'test'
       ...
     1..4
 ok 1 - 배포 형태 — 단일 컨테이너(Dockerfile과 같은 구성)
   ---
-  duration_ms: 2523.922137
+  duration_ms: 2558.884688
   type: 'suite'
   ...
 # Subtest: 보안 경계 — 입력
     # Subtest: Q05 메모·회신에 스크립트를 넣어도 화면에서 실행되지 않음(브라우저·서버 모드)
     ok 1 - Q05 메모·회신에 스크립트를 넣어도 화면에서 실행되지 않음(브라우저·서버 모드)
       ---
-      duration_ms: 1358.89532
+      duration_ms: 1416.983704
       type: 'test'
       ...
     # Subtest: Q06 승인 우회 지시의 흔한 변형도 차단(조사·띄어쓰기·영어 표현)
     ok 2 - Q06 승인 우회 지시의 흔한 변형도 차단(조사·띄어쓰기·영어 표현)
       ---
-      duration_ms: 53.402437
+      duration_ms: 65.170712
       type: 'test'
       ...
     # Subtest: Q07 정상 업무 문장은 우회 지시로 오인해 막지 않음(과차단 방지)
     ok 3 - Q07 정상 업무 문장은 우회 지시로 오인해 막지 않음(과차단 방지)
       ---
-      duration_ms: 28.250937
+      duration_ms: 33.903078
       type: 'test'
       ...
     # Subtest: Q08 존재하지 않는 날짜·과도한 날짜로 시계를 옮길 수 없음(화면 D-day가 깨지지 않음)
     ok 4 - Q08 존재하지 않는 날짜·과도한 날짜로 시계를 옮길 수 없음(화면 D-day가 깨지지 않음)
       ---
-      duration_ms: 10.206237
+      duration_ms: 11.347891
       type: 'test'
       ...
     1..4
 ok 2 - 보안 경계 — 입력
   ---
-  duration_ms: 1451.241464
+  duration_ms: 1527.979783
   type: 'suite'
   ...
 # Subtest: 사용 환경 — 시간대·저사양·좁은 화면·오프라인
     # Subtest: Q09-Los_Angeles 다른 시간대(America/Los_Angeles)에서도 날짜·D-day·하회 구간이 같음
     ok 1 - Q09-Los_Angeles 다른 시간대(America/Los_Angeles)에서도 날짜·D-day·하회 구간이 같음
       ---
-      duration_ms: 503.612061
+      duration_ms: 598.335491
       type: 'test'
       ...
     # Subtest: Q09-Kiritimati 다른 시간대(Pacific/Kiritimati)에서도 날짜·D-day·하회 구간이 같음
     ok 2 - Q09-Kiritimati 다른 시간대(Pacific/Kiritimati)에서도 날짜·D-day·하회 구간이 같음
       ---
-      duration_ms: 501.643615
+      duration_ms: 533.402436
       type: 'test'
       ...
     # Subtest: Q10 저사양 기기(CPU 4배 느림)에서 무거운 동작도 클릭 → 화면 반영 200ms 이내
     ok 3 - Q10 저사양 기기(CPU 4배 느림)에서 무거운 동작도 클릭 → 화면 반영 200ms 이내
       ---
-      duration_ms: 1106.86842
+      duration_ms: 1269.606609
       type: 'test'
       ...
     # Subtest: Q11 저사양 기기 + 느린 4G에서 첫 화면이 3초 안에 조작 가능
     ok 4 - Q11 저사양 기기 + 느린 4G에서 첫 화면이 3초 안에 조작 가능
       ---
-      duration_ms: 1794.238456
+      duration_ms: 1898.653597
       type: 'test'
       ...
     # Subtest: Q12 320px 화면(작은 휴대폰·200% 확대)에서 모든 탭·결재 서류에 가로 넘침 없음
     ok 5 - Q12 320px 화면(작은 휴대폰·200% 확대)에서 모든 탭·결재 서류에 가로 넘침 없음
       ---
-      duration_ms: 824.884522
+      duration_ms: 851.267581
       type: 'test'
       ...
     # Subtest: Q13 브라우저 단독 모드는 첫 로드 뒤 네트워크가 끊겨도 계속 일할 수 있음
     ok 6 - Q13 브라우저 단독 모드는 첫 로드 뒤 네트워크가 끊겨도 계속 일할 수 있음
       ---
-      duration_ms: 655.095922
+      duration_ms: 529.654601
       type: 'test'
       ...
     1..6
 ok 3 - 사용 환경 — 시간대·저사양·좁은 화면·오프라인
   ---
-  duration_ms: 5386.879741
+  duration_ms: 5681.574889
   type: 'suite'
   ...
 # Subtest: 접근성 자동 점검(axe-core, WCAG 2.1 AA)
     # Subtest: Q14 근거·기안 보드·결재 서류·수정 필요 서류에서 심각(serious)·치명(critical) 위반 0건
     ok 1 - Q14 근거·기안 보드·결재 서류·수정 필요 서류에서 심각(serious)·치명(critical) 위반 0건
       ---
-      duration_ms: 1685.713681
+      duration_ms: 1554.663036
       type: 'test'
       ...
     1..1
 ok 4 - 접근성 자동 점검(axe-core, WCAG 2.1 AA)
   ---
-  duration_ms: 1685.911129
+  duration_ms: 1554.841164
   type: 'suite'
   ...
 # Subtest: 동시 접속 부하 — 서버 모드
     # Subtest: Q15 30명이 화면을 열어 둔 상태(자동 갱신)에서 결재·스냅샷 응답 p95 500ms 이내
     ok 1 - Q15 30명이 화면을 열어 둔 상태(자동 갱신)에서 결재·스냅샷 응답 p95 500ms 이내
       ---
-      duration_ms: 860.607005
+      duration_ms: 861.471679
       type: 'test'
       ...
     # Subtest: Q16 느린 4G(1.6Mbps)로 배포 서버를 쓸 때 결재 → 화면 반영 1.5초 이내
     ok 2 - Q16 느린 4G(1.6Mbps)로 배포 서버를 쓸 때 결재 → 화면 반영 1.5초 이내
       ---
-      duration_ms: 1588.140269
+      duration_ms: 1599.730396
       type: 'test'
       ...
     1..2
 ok 5 - 동시 접속 부하 — 서버 모드
   ---
-  duration_ms: 2449.100035
+  duration_ms: 2461.456772
   type: 'suite'
   ...
 1..5
@@ -144,4 +144,4 @@ ok 5 - 동시 접속 부하 — 서버 모드
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 13748.142059
+# duration_ms 14044.952076

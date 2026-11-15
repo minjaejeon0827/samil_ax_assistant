@@ -120,4 +120,4 @@ def test_reanalysis_does_not_duplicate_fix_tasks(desk):
     desk.run(ChangeConditionCommand("FINANCE", cash_assumption="CONSERVATIVE"))
     desk.run(ChangeConditionCommand("FINANCE", cash_assumption="AS_IS"))
     fixes = [t for t in desk.snapshot()["tasks"] if t["kind"] == "FIX" and t["status"] == "OPEN"]
-    assert len(fixes) == 2   # PLAN-016, PLAN-023 각 1건
+    assert len(fixes) == 3   # PLAN-011(30차 AP-07: 카피 수정이 먼저), PLAN-016, PLAN-023 각 1건

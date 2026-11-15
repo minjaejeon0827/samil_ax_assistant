@@ -73,7 +73,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"
@@ -235,7 +235,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"
@@ -400,7 +400,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"
@@ -565,7 +565,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"
@@ -730,7 +730,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"
@@ -895,7 +895,7 @@
     "copy_action": "pass"
    },
    "PLAN-011": {
-    "recommendation": "HOLD_SUPPLY",
+    "recommendation": "HOLD_COPY",
     "approver": "MASIL_CEO",
     "covenant_override": false,
     "copy_action": "warn"

@@ -29,6 +29,17 @@ from ..graph.pipeline import clear_cache, run_case, warm
 from ..repo.base import Repository
 from ..validation import check_input, check_output
 from .events import EventBus
+
+
+def copy_unresolved(case: dict) -> bool:
+    """30차(AP-07): 이 기안의 현재 광고 카피에 수정이 필요한 위반(warn)이 남아 있는가 — 남아 있으면 누구도 승인할 수 없다."""
+    reg = (case.get("decision") or {}).get("regulation") or {}
+    return case.get("type") == "PLAN" and bool(reg.get("findings"))
+
+
+def info_dept(case: dict) -> str:
+    """30차(AP-04): 결재권자의 '확인 요청'을 받아 근거를 보완할 부서 = 그 건을 올린 부서(계약 건·다른 계약서 → 계약 담당, 기안 → 마케팅팀)."""
+    return "CONTRACT_OWNER" if case.get("type") in ("CONTRACT", "RENEWAL") else "MARKETING_TEAM"
 from .states import InvalidTransition, next_state_for, state_of
 
 
@@ -398,6 +409,8 @@ class OpsDesk:
         state_of(case["state"]).check(cmd)
         case["history"].append({"sim_date": self.ctx()["today"], "from": case["state"], "to": new_state,
                                 "by": actor, "note": note})
+        if case["state"] == "NEEDS_INFO" and new_state != "NEEDS_INFO":
+            case.pop("hold_reason", None)   # 30차(AP-06): 보류가 풀리는 모든 길에서 사유를 지운다(남으면 이후 조건 변경 재검증에서 계속 빠짐)
         case["state"] = new_state
         return case
 
@@ -707,7 +720,7 @@ class OpsDesk:
     def reanalyze_open(self, pred, note: str) -> list[dict]:
         out = []
         targets = self._cases(lambda x: pred(x) and x["state"] in ("PENDING_APPROVAL", "NEEDS_INFO", "ACTION_REQUIRED", "HOLD_LINKED")
-                              and x.get("hold_reason") != "MANUAL")
+                              and not (x["state"] == "NEEDS_INFO" and x.get("hold_reason") == "MANUAL"))   # 30차(AP-06): 사람 보류는 '확인 필요'일 때만 제외
         pre = self._prefetch(targets)
         for c in targets:
             before = (c.get("approval") or {}).get("approver")
@@ -807,16 +820,25 @@ class OpsDesk:
                 raise InvalidTransition("이 결재 서류는 화면을 연 뒤에 바뀌었습니다(AI 설명 도착·재분석 등). 바뀐 내용을 확인한 뒤 다시 결재하세요.")
             raise InvalidTransition("다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요.")
         appr = case.get("approval") or {}
-        if action in ("approve", "reject"):
-            if actor != appr.get("approver"):   # D-11: '수정 필요' 건 부결도 결재권자만(기존: 누구나 부결 가능)
-                raise PermissionDenied(f"이 건의 승인 권한은 {ROLE_KO.get(appr.get('approver'), appr.get('approver'))}에게 있습니다({ROLE_KO.get(actor, actor)} 불가).")
+        if actor != appr.get("approver"):
+            # D-11: '수정 필요' 건 부결도 결재권자만. 30차(AP-03): 확인 요청도 결재권자만(PRD §9) — 기존에는 누구나 아무 결재 건을 '확인 필요'로 멈춤
+            who = ROLE_KO.get(appr.get("approver"), appr.get("approver") or "미정")
+            if action == "request_info":
+                raise PermissionDenied(f"이 건의 확인 요청은 결재권자({who})만 할 수 있습니다({ROLE_KO.get(actor, actor)} 불가).")
+            raise PermissionDenied(f"이 건의 승인 권한은 {who}에게 있습니다({ROLE_KO.get(actor, actor)} 불가).")
+        if action == "approve" and copy_unresolved(case):
+            # 30차(AP-07): 위반 카피가 남은 기안은 권고와 상관없이 승인하지 않는다(필수 확장 카피 게이트)
+            raise InvalidTransition("광고 카피 위반이 남아 있어 승인할 수 없습니다 — 마케팅팀이 수정안을 반영해 재검증을 통과한 뒤 결재하세요(부결·확인 요청은 가능).")
         if action == "request_info":
             self._transition(case, "request_info", "NEEDS_INFO", actor, comment or "추가 확인 요청")
             case["hold_reason"] = "MANUAL"   # D-10: 사람이 건 확인 요청은 조건 변경 재검증으로 풀리지 않음
-            self._create_task(case_id, {"dept": "MARKETING_TEAM", "title": f"[확인 요청] {case['target_id']}: {comment or '근거 보완'}",
+            # 30차(AP-04): 확인 작업은 그 건의 기안 부서로(기존: 항상 마케팅팀 → 계약 건을 계약 담당이 풀 수 없었음)
+            self._create_task(case_id, {"dept": info_dept(case), "title": f"[확인 요청] {case['target_id']}: {comment or '근거 보완'}",
                                         "due": (case.get("decision") or {}).get("subject", {}).get("deadline"), "kind": "INFO_REQUEST",
                                         "resume_case": True})
-            self.bus.publish("case.info_requested", {"case_id": case_id, "actor": actor, "detail": comment})
+            # 30차(AP-08): 감사에 행위와 대상을 남긴다(기존: 의견만 — 의견이 없으면 빈 행)
+            self.bus.publish("case.info_requested", {"case_id": case_id, "actor": actor,
+                                                     "detail": f"{case['title']} 확인 요청" + (f" — {comment}" if comment else "")})
             self._outbound.append(("approval.closed", case_id))
             return {"case": self._save(case)}
         new = "APPROVED" if action == "approve" else "REJECTED"
@@ -872,12 +894,17 @@ class OpsDesk:
         masked = check_output(r["summary"])
         if reply_key == "agency_payment_schedule":
             c = self.ctx()
+            if (c.get("offer") or {}).get("payment_schedule"):
+                # 30차(AP-05): 같은 회신을 두 번 반영하지 않는다(FR-27 중복 접수와 같은 원칙) — 기존: 다시 받으면 사람이 건 보류까지 풀림
+                raise InvalidTransition(f"이미 받은 회신({r['reply_id']})입니다 — 다시 반영하지 않았습니다.")
+            # 회신을 기다리는 건만(사람이 건 확인 요청 보류는 담당 부서의 확인 완료로만 풀린다 — D-10)
+            targets = self._cases(lambda x: x["type"] == "CONTRACT" and x["state"] == "NEEDS_INFO" and x.get("hold_reason") != "MANUAL")
+            if not targets:
+                raise InvalidTransition("지급 일정 회신을 기다리는 건이 없습니다.")
             offer = dict(c["offer"] or {})
             offer["payment_schedule"] = r["payment_schedule"]
             self._set_ctx(offer=offer)
-            targets = self._cases(lambda x: x["type"] == "CONTRACT" and x["state"] == "NEEDS_INFO")
-            if not targets:
-                raise InvalidTransition("지급 일정 회신을 기다리는 건이 없습니다.")
+            self.bus.publish("reply.received", {"actor": "AGENCY", "detail": masked["masked_text"]})   # 30차(O-5): 회신 접수 → 결과 순서로 남김
             out = []
             for case in targets:
                 self._transition(case, "receive_reply", "RECEIVED", actor, f"모의 회신 {r['reply_id']}: {masked['masked_text']}")
@@ -886,7 +913,6 @@ class OpsDesk:
                         t.update(status="DONE", done_by="AGENCY", done_on=self.ctx()["today"], result=masked["masked_text"])
                         self.repo.put("tasks", t)
                 out.append(self._save(self._analyze(case, actor)))
-            self.bus.publish("reply.received", {"actor": "AGENCY", "detail": masked["masked_text"]})
             return {"cases": out, "masked": masked["action"] == "warn"}
         if reply_key == "agency_accepts_termination":
             self._set_ctx(contract_status="TERMINATED" if self.ctx()["contract_status"] == "TERMINATION_SENT" else self.ctx()["contract_status"])
@@ -1089,7 +1115,11 @@ class OpsDesk:
         # 전속계약: 결정은 했어도 통보가 기한 내 '발송'되지 않으면 계약상 자동 갱신된다
         notice_dl = self.dr.policy["contracts"][0]["notice_deadline"]
         if to > notice_dl and self.ctx()["contract_status"] in ("UNDER_REVIEW", "NOTICE_APPROVED", "COUNTER_OFFER", "TERMINATION_APPROVED"):
-            self.bus.publish("deadline.expired", {"detail": f"⚠ INF-001 통보 기한 {notice_dl}까지 통보 미발송({CONTRACT_STATUS_KO[self.ctx()['contract_status']]}) — 동일 조건 자동 갱신(승인 없는 체결)"})
+            # 30차(O-4): 조건변경 통보를 기한 안에 보냈다면 '통보 미발송'이 아니다 — 미갱신 통보가 없었다는 사실과 법무 확인 필요를 함께 남긴다
+            sent = next((t for t in self.repo.list("tasks") if t.get("effect") == "CONTRACT_NOTICE_SENT" and t["status"] == "DONE"), None)
+            what = (f"미갱신 통보 미발송(조건변경 통보는 {sent.get('done_on')} 발송 — 갱신 거절 통보로 볼 수 있는지 법무 확인 필요)" if sent
+                    else "통보 미발송")
+            self.bus.publish("deadline.expired", {"detail": f"⚠ INF-001 통보 기한 {notice_dl}까지 {what}({CONTRACT_STATUS_KO[self.ctx()['contract_status']]}) — 동일 조건 자동 갱신(승인 없는 체결)"})
             self._set_ctx(contract_status="AUTO_RENEWED")
         # v1.21(§15-4): 다른 자동 갱신 계약도 같은 원칙 — 결정했어도 통보를 기한 안에 보내지 않으면 자동 갱신(승인 없는 체결)
         for rid, r in self.renewals().items():

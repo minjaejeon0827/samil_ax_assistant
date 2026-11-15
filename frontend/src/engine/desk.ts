@@ -60,8 +60,13 @@ function audit(s: S, topic: string, detail: string, actor = "SYSTEM", case_id: s
 function transition(s: S, c: Case, cmd: string, to: string, by: string, note: string) {
   if (!(ALLOWED[c.state] ?? []).includes(cmd)) throw new DeskError(`'${STATE_KO[c.state]}' 상태에서는 '${cmd}'를 할 수 없습니다.`);
   c.history.push({ sim_date: s.ctx.today, from: c.state, to, by, note });
+  if (c.state === "NEEDS_INFO" && to !== "NEEDS_INFO") delete c.hold_reason; // 30차(AP-06): 보류가 풀리는 모든 길에서 사유를 지움
   c.state = to;
 }
+/** 30차(AP-07): 현재 광고 카피에 수정이 필요한 위반이 남아 있는가 — 남아 있으면 누구도 승인할 수 없음(서버와 같은 규칙). */
+export function copyUnresolved(c: Case): boolean { return c.type === "PLAN" && !!c.decision?.regulation?.findings?.length; }
+/** 30차(AP-04): 확인 요청을 받아 근거를 보완할 부서 = 그 건을 올린 부서. */
+export function infoDept(c: Case): string { return c.type === "CONTRACT" || c.type === "RENEWAL" ? "CONTRACT_OWNER" : "MARKETING_TEAM"; }
 function createTask(s: S, caseId: string, t: Partial<Task> & TaskSpec) {
   if (["FIX", "INFO_REQUEST", "DEADLINE_ALERT"].includes(t.kind)) { // 재분석해도 같은 확인·수정 작업은 하나만
     const ex = Object.values(s.tasks).find((x) => x.case_id === caseId && x.kind === t.kind && x.status === "OPEN");
@@ -161,7 +166,7 @@ function reanalyzeOpen(s: S, pred: (c: Case) => boolean, note: string) {
   const out: Case[] = [];
   for (const c of Object.values(s.cases)) {
     if (!pred(c) || !["PENDING_APPROVAL", "NEEDS_INFO", "ACTION_REQUIRED", "HOLD_LINKED"].includes(c.state)) continue;
-    if (c.hold_reason === "MANUAL") continue; // D-10: 사람이 건 확인 요청은 재검증으로 풀지 않음
+    if (c.state === "NEEDS_INFO" && c.hold_reason === "MANUAL") continue; // D-10: 사람이 건 확인 요청은 재검증으로 풀지 않음(30차 AP-06: '확인 필요'일 때만)
     const before = c.approval?.approver;
     transition(s, c, "supersede", "SUPERSEDED", "SYSTEM", note);
     analyze(s, c); c.version++;
@@ -241,12 +246,17 @@ function exec(s: S, cmd: Command): string {
       if (cmd.expectedVersion !== undefined && c.version !== cmd.expectedVersion)   // AG-02(20차): 서버와 같은 문장
         throw new DeskError(!c.approval?.decision && c.state === "PENDING_APPROVAL" ? "이 결재 서류는 화면을 연 뒤에 바뀌었습니다(AI 설명 도착·재분석 등). 바뀐 내용을 확인한 뒤 다시 결재하세요." : "다른 사용자가 먼저 이 건을 처리했습니다. 새로고침 후 다시 확인하세요.");
       const ap = c.approval!;
-      if (cmd.action !== "request_info" && cmd.actor !== ap.approver) // D-11: 수정 필요 건 부결도 결재권자만
-        throw new DeskError(`이 건의 승인 권한은 ${ROLE_KO[ap.approver ?? ""] ?? "미정"}에게 있습니다(${ROLE_KO[cmd.actor]} 불가).`);
+      if (cmd.actor !== ap?.approver) { // D-11: 수정 필요 건 부결도 결재권자만 · 30차(AP-03): 확인 요청도 결재권자만(서버와 같은 문장)
+        const who = ROLE_KO[ap?.approver ?? ""] ?? "미정";
+        throw new DeskError(cmd.action === "request_info" ? `이 건의 확인 요청은 결재권자(${who})만 할 수 있습니다(${ROLE_KO[cmd.actor]} 불가).` : `이 건의 승인 권한은 ${who}에게 있습니다(${ROLE_KO[cmd.actor]} 불가).`);
+      }
+      if (cmd.action === "approve" && copyUnresolved(c))
+        throw new DeskError("광고 카피 위반이 남아 있어 승인할 수 없습니다 — 마케팅팀이 수정안을 반영해 재검증을 통과한 뒤 결재하세요(부결·확인 요청은 가능).");
       if (cmd.action === "request_info") {
         transition(s, c, "request_info", "NEEDS_INFO", cmd.actor, cmd.comment || "추가 확인 요청");
         c.hold_reason = "MANUAL";
-        createTask(s, c.id, { dept: "MARKETING_TEAM", title: `[확인 요청] ${c.target_id}: ${cmd.comment || "근거 보완"}`, due: c.decision?.subject.deadline ?? null, kind: "INFO_REQUEST", resume_case: true });
+        createTask(s, c.id, { dept: infoDept(c), title: `[확인 요청] ${c.target_id}: ${cmd.comment || "근거 보완"}`, due: c.decision?.subject.deadline ?? null, kind: "INFO_REQUEST", resume_case: true });
+        audit(s, "case.info_requested", `${c.title} 확인 요청${cmd.comment ? ` — ${cmd.comment}` : ""}`, cmd.actor, c.id); // 30차(AP-08)
         c.version++;
         return `${c.id} 확인 요청`;
       }
@@ -264,16 +274,17 @@ function exec(s: S, cmd: Command): string {
       const r = mr[cmd.key] as { reply_id: string; summary: string; payment_schedule?: { date: string; amount_krw: number }[] };
       const m = checkOutput(r.summary);
       if (cmd.key === "agency_payment_schedule") {
-        const targets = Object.values(s.cases).filter((x) => x.type === "CONTRACT" && x.state === "NEEDS_INFO");
+        if (s.ctx.offer?.payment_schedule) throw new DeskError(`이미 받은 회신(${r.reply_id})입니다 — 다시 반영하지 않았습니다.`); // 30차(AP-05)
+        const targets = Object.values(s.cases).filter((x) => x.type === "CONTRACT" && x.state === "NEEDS_INFO" && x.hold_reason !== "MANUAL");
         if (!targets.length) throw new DeskError("지급 일정 회신을 기다리는 건이 없습니다.");
         s.ctx.offer = { ...(s.ctx.offer ?? {}), payment_schedule: r.payment_schedule };
+        audit(s, "reply.received", m.masked_text, "AGENCY"); // 30차(O-5): 회신 접수 → 결과 순서
         for (const c of targets) {
           transition(s, c, "receive_reply", "RECEIVED", "AGENCY", `모의 회신 ${r.reply_id}: ${m.masked_text}`);
           Object.values(s.tasks).filter((t) => t.case_id === c.id && t.kind === "INFO_REQUEST" && t.status === "OPEN")
             .forEach((t) => Object.assign(t, { status: "DONE", done_by: "AGENCY", done_on: s.ctx.today, result: m.masked_text }));
           analyze(s, c, "AGENCY"); c.version++;
         }
-        audit(s, "reply.received", m.masked_text, "AGENCY");
         return `에이전시 회신 반영 → 재분석 ${targets.length}건`;
       }
       if (s.ctx.contract_status === "TERMINATION_SENT") s.ctx.contract_status = "TERMINATED";
@@ -361,7 +372,9 @@ function exec(s: S, cmd: Command): string {
         }
       }
       if (cmd.to > CONTRACT.notice_deadline && ["UNDER_REVIEW", "NOTICE_APPROVED", "COUNTER_OFFER", "TERMINATION_APPROVED"].includes(s.ctx.contract_status)) {
-        audit(s, "deadline.expired", `⚠ INF-001 통보 기한 ${CONTRACT.notice_deadline}까지 통보 미발송(${CONTRACT_STATUS_KO[s.ctx.contract_status]}) — 동일 조건 자동 갱신(승인 없는 체결)`);
+        const sent = Object.values(s.tasks).find((t) => t.effect === "CONTRACT_NOTICE_SENT" && t.status === "DONE"); // 30차(O-4)
+        const what = sent ? `미갱신 통보 미발송(조건변경 통보는 ${sent.done_on} 발송 — 갱신 거절 통보로 볼 수 있는지 법무 확인 필요)` : "통보 미발송";
+        audit(s, "deadline.expired", `⚠ INF-001 통보 기한 ${CONTRACT.notice_deadline}까지 ${what}(${CONTRACT_STATUS_KO[s.ctx.contract_status]}) — 동일 조건 자동 갱신(승인 없는 체결)`);
         s.ctx.contract_status = "AUTO_RENEWED";
       }
       for (const c of Object.values(s.cases)) {

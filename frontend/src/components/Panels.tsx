@@ -12,7 +12,8 @@ export function Intake({ dispatch, snap, busy = false, onUpload }: { dispatch: (
   const [memo, setMemo] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const has = (k: string) => snap.cases.some((c) => c.kind === k);
-  const needInfo = snap.cases.some((c) => c.type === "CONTRACT" && c.state === "NEEDS_INFO");
+  // 30차(AP-05): 회신을 기다리는 건이 있을 때만(사람이 건 확인 요청 보류·이미 받은 회신은 제외 — 기존: 다시 누르면 보류가 풀림)
+  const needInfo = !snap.ctx.offer?.payment_schedule && snap.cases.some((c) => c.type === "CONTRACT" && c.state === "NEEDS_INFO" && c.hold_reason !== "MANUAL");
   return (
     <section className="intake" aria-label="사건 접수" aria-busy={busy}>
       <h2>사건 접수</h2>
@@ -175,21 +176,26 @@ export function Deliveries({ items, role, onRetry }: { items: Delivery[]; role: 
   );
 }
 
-export function AuditLog({ snap, loadAudit, verifyAudit }: { snap: Snapshot; loadAudit: (offset: number, q: string) => Promise<AuditPage>; verifyAudit?: () => Promise<AuditVerify> }) {
+export function AuditLog({ snap, loadAudit, verifyAudit, who = "" }: { snap: Snapshot; loadAudit: (offset: number, q: string) => Promise<AuditPage>; verifyAudit?: () => Promise<AuditVerify>; who?: string }) {
   const [open, setOpen] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
   // v1.27(AN06): 감사 담당이 화면에서 해시 체인을 검증(기존: API로만). 결과는 화면 낭독기가 읽는 상태 영역
-  const [check, setCheck] = useState<{ busy: boolean; text: string; bad: boolean } | null>(null);
+  // 30차(AP-09): 결과는 잰 사람·잰 때의 기록 수와 함께 둔다 — 로그아웃·다른 사람 로그인이면 지우고(칸을 새로 그리지 않음 — 버튼은 그대로),
+  // 그 뒤 기록이 늘면 '다시 검증'을 안내한다(기존: 앞 사람이 잰 낡은 결과가 계속 보임)
+  const [check, setCheck] = useState<{ busy: boolean; text: string; bad: boolean; at?: number } | null>(null);
+  useEffect(() => { setCheck(null); }, [who]);
+  const total = snap.audit_total ?? snap.audit.length;
   const runVerify = async () => {
     if (!verifyAudit) return;
     setCheck({ busy: true, text: "검증 중…", bad: false });
     try {
       const v = await verifyAudit();
       const head = v.head ? ` · 머리값 ${v.head_id ?? ""} ${v.head.slice(0, 12)}…` : "";
-      setCheck(v.ok ? { busy: false, bad: false, text: `이상 없음 · 검사 ${v.checked}건${v.legacy ? `(체인 이전 기록 ${v.legacy}건 제외)` : ""}${head}` }
-        : { busy: false, bad: true, text: `이상 ${v.broken_total}곳 · 검사 ${v.checked}건 — ${v.broken.slice(0, 3).map((b) => `${b.id}: ${b.reason}`).join(" / ")}` });
+      setCheck(v.ok ? { busy: false, bad: false, at: v.checked + (v.legacy ?? 0), text: `이상 없음 · 검사 ${v.checked}건${v.legacy ? `(체인 이전 기록 ${v.legacy}건 제외)` : ""}${head}` }
+        : { busy: false, bad: true, at: v.checked + (v.legacy ?? 0), text: `이상 ${v.broken_total}곳 · 검사 ${v.checked}건 — ${v.broken.slice(0, 3).map((b) => `${b.id}: ${b.reason}`).join(" / ")}` });
     } catch (e) { setCheck({ busy: false, bad: true, text: `검증하지 못했습니다: ${(e as Error).message}` }); }
   };
+  const newer = check?.at !== undefined && total > check.at ? total - check.at : 0;
   return (
     <section className="audit" aria-label="감사 로그">
       <h2>감사 로그 <span className="count">{snap.audit_total ?? snap.audit.length}건</span></h2>
@@ -199,7 +205,7 @@ export function AuditLog({ snap, loadAudit, verifyAudit }: { snap: Snapshot; loa
         <button ref={opener} className="small ghost" data-testid="audit-all" onClick={() => setOpen(true)}>전체 기록 보기·검색</button>
         {verifyAudit && <button className="small ghost" data-testid="audit-verify" disabled={check?.busy} onClick={() => void runVerify()} title="기록마다 앞 기록의 해시를 따라가며 고치거나 지운 자리를 찾습니다">체인 검증</button>}
       </div>
-      {verifyAudit && <p role="status" aria-live="polite" data-testid="audit-verify-result" className={`verify-result${check?.bad ? " seal" : ""}`}>{check?.text ?? ""}</p>}
+      {verifyAudit && <p role="status" aria-live="polite" data-testid="audit-verify-result" className={`verify-result${check?.bad ? " seal" : ""}`}>{check ? `${check.text}${newer ? ` — 그 뒤 기록 ${newer}건이 더 생겼습니다. 다시 검증하세요.` : ""}` : ""}</p>}
       {open && <AuditDialog loadAudit={loadAudit} onClose={() => { setOpen(false); opener.current?.focus(); }} />}
     </section>
   );

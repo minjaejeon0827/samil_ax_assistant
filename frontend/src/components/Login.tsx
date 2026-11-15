@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { trapTab } from "./bits";
 
 /** 로그인 모드(AUTH_MODE=jwt) 서버에 연결했을 때만 뜬다 — 역할은 로그인한 계정이 정한다(J-01). */
-export function LoginDialog({ onLogin, ssoLabel, onSso }: { onLogin: (user: string, password: string) => Promise<void>; ssoLabel?: string | null; onSso?: () => Promise<void> }) {
+export function LoginDialog({ onLogin, ssoLabel, onSso, onLocal }: { onLogin: (user: string, password: string) => Promise<void>; ssoLabel?: string | null; onSso?: () => Promise<void>; onLocal?: () => void }) {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,13 +19,15 @@ export function LoginDialog({ onLogin, ssoLabel, onSso }: { onLogin: (user: stri
       <form className="dialog login" role="dialog" aria-modal="true" aria-labelledby="login-title" onSubmit={submit} onKeyDown={(e) => trapTab(e)}>
         <h2 id="login-title">서버 모드 로그인</h2>
         <p className="hint">이 서버는 로그인한 계정의 역할로만 결재합니다. 계정은 관리자에게 받으세요.</p>
-        <label>아이디<input ref={first} data-testid="login-user" type="text" placeholder="ceo.kang" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={user} onChange={(e) => setUser(e.target.value)} required /></label>
+        <label>아이디<input ref={first} data-testid="login-user" type="text" placeholder="test.aurora" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={user} onChange={(e) => setUser(e.target.value)} required /></label>
         <label>비밀번호<input data-testid="login-password" type="password" placeholder="0000" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
         {error && <p className="alert seal" role="alert">{error}</p>}
         <button type="submit" data-testid="login-submit" disabled={busy}>{busy ? "확인 중…" : "로그인"}</button>
         {/* v1.21(§15-1): 사내 SSO(OIDC) — 서버에 설정돼 있을 때만 */}
         {ssoLabel && onSso && <button type="button" className="ghost" data-testid="login-sso" disabled={busy}
           onClick={async () => { setBusy(true); setError(""); try { await onSso(); } catch (err) { setError((err as Error).message); setBusy(false); } }}>{ssoLabel}로 로그인</button>}
+        {/* 30차(AP-11): 계정이 없는 방문자가 갇히지 않게 — 기존 '실행 위치: 브라우저'로 돌아가는 길(새 기능 아님, 창이 상단 선택을 가렸음) */}
+        {onLocal && <button type="button" className="ghost" data-testid="login-local" onClick={onLocal}>브라우저 모드로 보기(로그인 없이, 이 브라우저에만 저장)</button>}
       </form>
     </div>
   );

@@ -3,99 +3,99 @@ TAP version 13
     # Subtest: M00 저장소 스키마(schema.sql)가 MySQL 호환 DB에 그대로 적용됨
     ok 1 - M00 저장소 스키마(schema.sql)가 MySQL 호환 DB에 그대로 적용됨
       ---
-      duration_ms: 0.549455
+      duration_ms: 0.569372
       type: 'test'
       ...
     # Subtest: M01 MySQL 저장소 서버 모드와 브라우저 모드에서 같은 시연 여정 → 처리 건·결재자·작업·계약 상태·발송함이 같음
     ok 2 - M01 MySQL 저장소 서버 모드와 브라우저 모드에서 같은 시연 여정 → 처리 건·결재자·작업·계약 상태·발송함이 같음
       ---
-      duration_ms: 4230.043798
+      duration_ms: 4580.873056
       type: 'test'
       ...
     # Subtest: M02 같은 동작이면 두 모드의 안내 문구가 같은 사실을 알려 줌(처리 건 수·생성 작업 수)
     ok 3 - M02 같은 동작이면 두 모드의 안내 문구가 같은 사실을 알려 줌(처리 건 수·생성 작업 수)
       ---
-      duration_ms: 0.339442
+      duration_ms: 0.4696
       type: 'test'
       ...
     # Subtest: M03 MySQL 저장소: 기안 25건 일괄 판단·조건 변경 재검증이 각각 1초 이내(화면 반영 1.5초 예산 안)
     ok 4 - M03 MySQL 저장소: 기안 25건 일괄 판단·조건 변경 재검증이 각각 1초 이내(화면 반영 1.5초 예산 안)
       ---
-      duration_ms: 576.491373
+      duration_ms: 599.247665
       type: 'test'
       ...
     # Subtest: M04 MySQL 저장소: 두 결재자가 같은 건을 동시에 결정하면 하나만 반영되고 서버를 다시 켜도 그대로
     ok 5 - M04 MySQL 저장소: 두 결재자가 같은 건을 동시에 결정하면 하나만 반영되고 서버를 다시 켜도 그대로
       ---
-      duration_ms: 1255.652006
+      duration_ms: 1317.449534
       type: 'test'
       ...
     # Subtest: M05 감사 로그가 일어난 순서대로 보임(빠르게 연속된 30건)
     ok 6 - M05 감사 로그가 일어난 순서대로 보임(빠르게 연속된 30건)
       ---
-      duration_ms: 1031.071128
+      duration_ms: 1037.165457
       type: 'test'
       ...
     # Subtest: M06 DB가 멈추면 서버가 내부 오류(500) 대신 503과 원인을 알려 주고, 화면 안내도 한국어
     ok 7 - M06 DB가 멈추면 서버가 내부 오류(500) 대신 503과 원인을 알려 주고, 화면 안내도 한국어
       ---
-      duration_ms: 4298.996983
+      duration_ms: 4335.232834
       type: 'test'
       ...
     1..7
 ok 1 - 운영 저장소(MySQL 호환 DB)
   ---
-  duration_ms: 13826.509536
+  duration_ms: 14121.456159
   type: 'suite'
   ...
 # Subtest: 문서·영상과 시스템의 일치
     # Subtest: V01 PRD·A04·리더 가이드·데이터 계보·시연 자막의 핵심 수치가 실제 계산값과 같음
     ok 1 - V01 PRD·A04·리더 가이드·데이터 계보·시연 자막의 핵심 수치가 실제 계산값과 같음
       ---
-      duration_ms: 592.269637
+      duration_ms: 630.07659
       type: 'test'
       ...
     # Subtest: V02 문서에 적힌 실행 명령·테스트 수가 실제와 같음(README·리더 가이드·A04)
     ok 2 - V02 문서에 적힌 실행 명령·테스트 수가 실제와 같음(README·리더 가이드·A04)
       ---
-      duration_ms: 1129.956739
+      duration_ms: 1158.14975
       type: 'test'
       ...
     1..2
 ok 2 - 문서·영상과 시스템의 일치
   ---
-  duration_ms: 1722.531776
+  duration_ms: 1788.581471
   type: 'suite'
   ...
 # Subtest: 저장·채널·입력·장시간
     # Subtest: S01 브라우저 저장 공간이 가득 차 저장에 실패하면 사용자에게 알림(조용히 잃지 않음)
     ok 1 - S01 브라우저 저장 공간이 가득 차 저장에 실패하면 사용자에게 알림(조용히 잃지 않음)
       ---
-      duration_ms: 1367.206222
+      duration_ms: 1346.269117
       type: 'test'
       ...
     # Subtest: S02 MCP 원격 전송(streamable-http)으로 서버를 띄워 승인 대기 조회가 동작(API 서버와 포트가 겹치지 않음)
     ok 2 - S02 MCP 원격 전송(streamable-http)으로 서버를 띄워 승인 대기 조회가 동작(API 서버와 포트가 겹치지 않음)
       ---
-      duration_ms: 1698.971265
+      duration_ms: 1531.733876
       type: 'test'
       ...
     # Subtest: S03 공백 없는 아주 긴 메모(URL 등)를 접수해도 목록·결재 서류가 화면 밖으로 넘치지 않음(데스크톱·휴대폰)
     ok 3 - S03 공백 없는 아주 긴 메모(URL 등)를 접수해도 목록·결재 서류가 화면 밖으로 넘치지 않음(데스크톱·휴대폰)
       ---
-      duration_ms: 813.275614
+      duration_ms: 1199.7015
       type: 'test'
       ...
     # Subtest: S04 오래 켜 둔 서버(요청 3,000건: 자동 갱신·스냅샷·결재·시계)에서도 메모리·응답 시간이 늘지 않음
     ok 4 - S04 오래 켜 둔 서버(요청 3,000건: 자동 갱신·스냅샷·결재·시계)에서도 메모리·응답 시간이 늘지 않음
       ---
-      duration_ms: 7072.130026
+      duration_ms: 8383.789839
       type: 'test'
       ...
     1..4
 ok 3 - 저장·채널·입력·장시간
   ---
-  duration_ms: 10952.000036
+  duration_ms: 12461.996827
   type: 'suite'
   ...
 1..3
@@ -106,4 +106,4 @@ ok 3 - 저장·채널·입력·장시간
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 27585.943434
+# duration_ms 29396.122358

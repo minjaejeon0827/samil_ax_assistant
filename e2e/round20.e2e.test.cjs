@@ -46,7 +46,7 @@ async function openWriting(p, base, port) {
   await openApi(p, base);
   await mode("echo", 1.5);
   await call(base, "POST", "/api/conditions", { actor: "FINANCE", cash_assumption: "LEGACY45" });
-  const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.type === "PLAN");
+  const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.type === "PLAN" && !c.decision?.regulation?.findings?.length);   // 30차(AP-07): 위반 카피가 남은 기안(PLAN-001)은 승인 불가라 제외
   assert.ok(t, "시험 전제: 작성 중인 결재 대기 건이 없음");
   await p.locator('[data-testid="role-select"]').selectOption(t.approval.approver);
   await p.locator(`[data-testid="case-${t.target_id}"]`).click();
@@ -148,7 +148,7 @@ describe("API", () => {
       await seed(base);
       await mode("echo", 1.0);
       await call(base, "POST", "/api/conditions", { actor: "FINANCE", cash_assumption: "LEGACY45" });
-      const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL");
+      const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && !c.decision?.regulation?.findings?.length);   // 30차(AP-07): 위반 카피가 남은 기안(PLAN-001)은 승인 불가라 제외
       assert.ok(t, "시험 전제");
       await settle(base);
       const r1 = await call(base, "POST", `/api/cases/${t.id}/decision`, { actor: t.approval.approver, action: "approve", comment: "옛 판", expected_version: t.version });

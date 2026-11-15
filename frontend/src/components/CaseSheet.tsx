@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ROLE_KO } from "../engine/desk";
+import { copyUnresolved, ROLE_KO } from "../engine/desk";
 import { daysBetween } from "../engine/cash";
 import type { Case, Task } from "../engine/types";
 import type { Command } from "../engine/desk";
@@ -98,7 +98,7 @@ function ContractFacts({ c, role, api }: { c: Case; role: string; api: RenewalAp
   );
 }
 
-export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, today, takeFocus, renewalApi }: { c: Case; role: string; tasks: Task[]; dispatch: (cmd: Command) => void; takeFocus?: () => boolean; renewalApi?: RenewalApi | null;
+export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, today, takeFocus, renewalApi, loginMode = false }: { c: Case; role: string; tasks: Task[]; dispatch: (cmd: Command) => void; takeFocus?: () => boolean; renewalApi?: RenewalApi | null; loginMode?: boolean;
   cashAssumption: "AS_IS" | "CONSERVATIVE" | "LEGACY45"; schedule: { date: string; amount_krw: number }[] | null; today: string }) {
   const [comment, setComment] = useState("");
   const head = useRef<HTMLHeadingElement>(null);
@@ -110,18 +110,24 @@ export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, 
   // AG-03: 열어 둔 서류의 AI 설명이 바뀌면(작성 중 → LLM 설명, 결재 뒤 도착) 말없이 바꾸지 않고 알린다
   const [explainNote, setExplainNote] = useState("");
   const lastExplain = useRef(`${c.explanation ?? ""}|${c.late_explanation ?? ""}`);
+  // 30차(O-6): 결재할 사람에게만 알린다(결재권자 + 결재 대기, 또는 결재 뒤 도착 보관). 기존: 결재권자가 아닌 역할에게도 거의 모든 동작 뒤에 떴음
+  const approverNow = role === c.approval?.approver && c.state === "PENDING_APPROVAL";
   useEffect(() => {
     const now = `${c.explanation ?? ""}|${c.late_explanation ?? ""}`;
     if (lastExplain.current === now) return;
+    const late = (lastExplain.current.split("|")[1] ?? "") !== (c.late_explanation ?? "");
     lastExplain.current = now;
-    setExplainNote(c.late_explanation ? "결재 뒤 AI 설명이 도착해 아래에 따로 보관했습니다(결재 서류의 설명은 그대로)." : "AI 설명이 방금 도착해 승인자용 설명문이 바뀌었습니다 — 결재하기 전에 다시 확인하세요.");
-  }, [c.explanation, c.late_explanation]);
+    if (late && c.late_explanation) setExplainNote("결재 뒤 AI 설명이 도착해 아래에 따로 보관했습니다(결재 서류의 설명은 그대로).");
+    else if (approverNow) setExplainNote("승인자용 설명문이 바뀌었습니다(AI 설명 도착 또는 다시 판단) — 결재하기 전에 다시 확인하세요.");
+  }, [c.explanation, c.late_explanation, approverNow]);
   useEffect(() => {   // E-04: 결정 직후 다시 그려지면 결과(결재란·도장)가 있는 서류 머리로 포커스·스크롤
     if (takeFocus?.() && head.current) { head.current.focus({ preventScroll: true }); head.current.closest(".sheet")?.scrollIntoView({ block: "start", behavior: "instant" as ScrollBehavior }); }
   }, [takeFocus, c.version]);
   const d = c.decision;
   const canDecide = c.state === "PENDING_APPROVAL";
   const isApprover = role === c.approval?.approver;
+  const copyHold = copyUnresolved(c);   // 30차(AP-07): 위반 카피가 남은 기안은 승인 불가(서버와 같은 규칙)
+  const approverKo = ROLE_KO[c.approval?.approver ?? ""];
   const extra = c.kind === "AGENCY_COUNTER_OFFER" && schedule ? schedule : [];
   return (
     <article className="sheet" aria-labelledby="sheet-title" data-testid="case-sheet">
@@ -151,12 +157,15 @@ export function CaseSheet({ c, role, tasks, dispatch, cashAssumption, schedule, 
                 <label htmlFor="cmt">결정 의견</label>
                 <input id="cmt" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="예: 조건변경 통보 승인, 7월 16일까지 발송" maxLength={200} />
                 <div className="btns">
-                  <button className="primary" data-testid="approve" disabled={!isApprover} onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "approve", comment, expectedVersion: c.version })}>승인</button>
+                  <button className="primary" data-testid="approve" disabled={!isApprover || copyHold} title={copyHold ? "광고 카피 위반이 남아 있어 승인할 수 없습니다" : ""} onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "approve", comment, expectedVersion: c.version })}>승인</button>
                   <button className="danger" data-testid="reject" disabled={!isApprover} onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "reject", comment, expectedVersion: c.version })}>거절</button>
-                  <button data-testid="request-info" onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "request_info", comment })}>확인 요청</button>
+                  {/* 30차(AP-03): 확인 요청도 결재권자만(PRD §9) — 기존에는 누구나 눌러 결재를 멈출 수 있었음 */}
+                  <button data-testid="request-info" disabled={!isApprover} title={isApprover ? "" : `${approverKo}만 확인을 요청할 수 있습니다`} onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "request_info", comment })}>확인 요청</button>
                   {!isApprover && <button className="ghost" onClick={() => dispatch({ type: "decide", caseId: c.id, actor: role, action: "approve", comment })} title="권한 검사가 어떻게 막는지 보여줍니다">현재 역할로 승인 시도</button>}
                 </div>
-                {!isApprover && <p className="hint">이 건은 {ROLE_KO[c.approval?.approver ?? ""]} 결재 사항입니다. 상단에서 역할을 바꾸면 결정할 수 있습니다.</p>}
+                {/* 30차(AP-10): 로그인 모드에서는 역할 선택이 잠겨 있으므로 '역할을 바꾸면'이 아니라 계정으로 안내 */}
+                {!isApprover && <p className="hint">이 건은 {approverKo} 결재 사항입니다. {loginMode ? `${approverKo} 계정으로 로그인해야 결정할 수 있습니다.` : "상단에서 역할을 바꾸면 결정할 수 있습니다."}</p>}
+                {copyHold && <p className="hint seal">광고 카피 위반이 남아 있어 승인할 수 없습니다(부결·확인 요청은 가능).</p>}
               </>
             )}
             {c.state === "ACTION_REQUIRED" && (

@@ -1,0 +1,385 @@
+TAP version 13
+# Subtest: 29차 결함 × v1.29
+    # Subtest: AQ02 AP-01: requirements.txt만 깐 깨끗한 파이썬(배포 이미지와 같은 의존성)에서 글자층 PDF·스캔 PDF·md 계약서 3종 업로드가 모두 처리되고 조항 값이 맞으며, 앱이 쓰는 외부 모듈이 모두 깔려 있고 /api/health가 PDF·OCR 준비를 알림
+    not ok 1 - AQ02 AP-01: requirements.txt만 깐 깨끗한 파이썬(배포 이미지와 같은 의존성)에서 글자층 PDF·스캔 PDF·md 계약서 3종 업로드가 모두 처리되고 조항 값이 맞으며, 앱이 쓰는 외부 모듈이 모두 깔려 있고 /api/health가 PDF·OCR 준비를 알림
+      ---
+      duration_ms: 4518.619191
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        깨끗한 환경에 없는 모듈: pypdf
+        + actual - expected
+        
+        + [
+        +   'pypdf'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'pypdf'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:229:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: AQ03 AP-02: 로그인 창의 아이디·비밀번호 칸에 예시 글자(계정·비밀번호)가 없고, 배포 번들에 계정 아이디·비밀번호가 없으며, 서버가 평문·약한·여러 계정 공용 비밀번호를 기동 때 경고(값은 쓰지 않음)
+    not ok 2 - AQ03 AP-02: 로그인 창의 아이디·비밀번호 칸에 예시 글자(계정·비밀번호)가 없고, 배포 번들에 계정 아이디·비밀번호가 없으며, 서버가 평문·약한·여러 계정 공용 비밀번호를 기동 때 경고(값은 쓰지 않음)
+      ---
+      duration_ms: 2053.897082
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   '기동 경고 없음(평문·공용 비밀번호): 로그 없음'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: '기동 경고 없음(평문·공용 비밀번호): 로그 없음'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:257:14
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ04 AP-03·AP-04·AP-08·AP-10: 확인 요청은 결재권자만(서버 403 + 화면 버튼 잠김), 확인 작업은 그 건의 기안 부서(계약 건 → 계약 담당), 감사에 '건 제목 확인 요청 — 의견', 로그인 모드 안내는 '○○ 계정으로 로그인' — 서버·브라우저 엔진 같은 규칙
+    not ok 3 - AQ04 AP-03·AP-04·AP-08·AP-10: 확인 요청은 결재권자만(서버 403 + 화면 버튼 잠김), 확인 작업은 그 건의 기안 부서(계약 건 → 계약 담당), 감사에 '건 제목 확인 요청 — 의견', 로그인 모드 안내는 '○○ 계정으로 로그인' — 서버·브라우저 엔진 같은 규칙
+      ---
+      duration_ms: 6282.407681
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'AP-03 계약 담당이 그룹 CEO 건에 확인 요청 → HTTP 200(403이어야 함), 상태 NEEDS_INFO',
+        +   'AP-04 계약 건 확인 작업 부서 = MARKETING_TEAM(CONTRACT_OWNER여야 함)',
+        +   "AP-08 확인 요청 감사 문구 = '없음'('INF-001 에이전시 역제안(조건 변경) 확인 요청 — 의견'이어야 함)",
+        +   "AP-03 화면: 계약 담당에게 그룹 CEO 건의 '확인 요청' 버튼이 켜져 있음",
+        +   "AP-10 로그인 모드 안내 = '이 건은 그룹 CEO/이사회 결재 사항입니다. 상단에서 역할을 바꾸면 결정할 수 있습니다.'",
+        +   "AP-03 브라우저 엔진: 계약 담당에게 '확인 요청' 버튼이 켜져 있음",
+        +   "AP-04 브라우저 엔진: 확인 작업 부서 = '마케팅팀'",
+        +   "AP-08 브라우저 엔진 감사 = ''"
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'AP-03 계약 담당이 그룹 CEO 건에 확인 요청 → HTTP 200(403이어야 함), 상태 NEEDS_INFO'
+        1: 'AP-04 계약 건 확인 작업 부서 = MARKETING_TEAM(CONTRACT_OWNER여야 함)'
+        2: "AP-08 확인 요청 감사 문구 = '없음'('INF-001 에이전시 역제안(조건 변경) 확인 요청 — 의견'이어야 함)"
+        3: "AP-03 화면: 계약 담당에게 그룹 CEO 건의 '확인 요청' 버튼이 켜져 있음"
+        4: "AP-10 로그인 모드 안내 = '이 건은 그룹 CEO/이사회 결재 사항입니다. 상단에서 역할을 바꾸면 결정할 수 있습니다.'"
+        5: "AP-03 브라우저 엔진: 계약 담당에게 '확인 요청' 버튼이 켜져 있음"
+        6: "AP-04 브라우저 엔진: 확인 작업 부서 = '마케팅팀'"
+        7: "AP-08 브라우저 엔진 감사 = ''"
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:311:14
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ05 AP-05·AP-06·O-5: 같은 에이전시 회신(MR-002)을 다시 받으면 거절하고 사람이 건 확인 요청 보류·작업이 그대로이며, 담당 부서가 확인을 끝내 보류가 풀린 건은 다음 조건 변경에서 다시 검증되고, 감사는 '회신 접수 → 결과' 순서 — 서버·브라우저 엔진
+    not ok 4 - AQ05 AP-05·AP-06·O-5: 같은 에이전시 회신(MR-002)을 다시 받으면 거절하고 사람이 건 확인 요청 보류·작업이 그대로이며, 담당 부서가 확인을 끝내 보류가 풀린 건은 다음 조건 변경에서 다시 검증되고, 감사는 '회신 접수 → 결과' 순서 — 서버·브라우저 엔진
+      ---
+      duration_ms: 7367.203787
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.click: Timeout 5000ms exceeded.
+        Call log:
+        [2m  - waiting for locator('.dept li').filter({ hasText: '[확인 요청] CT-INF001-2025' }).first().getByRole('button')[22m
+        [2m    - locator resolved to <button disabled class="small" title="마케팅팀 역할에서 완료할 수 있습니다" data-testid="task-done-TK-0002">완료</button>[22m
+        [2m  - attempting click action[22m
+        [2m    2 × waiting for element to be visible, enabled and stable[22m
+        [2m      - element is not enabled[22m
+        [2m    - retrying click action[22m
+        [2m    - waiting 20ms[22m
+        [2m    2 × waiting for element to be visible, enabled and stable[22m
+        [2m      - element is not enabled[22m
+        [2m    - retrying click action[22m
+        [2m      - waiting 100ms[22m
+        [2m    10 × waiting for element to be visible, enabled and stable[22m
+        [2m       - element is not enabled[22m
+        [2m     - retrying click action[22m
+        [2m       - waiting 500ms[22m
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:338:103
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+      ...
+    # Subtest: AQ06 AP-07: PLAN-011(카피 위반 '치료' + 더마 공급 제약)은 '수정 필요'로 멈추고(공급 제약도 함께 표시, '원안 그대로 확정' 없음), 위반 카피가 남은 기안은 결재권자도 승인할 수 없으며(PLAN-001 부결 권고 건 포함), 수정안 반영 뒤에야 공급 보류 결재로 올라감 — 서버·브라우저 엔진
+    not ok 5 - AQ06 AP-07: PLAN-011(카피 위반 '치료' + 더마 공급 제약)은 '수정 필요'로 멈추고(공급 제약도 함께 표시, '원안 그대로 확정' 없음), 위반 카피가 남은 기안은 결재권자도 승인할 수 없으며(PLAN-001 부결 권고 건 포함), 수정안 반영 뒤에야 공급 보류 결재로 올라감 — 서버·브라우저 엔진
+      ---
+      duration_ms: 2209.799146
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'AP-07 PLAN-011(카피 위반+공급 제약) 상태 = PENDING_APPROVAL(수정 필요여야 함), 권고 HOLD_SUPPLY',
+        +   "AP-07 위반 카피인데 대안에 '원안 그대로 확정'",
+        +   'AP-07 위반 카피 그대로 승인됨(APPROVED)',
+        +   'AP-07 PLAN-001 위반 카피(부결 권고 건)가 승인됨',
+        +   '수정안 반영 뒤 PLAN-011: HTTP 409 · APPROVED · HOLD_SUPPLY(승인 대기·공급 보류여야 함)',
+        +   '브라우저 엔진 PLAN-011 = 승인 대기',
+        +   '브라우저 엔진 PLAN-011에 승인 버튼이 보임',
+        +   '브라우저 엔진 PLAN-001(위반 카피) 승인 버튼이 결재권자에게 켜짐'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'AP-07 PLAN-011(카피 위반+공급 제약) 상태 = PENDING_APPROVAL(수정 필요여야 함), 권고 HOLD_SUPPLY'
+        1: "AP-07 위반 카피인데 대안에 '원안 그대로 확정'"
+        2: 'AP-07 위반 카피 그대로 승인됨(APPROVED)'
+        3: 'AP-07 PLAN-001 위반 카피(부결 권고 건)가 승인됨'
+        4: '수정안 반영 뒤 PLAN-011: HTTP 409 · APPROVED · HOLD_SUPPLY(승인 대기·공급 보류여야 함)'
+        5: '브라우저 엔진 PLAN-011 = 승인 대기'
+        6: '브라우저 엔진 PLAN-011에 승인 버튼이 보임'
+        7: '브라우저 엔진 PLAN-001(위반 카피) 승인 버튼이 결재권자에게 켜짐'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:373:14
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ07 AP-09·AP-11·AP-12: 체인 검증 결과는 로그아웃·다른 사람 로그인 때 지워지고 그 뒤 기록이 늘면 '다시 검증' 안내, 로그인 창에서 브라우저 모드로 돌아갈 수 있고, 서버 로그인이 남은 채 브라우저 모드로 바꾸면 고른 역할이 그대로 쓰임
+    not ok 6 - AQ07 AP-09·AP-11·AP-12: 체인 검증 결과는 로그아웃·다른 사람 로그인 때 지워지고 그 뒤 기록이 늘면 '다시 검증' 안내, 로그인 창에서 브라우저 모드로 돌아갈 수 있고, 서버 로그인이 남은 채 브라우저 모드로 바꾸면 고른 역할이 그대로 쓰임
+      ---
+      duration_ms: 6861.028143
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   "AP-11 로그인 창에 '브라우저 모드로 보기' 없음",
+        +   "AP-09 기록이 늘어도 결과 그대로: '이상 없음 · 검사 2건 · 머리값 AU-0002 2a2d2b09c91a…'",
+        +   "AP-09 다음 사람 로그인 뒤에도 앞 사람 결과: '이상 없음 · 검사 2건 · 머리값 AU-0002 2a2d2b09c91a…'",
+        +   'AP-12 브라우저 모드에서 계약 담당을 골랐는데 MARKETING_TEAM로 되돌아감'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: "AP-11 로그인 창에 '브라우저 모드로 보기' 없음"
+        1: "AP-09 기록이 늘어도 결과 그대로: '이상 없음 · 검사 2건 · 머리값 AU-0002 2a2d2b09c91a…'"
+        2: "AP-09 다음 사람 로그인 뒤에도 앞 사람 결과: '이상 없음 · 검사 2건 · 머리값 AU-0002 2a2d2b09c91a…'"
+        3: 'AP-12 브라우저 모드에서 계약 담당을 골랐는데 MARKETING_TEAM로 되돌아감'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:424:14
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ08 O-4·O-6: 조건변경 통보를 보낸 뒤 기한을 넘기면 '통보 미발송'이 아니라 '미갱신 통보 미발송(조건변경 통보는 보냄 — 법무 확인)'으로 기록하고, 결재권자가 아닌 역할에게 'AI 설명 도착' 안내를 띄우지 않음
+    not ok 7 - AQ08 O-4·O-6: 조건변경 통보를 보낸 뒤 기한을 넘기면 '통보 미발송'이 아니라 '미갱신 통보 미발송(조건변경 통보는 보냄 — 법무 확인)'으로 기록하고, 결재권자가 아닌 역할에게 'AI 설명 도착' 안내를 띄우지 않음
+      ---
+      duration_ms: 2586.608042
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   "O-4 기한 경과 문구 = '⚠ INF-001 통보 기한 2026-07-17까지 통보 미발송(미갱신 결정(통보 발송 대기)) — 동일 조건 자동 갱신(승인 없는 체결)'",
+        +   "O-6 결재권자가 아닌 재무팀에게 'AI 설명이 방금 도착' 안내"
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: "O-4 기한 경과 문구 = '⚠ INF-001 통보 기한 2026-07-17까지 통보 미발송(미갱신 결정(통보 발송 대기)) — 동일 조건 자동 갱신(승인 없는 체결)'"
+        1: "O-6 결재권자가 아닌 재무팀에게 'AI 설명이 방금 도착' 안내"
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:464:14
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ09 MySQL(MariaDB) 저장소: 확인 요청 권한·부서·감사 문구(AQ04), 같은 회신 거절·보류 해제 뒤 재검증(AQ05), 카피 게이트(AQ06)가 메모리 저장소와 같고, 계약서 3종이 renewals 표에 한 줄씩·감사 체인 이상 없음
+    not ok 8 - AQ09 MySQL(MariaDB) 저장소: 확인 요청 권한·부서·감사 문구(AQ04), 같은 회신 거절·보류 해제 뒤 재검증(AQ05), 카피 게이트(AQ06)가 메모리 저장소와 같고, 계약서 3종이 renewals 표에 한 줄씩·감사 체인 이상 없음
+      ---
+      duration_ms: 3370.078013
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'AP-03 계약 담당이 그룹 CEO 건에 확인 요청 → HTTP 200(403이어야 함), 상태 NEEDS_INFO',
+        +   'AP-04 계약 건 확인 작업 부서 = MARKETING_TEAM(CONTRACT_OWNER여야 함)',
+        +   "AP-08 확인 요청 감사 문구 = '없음'('INF-001 에이전시 역제안(조건 변경) 확인 요청 — 의견'이어야 함)",
+        +   'O-5 감사 순서: 회신 접수 #7 / 결과 #5(회신이 먼저여야 함)',
+        +   'AP-05 같은 회신(MR-002) 두 번째 → HTTP 200, 건 PENDING_APPROVAL(거절·보류 유지여야 함)',
+        +   'AP-05 회신 뒤 사람 보류: 상태 PENDING_APPROVAL · hold MANUAL · 확인 작업 닫힘',
+        +   'D-10 사람 보류 중 조건 변경이 보류를 풀었음: PENDING_APPROVAL',
+        +   '확인 완료 뒤: 상태 PENDING_APPROVAL · hold MANUAL(승인 대기·사유 없음이어야 함)',
+        +   'AP-06 보류가 풀린 건이 조건 변경 재검증에서 빠짐(이력 변화 없음)',
+        +   'AP-07 PLAN-011(카피 위반+공급 제약) 상태 = PENDING_APPROVAL(수정 필요여야 함), 권고 HOLD_SUPPLY',
+        +   "AP-07 위반 카피인데 대안에 '원안 그대로 확정'",
+        +   'AP-07 위반 카피 그대로 승인됨(APPROVED)',
+        +   'AP-07 PLAN-001 위반 카피(부결 권고 건)가 승인됨',
+        +   '수정안 반영 뒤 PLAN-011: HTTP 409 · APPROVED · HOLD_SUPPLY(승인 대기·공급 보류여야 함)'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'AP-03 계약 담당이 그룹 CEO 건에 확인 요청 → HTTP 200(403이어야 함), 상태 NEEDS_INFO'
+        1: 'AP-04 계약 건 확인 작업 부서 = MARKETING_TEAM(CONTRACT_OWNER여야 함)'
+        2: "AP-08 확인 요청 감사 문구 = '없음'('INF-001 에이전시 역제안(조건 변경) 확인 요청 — 의견'이어야 함)"
+        3: 'O-5 감사 순서: 회신 접수 #7 / 결과 #5(회신이 먼저여야 함)'
+        4: 'AP-05 같은 회신(MR-002) 두 번째 → HTTP 200, 건 PENDING_APPROVAL(거절·보류 유지여야 함)'
+        5: 'AP-05 회신 뒤 사람 보류: 상태 PENDING_APPROVAL · hold MANUAL · 확인 작업 닫힘'
+        6: 'D-10 사람 보류 중 조건 변경이 보류를 풀었음: PENDING_APPROVAL'
+        7: '확인 완료 뒤: 상태 PENDING_APPROVAL · hold MANUAL(승인 대기·사유 없음이어야 함)'
+        8: 'AP-06 보류가 풀린 건이 조건 변경 재검증에서 빠짐(이력 변화 없음)'
+        9: 'AP-07 PLAN-011(카피 위반+공급 제약) 상태 = PENDING_APPROVAL(수정 필요여야 함), 권고 HOLD_SUPPLY'
+        10: "AP-07 위반 카피인데 대안에 '원안 그대로 확정'"
+        11: 'AP-07 위반 카피 그대로 승인됨(APPROVED)'
+        12: 'AP-07 PLAN-001 위반 카피(부결 권고 건)가 승인됨'
+        13: '수정안 반영 뒤 PLAN-011: HTTP 409 · APPROVED · HOLD_SUPPLY(승인 대기·공급 보류여야 함)'
+      operator: 'deepStrictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:488:14
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ10 배포 확인 스크립트(읽기 전용): 배포와 같은 단일 컨테이너(로그인 모드)에 --browser로 돌리면 실패 0, PDF·OCR 준비(A14)와 로그인 칸 예시 글자(U04)를 확인하고, 예시 글자에 비밀번호를 넣은 번들은 U04 실패로 잡음 — 보낸 요청은 GET·HEAD·OPTIONS뿐
+    not ok 9 - AQ10 배포 확인 스크립트(읽기 전용): 배포와 같은 단일 컨테이너(로그인 모드)에 --browser로 돌리면 실패 0, PDF·OCR 준비(A14)와 로그인 칸 예시 글자(U04)를 확인하고, 예시 글자에 비밀번호를 넣은 번들은 U04 실패로 잡음 — 보낸 요청은 GET·HEAD·OPTIONS뿐
+      ---
+      duration_ms: 4942.681475
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        A14 = undefined
+        + actual - expected
+        
+        + undefined
+        - 'PASS'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'PASS'
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:516:12
+        async TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:19)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: AQ11 시연 영상: 5분 미만, AI 음성 해설 트랙, 해설이 모두 영상 안이고, PRD·README에 적은 영상 길이가 실제와 같으며, 바뀐 규칙(PLAN-011 수정 필요)이 자막과 맞음
+    ok 10 - AQ11 시연 영상: 5분 미만, AI 음성 해설 트랙, 해설이 모두 영상 안이고, PRD·README에 적은 영상 길이가 실제와 같으며, 바뀐 규칙(PLAN-011 수정 필요)이 자막과 맞음
+      ---
+      duration_ms: 114.406741
+      type: 'test'
+      ...
+    1..10
+not ok 1 - 29차 결함 × v1.29
+  ---
+  duration_ms: 40606.80932
+  type: 'suite'
+  location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:170:1'
+  failureType: 'subtestsFailed'
+  error: '9 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: §14 리스크와 한계 · §15 대조
+    # Subtest: AQ01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, 표의 E2E 수가 사실과 같고, 기능 고정(§15에 'v1.28·v1.29 추가' 열 없음), 29차 결함 12건이 §14 또는 §36 한계에 모두 있음
+    not ok 1 - AQ01 §14의 모든 행이 지키는 테스트를 가리키고 통과했으며, §15 '검증' 열의 테스트가 모두 있고 통과했고, 표의 E2E 수가 사실과 같고, 기능 고정(§15에 'v1.28·v1.29 추가' 열 없음), 29차 결함 12건이 §14 또는 §36 한계에 모두 있음
+      ---
+      duration_ms: 2850.433024
+      type: 'test'
+      location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:32:29'
+      failureType: 'testCodeFailure'
+      error: |-
+        §14가 말하는 E2E 수 275 ≠ 실제 286
+        
+        275 !== 286
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 286
+      actual: 275
+      operator: 'strictEqual'
+      stack: |-
+        /home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:584:12
+        TestContext.<anonymous> (/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:34:25)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+      ...
+    1..1
+not ok 2 - §14 리스크와 한계 · §15 대조
+  ---
+  duration_ms: 2850.616499
+  type: 'suite'
+  location: '/home/claude/v128-snapshot/e2e/round30.e2e.test.cjs:549:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..2
+# tests 11
+# suites 2
+# pass 1
+# fail 10
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 45189.693735

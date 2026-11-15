@@ -40,7 +40,11 @@ def test_plan_routes(engine):
     p = {x["subject"]["id"]: x for x in engine.all_plans(ctx)}
     assert p["PLAN-014"]["recommendation"] == "APPROVE" and p["PLAN-014"]["approver"] == "MASIL_CEO"
     assert p["PLAN-016"]["recommendation"] == "HOLD_COPY"                 # 확장: 성과 좋아도 카피 위반이면 보류
-    assert p["PLAN-011"]["recommendation"] == "HOLD_SUPPLY"               # 다른 부서(SCM) 제약
+    # 30차(AP-07): 카피 위반('치료') + 더마 공급 제약 → 카피 수정이 먼저(공급 제약은 문구·대안·SCM 작업에 함께), 원안 그대로 확정은 대안 아님
+    assert p["PLAN-011"]["recommendation"] == "HOLD_COPY" and "공급 제약" in p["PLAN-011"]["label"]
+    assert [a["code"] for a in p["PLAN-011"]["alternatives"]] == ["REWRITE", "SWITCH_PRODUCT"]
+    fixed = engine.decide_plan("PLAN-011", Context(copy_overrides={"PLAN-011": p["PLAN-011"]["regulation"]["rewrite"]}))
+    assert fixed["recommendation"] == "HOLD_SUPPLY"                       # 카피를 고친 뒤에야 다른 부서(SCM) 제약으로 결재
     assert p["PLAN-015"]["approver"] == "GROUP_CEO" and p["PLAN-015"]["authority"]["covenant_override"]
     legacy = {x["subject"]["id"]: x for x in engine.all_plans(Context(cash_assumption="LEGACY45"))}
     assert legacy["PLAN-015"]["approver"] == "MASIL_CEO"                   # 조건이 바뀌면 권한이 바뀐다

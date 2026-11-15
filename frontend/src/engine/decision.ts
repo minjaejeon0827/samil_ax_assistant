@@ -169,9 +169,13 @@ export function decidePlan(planId: string, ctx: Ctx): Decision {
     else if (reco !== "REJECT") [reco, label] = ["HOLD_COPY", "카피 수정 필요 — 수정안 재검증 통과 후 승인"];
   } else if (reg) evidence.push(ev("CALC", "광고 카피 검증 통과(표시광고법·화장품법·추천보증 지침)", "check_regulation"));
   evidence.push(ev(DS.ad_copies[planId] ? "ASSUMPTION" : "ORIGINAL", `광고 카피 초안: “${copy}”`, "data/assumptions/ad_copies.csv (합성 A-07)"));
+  let supplyHold = false;
   if (sup?.constrained) {
     evidence.push(ev("CALC", `${c.product_line} 재고 커버 최저 ${sup.min_cover_weeks.toFixed(1)}주(${sup.min_cover_sku}) < 안전재고 ${sup.safety_min.toFixed(0)}주, 리드타임 ${sup.lead_time_weeks.toFixed(0)}주, 생산라인 ${sup.product_id} 가동률 ${sup.line_utilization_pct.toFixed(0)}%`, "sku_inventory·sku_weekly_sales·m_sku·strat_capacity", "FULL"));
-    if (reco !== "REJECT") [reco, label] = ["HOLD_SUPPLY", "공급 제약 — 제품 전환 또는 입고 후로 일정 조정"];
+    if (reco === "HOLD_COPY") { // 30차(AP-07): 카피 수정이 먼저 — 공급 제약이 '수정 필요'를 덮어쓰지 않음(서버와 같은 규칙)
+      supplyHold = true;
+      label = "카피 수정 필요 — 수정안 재검증 통과 후 승인 · 공급 제약도 있음(제품 전환 또는 입고 후 일정 조정)";
+    } else if (reco !== "REJECT") { supplyHold = true; [reco, label] = ["HOLD_SUPPLY", "공급 제약 — 제품 전환 또는 입고 후로 일정 조정"]; }
   }
   const isHyein = c.influencer_id === CONTRACT.influencer_id;
   if (isHyein && HOLD_STATUSES.has(ctx.contract_status)) {
@@ -191,11 +195,11 @@ export function decidePlan(planId: string, ctx: Ctx): Decision {
   }
   if (reco === "CONDITIONAL") alternatives.push({ code: "SCALE_DOWN", label: `요청액 50% 축소 집행(${won(amount / 2)})` });
   if (reco === "HOLD_COPY") alternatives.push({ code: "REWRITE", label: `수정안: “${reg!.rewrite}”` });
-  if (reco === "HOLD_SUPPLY") {
+  if (supplyHold && (reco === "HOLD_SUPPLY" || reco === "HOLD_COPY")) {
     const alts = Object.keys(DS.supply).filter((k) => !DS.supply[k].constrained && ["기초", "선케어", "색조"].includes(k));
     alternatives.push({ code: "SWITCH_PRODUCT", label: `제품 전환(${alts.join("/")}) 또는 입고 후 일정 연기` });
   }
-  alternatives.push({ code: "AS_PROPOSED", label: "원안 그대로 확정" });
+  if (!(reg && reg.findings.length)) alternatives.push({ code: "AS_PROPOSED", label: "원안 그대로 확정" }); // 30차(AP-07)
   const on_approve: TaskSpec[] = [
     task("MARKETING_TEAM", `${planId} 집행 확정·계약 체결`, p.contract_deadline, "EXECUTE", { effect: "PLAN_CONFIRMED" }),
     task("FINANCE", `${planId} 정산 ${p.settlement_date} ${won(amount)} 현금계획 반영`, p.settlement_date),
@@ -204,7 +208,7 @@ export function decidePlan(planId: string, ctx: Ctx): Decision {
   if (auth.covenant_override) on_approve.push(task("FINANCE", `${planId} 하회 구간 내 유출 — 그룹 자금 투입 계획과 대조`, p.settlement_date));
   if (sup) on_approve.push(task("SCM", `${c.product_line} 캠페인 확대 수요 공유(커버 ${sup.min_cover_weeks.toFixed(1)}주)`, p.contract_deadline, "INFO"));
   const on_reject: TaskSpec[] = [task("MARKETING_TEAM", `${planId} 부결 통보·예산 재배분안 작성(실질 공헌이익 기준)`, p.contract_deadline, "REALLOCATE", { effect: "PLAN_REJECTED" })];
-  if (reco === "HOLD_SUPPLY") on_reject.push(task("SCM", `${c.product_line} 입고 일정 회신(전환 가능 제품 포함)`, p.contract_deadline));
+  if (supplyHold && (reco === "HOLD_SUPPLY" || reco === "HOLD_COPY")) on_reject.push(task("SCM", `${c.product_line} 입고 일정 회신(전환 가능 제품 포함)`, p.contract_deadline));
   return {
     subject: { type: "PLAN", id: planId, campaign_id: c.campaign_id, campaign_name: c.campaign_name, influencer_id: c.influencer_id, name: i.influencer_name,
       product_line: c.product_line, amount_krw: amount, settlement_date: p.settlement_date, deadline: p.contract_deadline, dday: daysBetween(ctx.today, p.contract_deadline) },

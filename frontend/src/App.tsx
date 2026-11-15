@@ -69,7 +69,7 @@ export function App() {
         {/* AF-04(19차): 처리 상태는 탭 목록 밖의 상태 영역에 — 화면 낭독기가 '접수 처리 중'을 알린다(기존: 탭 목록 안의 글자라 알려지지 않음) */}
         <p className="busy" role="status" aria-live="polite">{busy ? "서버 처리 중…" : intaking ? <span data-testid="intaking">{intakeMsg ? `${intakeMsg} — 결재·조회는 계속할 수 있습니다` : "접수 처리 중(AI 설명 작성 포함) — 결재·조회는 계속할 수 있습니다"}</span> : null}</p>
         {ui.tab === "case" && (selected
-          ? <CaseSheet key={selected.id} today={snap.ctx.today} c={selected} role={role} tasks={snap.tasks.filter((t) => t.case_id === selected.id)} dispatch={sheetDispatch} takeFocus={takeFocus} renewalApi={renewalApi} cashAssumption={snap.ctx.cash_assumption} schedule={offer?.payment_schedule ?? null} />
+          ? <CaseSheet key={selected.id} today={snap.ctx.today} c={selected} role={role} loginMode={!!session} tasks={snap.tasks.filter((t) => t.case_id === selected.id)} dispatch={sheetDispatch} takeFocus={takeFocus} renewalApi={renewalApi} cashAssumption={snap.ctx.cash_assumption} schedule={offer?.payment_schedule ?? null} />
           : <p className="empty big">왼쪽에서 처리 건을 고르면 결재 서류가 열립니다.</p>)}
         {ui.tab === "plans" && <PlanBoard snap={snap} onSelect={select} />}
         {ui.tab === "facts" && (<><FactsView /><h3 className="sec">배분은 성과를 따라가는가</h3><AllocationChart /><h3 className="sec">13주 현금 재전망</h3><CashChart assumption={snap.ctx.cash_assumption} /></>)}
@@ -80,10 +80,10 @@ export function App() {
         <StateRegister snap={snap} role={role} dispatch={dispatch} />
         <Outbox snap={snap} />
         {deliveries && <Deliveries items={deliveries} role={role} onRetry={(eid) => void redeliver(eid)} />}
-        <AuditLog snap={snap} loadAudit={loadAudit} verifyAudit={verifyAudit} />
+        <AuditLog who={session?.user ?? ""} snap={snap} loadAudit={loadAudit} verifyAudit={verifyAudit} />
       </aside>
 
-      {needLogin && <LoginDialog onLogin={login} ssoLabel={ssoLabel} onSso={ssoStart} />}
+      {needLogin && <LoginDialog onLogin={login} ssoLabel={ssoLabel} onSso={ssoStart} onLocal={() => setUi((u) => ({ ...u, mode: "local" }))} />}
       {pwOpen && session && <PasswordDialog onChange={changePassword} onClose={() => setPwOpen(false)} />}
       <div className={`toast ${toast ? "show" : ""} ${toast.startsWith("⚠") ? "warn" : ""}`} role="status" aria-live="polite">{toast}</div>
     </div>

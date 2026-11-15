@@ -1,22 +1,10 @@
-# 기록 키가 든 설정 — git 에 올리지 않아요
+# AI 활용 기록 키(대회 훅) — 절대 커밋 금지
 .claude/settings.local.json
 .codex/hooks.json
 .agents/hooks.json
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 # 빌드·캐시
-frontend/node_modules/
+node_modules/
 frontend/dist/
-frontend/dist-ssr
-*.local
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -27,16 +15,4 @@ frontend/dist-docker/
 e2e/.mariadb/
 demo/tts_model/
 demo/raw/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-*.tsbuildinfo
+e2e/.venv-clean/

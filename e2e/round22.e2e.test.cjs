@@ -178,7 +178,7 @@ describe("다음 후보 ⑤⑥⑦", () => {
       const asIs = Object.fromEntries((await snap(base)).cases.filter((c) => c.decision).map((c) => [c.id, c.decision.approver]));
       await post(`${LLM}/__mode`, { mode: "echo", latency: 1.5 });
       await call(base, "POST", "/api/conditions", { body: { actor: "FINANCE", cash_assumption: "LEGACY45" } });
-      const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.approval?.approver === "MASIL_CEO" && asIs[c.id] === "GROUP_CEO");
+      const t = writing(await snap(base)).find((c) => c.state === "PENDING_APPROVAL" && c.approval?.approver === "MASIL_CEO" && asIs[c.id] === "GROUP_CEO" && !c.decision?.regulation?.findings?.length);   // 30차(AP-07): 위반 카피가 남은 기안(PLAN-001)은 승인 불가라 제외
       assert.ok(t, "시험 전제");
       await call(base, "POST", `/api/cases/${t.id}/decision`, { body: { actor: "MASIL_CEO", action: "approve", comment: "작성 중 결재" } });
       await settle(base);
@@ -220,7 +220,7 @@ describe("다음 후보 ⑤⑥⑦", () => {
 // ---------------- §14 리스크와 한계 ----------------
 // 행 이름(앞부분) → 그 위험을 지키는 테스트. 'suite:ID'는 e2e/reports/<suite>.json, 'pytest:이름'은 단위 테스트, 'round22:ID'는 이번 실행.
 // 행 ↔ 테스트 짝은 e2e/risk_guards.cjs(23차와 함께 씀). 22차보다 뒤에 실행되는 묶음(round23)의 짝은 여기서 보지 않는다.
-const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round2[3-8]:/.test(r))]));
+const RISK_GUARDS = Object.fromEntries(Object.entries(require("./risk_guards.cjs").RISK_GUARDS).map(([k, v]) => [k, v.filter((r) => !/^round(2[3-8]|30):/.test(r))]));
 const SUITES = () => (fs.readFileSync(path.join(__dirname, "run_all.sh"), "utf8").match(/for s in ([^;]+);/) || [, ""])[1].trim().split(/\s+/);
 
 describe("§14 리스크와 한계", () => {

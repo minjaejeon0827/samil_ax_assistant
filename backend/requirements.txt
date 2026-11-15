@@ -9,6 +9,8 @@ langchain-core==1.7.6
 faiss-cpu==1.15.1
 numpy==2.5.3
 mcp==2.3.0          # 1.x(FastMCP)도 호환: app/mcp_server.py가 둘 다 처리
+pypdf==6.17.0       # 30차(AP-01): 계약서 PDF 읽기 — 빠져 있어 배포 이미지에서 PDF 업로드가 모두 422(작업 공간에는 따로 깔려 있어 놓침)
+PyJWT[crypto]==2.15.0   # 30차: 사내 SSO(OIDC) 토큰 검증 — 그동안 mcp가 끌어오는 간접 의존성에 기대고 있었음
 # 선택: 실제 LLM·공식 RAGAS·Chroma
 # langchain-openai
 # langchain-anthropic

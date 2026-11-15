@@ -927,7 +927,8 @@ def _approve_while_writing(desk, monkeypatch):
     bg = _capture_background(monkeypatch, desk)
     desk.run(ChangeConditionCommand("FINANCE", cash_assumption="LEGACY45"))
     t = next(c for c in desk.repo.list("cases") if str(c.get("llm", "")).startswith("작성 중") and c["state"] == "PENDING_APPROVAL"
-             and c["approval"]["approver"] == "MASIL_CEO" and as_is[c["id"]] == "GROUP_CEO")
+             and c["approval"]["approver"] == "MASIL_CEO" and as_is[c["id"]] == "GROUP_CEO"
+             and not (c["decision"].get("regulation") or {}).get("findings"))   # 30차(AP-07): 위반 카피가 남은 기안은 승인 불가 — 그 밖의 건으로
     desk.run(DecideCommand("MASIL_CEO", case_id=t["id"], action="approve", comment="작성 중 결재"))
     for todo in list(bg):
         desk._enrich(todo)
@@ -988,7 +989,8 @@ def test_AG05_stale_version_after_ai_explanation_says_the_document_changed(desk,
     desk.intake("BUDGET_PLAN_BATCH")
     bg = _capture_background(monkeypatch, desk)
     desk.run(ChangeConditionCommand("FINANCE", cash_assumption="LEGACY45"))
-    t = next(c for c in desk.repo.list("cases") if str(c.get("llm", "")).startswith("작성 중") and c["state"] == "PENDING_APPROVAL")
+    t = next(c for c in desk.repo.list("cases") if str(c.get("llm", "")).startswith("작성 중") and c["state"] == "PENDING_APPROVAL"
+             and not (c["decision"].get("regulation") or {}).get("findings"))   # 30차(AP-07): 위반 카피 기안은 승인 불가라 제외
     for todo in bg:
         desk._enrich(todo)                                   # 화면을 연 뒤 AI 설명 도착 → 판 번호 증가
     r = desk.run(DecideCommand(t["approval"]["approver"], case_id=t["id"], action="approve", expected_version=t["version"]))
